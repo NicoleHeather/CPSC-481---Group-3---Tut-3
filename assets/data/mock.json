@@ -1,0 +1,18 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "title": "Campus Concert",
+      "date": "2025-10-25",
+      "location": "Auditorium",
+      "description": "An evening of student bands and performances."
+    },
+    {
+      "id": 2,
+      "title": "Career Fair",
+      "date": "2025-11-02",
+      "location": "Main Hall",
+      "description": "Meet employers and learn about internships."
+    }
+  ]
+}
