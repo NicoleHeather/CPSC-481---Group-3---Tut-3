@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
       ]
     };
 
+    // Render events from data
     function renderEvents(data) {
       data.events.forEach(ev => {
         const card = document.createElement('article');
@@ -35,7 +36,8 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    // Try to fetch external mock.json (useful when serving over HTTP). Fall back to inline data if fetch fails.
+    // Try to fetch external mock.json (useful when serving over HTTP)
+    // Fall back to inline data if fetch fails
     fetch(dataUrl)
       .then(r => {
         if (!r.ok) throw new Error('Network response not ok');

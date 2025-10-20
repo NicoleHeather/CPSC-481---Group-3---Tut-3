@@ -1,10 +1,11 @@
 /* CSS variables for prototype theme */
 :root {
-  --color-bg: #f7f7fb;
+  /* Calgary-themed palette: deep red and energetic orange */
+  --color-bg: #fbfaf9; /* soft off-white */
   --color-surface: #ffffff;
-  --color-primary: #2b6cb0;
-  --color-accent: #ff7b54;
-  --color-text: #1f2937;
+  --color-primary: #c8102e; /* Calgary red */
+  --color-accent: #ff7f27; /* Calgary orange */
+  --color-text: #111827; /* near-black for legibility */
   --color-muted: #6b7280;
 
   --radius: 8px;
