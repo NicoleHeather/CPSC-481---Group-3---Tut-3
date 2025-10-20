@@ -10,15 +10,72 @@
 <body>
   <!-- header partial will be injected here -->
   <main class="container">
-    <h1>Welcome to the Prototype</h1>
-    <p>Open the pages in the <code>pages/</code> folder or click the nav.
-    This prototype uses plain HTML, CSS, and a tiny amount of JS for interaction.</p>
+    <h1>Prototype UI samples</h1>
+    <p>Interactive UI components you can copy into pages: buttons, header styles, and event cards.</p>
 
+    <!-- Buttons -->
+    <section class="demo-section">
+      <h2 class="section-title">Buttons</h2>
+      <div class="demo-row">
+        <button class="btn btn-primary">Primary</button>
+        <button class="btn btn-secondary">Secondary</button>
+        <button class="btn btn-black">Black</button>
+        <button class="btn">Regular</button>
+        <button class="btn btn-large">Large</button>
+      </div>
+    </section>
+
+    <!-- Header styles -->
+    <section class="demo-section">
+      <h2 class="section-title">Header formats</h2>
+      <h3 class="page-header">Page header with underline</h3>
+      <h3 class="page-header page-header--accent">Accent header with underline</h3>
+    </section>
+
+    <!-- Links demo -->
+    <section class="demo-section">
+      <h2 class="section-title">Links</h2>
+      <p>Here are a few link styles demonstrating the global link formatting:</p>
+      <ul>
+        <li>Inline link: <a href="../pages/Search.html">Search events</a></li>
+        <li>External link: <a href="https://www.calgary.ca" target="_blank" rel="noopener">City of Calgary</a></li>
+        <li>Email link: <a href="mailto:info@example.com">Email us</a></li>
+        <li>Button-like link: <a class="btn" href="../pages/CreateEvent.html">Create an event</a></li>
+      </ul>
+    </section>
+
+    <!-- Event cards -->
+    <section class="demo-section">
+      <h2 class="section-title">Event cards</h2>
+      <div class="cards-grid">
+  <article class="event-card" style="background-image: url('https://images.unsplash.com/photo-1485579149621-3123dd979885?auto=format&fit=crop&w=1200&q=80')">
+          <div class="event-card__overlay">
+            <div class="event-card__meta">
+              <h4 class="event-card__title">Sample Concert</h4>
+              <p class="event-card__subtitle">Downtown Calgary • 7:00 PM</p>
+            </div>
+            <div class="price-badge">$29</div>
+          </div>
+        </article>
+
+  <article class="event-card" style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80')">
+          <div class="event-card__overlay">
+            <div class="event-card__meta">
+              <h4 class="event-card__title">Guided Hike</h4>
+              <p class="event-card__subtitle">Banff • 8:00 AM</p>
+            </div>
+            <div class="price-badge">$49</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Live data area (keeps existing behavior) -->
     <section id="sample-list">
       <h2>Sample events (loaded from mock data)</h2>
       <div id="events" class="grid"></div>
     </section>
-    </main>
+  </main>
 
   <!-- footer partial will be injected here -->
 

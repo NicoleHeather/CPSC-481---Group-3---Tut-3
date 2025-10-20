@@ -43,6 +43,22 @@
         insertAtBodyStart(html);
       }
     }
+    // If running from file:// and header partial couldn't be loaded, insert a minimal fallback header
+    if (!html && window.location.protocol === 'file:') {
+      const simpleHeader = `
+        <header class="site-header">
+          <div class="container">
+            <a class="brand" href="${base}/pages/Home.html">My Events</a>
+            <nav class="simple-nav">
+              <a href="${base}/pages/Search.html">Search</a>
+              <a href="${base}/pages/EventBooking.html">Bookings</a>
+              <a href="${base}/pages/AccountSettings.html">Account</a>
+            </nav>
+          </div>
+        </header>
+      `;
+      insertAtBodyStart(simpleHeader);
+    }
 
     // after header inserted, turn data-href into real hrefs
     document.querySelectorAll('[data-href]').forEach(el => {
@@ -81,6 +97,17 @@
       } else {
         insertFooterToBody(html);
       }
+    }
+    // If running from file:// and footer partial couldn't be loaded, insert a minimal fallback footer
+    if (!html && window.location.protocol === 'file:') {
+      const simpleFooter = `
+        <footer class="site-footer">
+          <div class="container">
+            <p>© ${new Date().getFullYear()} My Events • <a href="${base}/pages/Contact.html">Contact</a></p>
+          </div>
+        </footer>
+      `;
+      insertFooterToBody(simpleFooter);
     }
   } catch (err) {
     // fail silently
