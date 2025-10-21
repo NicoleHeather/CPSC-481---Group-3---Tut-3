@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <script>
+  // Always start on Login when app is first opened
+  if (!location.pathname.includes("Login.html") && !location.pathname.includes("Home.html")) {
+    window.location.replace("./pages/Login.html");
+  }
+</script>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Trip Management System Prototype</title>
@@ -13,17 +20,12 @@
   <!-- header partial will be injected here -->
    
   <script>
-    (function(){
-      try {
-        var path = location.pathname.replace(/\\/g, '/');
-        if (path.endsWith('/index.html') || path === '/' || path === '') {
-          location.replace('pages/Home.html');
-        }
-      } catch (e) {
-        /* ignore */
-      }
-    })();
-  </script>
+  document.getElementById('login-form').addEventListener('submit', e => {
+    e.preventDefault();
+    window.location.href = '../pages/Home.html';
+  });
+</script>
+
 
   <main class="container">
     <h1>Redirecting to Home</h1>
@@ -34,5 +36,8 @@
 
   <script src="assets/js/include.js"></script>
   <script src="assets/js/main.js"></script>
+  <script>
+</script>
+
 </body>
 </html>
