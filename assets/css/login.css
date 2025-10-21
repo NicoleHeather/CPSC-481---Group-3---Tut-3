@@ -1,0 +1,106 @@
+/* ==========================================================================
+   Login Page Styles — Trips R Us Prototype
+   ========================================================================== */
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  background: var(--color-bg);
+  padding: 32px 16px;
+  text-align: center;
+}
+
+/* ---------- Brand Banner ---------- */
+.brand-banner {
+  position: relative;
+  width: 240px;
+  height: 130px;
+  margin-bottom: 40px;
+}
+
+.banner-shape {
+  background: var(--color-primary);
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0 0, 100% 0, 70% 70%, 30% 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-name {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.brand-name span {
+  color: var(--color-accent);
+}
+
+/* ---------- Logo image ---------- */
+
+.logo-img {
+  width: 140px;
+  height: 140px;
+  margin-top: 40px;
+}
+
+
+.logo-img img {
+  width: 90%;
+  height: auto;
+  object-fit: contain;
+}
+
+
+/* ---------- Buttons / Form ---------- */
+.change-profile {
+  border-radius: 20px;
+  margin-bottom: 14px;
+  background: #e5e5e5;
+  padding: 8px 16px;
+  border: none;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 280px;
+  margin-top: 10px;
+}
+
+.login-form input {
+  border: none;
+  background: #e5e5e5;
+  border-radius: 20px;
+  padding: 12px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.login-btn {
+  border-radius: 20px;
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  padding: 12px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+}
+
