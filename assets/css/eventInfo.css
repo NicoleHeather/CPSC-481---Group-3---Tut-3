@@ -1,0 +1,95 @@
+#event-remove-btn, #event-edit-btn, #event-share-btn {
+    font-weight: 600;
+    background: var(--color-primary);
+    color: white;
+    margin-top: 120px;
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    width:100px
+}
+
+
+#editPopupForm {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: lightgrey;
+    padding: 20px;
+    border: 1px solid black;
+    z-index: 1;
+    width: 475px;
+    height: 575px;
+}
+
+#editPopupForm form input {
+    border-radius: 20px;
+    padding: 10px;
+}
+
+#cancel-edit, #save-edit {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 150px;
+}
+
+#cancel-edit {
+    margin-left: 115px;
+}
+
+#description {
+    width: 400px;
+    height: 125px;
+}
+
+#removePopupForm {
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: lightgrey;
+    padding: 20px;
+    border: 1px solid black;
+    z-index: 1;
+    width: 400px;
+    height: 300px;
+}
+
+
+#cancel-remove, #yes-remove {
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#cancel-remove {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    margin-top: 80px;
+}
+
+#yes-remove {
+    background: green;
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    margin-left: 150px;
+    margin-top: 80px;
+}
