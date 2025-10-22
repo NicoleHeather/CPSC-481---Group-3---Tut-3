@@ -6,13 +6,48 @@
 	<title>Emergency Info - Prototype</title>
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/emergencyinfo.css">
 </head>
-<body>
+<body style="align-items: center;">
 	<!-- header partial will be injected here -->
 
-	<main class="container">
+	<main class="container" style="align-items: center;">
+
+		<!-- Personal Info Div -->
 		<h1>Emergency Info</h1>
-		<p>Emergency info placeholder.</p>
+		<div class="contact-name" style="display:flex;">
+			<p>Name:</p><input class="name-input" type="text", placeholder="John Smith..."/><br>
+		</div>
+		<div style="padding:5px"></div>
+		<div class="contact-phone" style="display:flex;">
+			<p>Phone Number:</p><input class="phone-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
+		</div>
+		<button class="button-save">Save Info</button>
+
+		<!-- Emergency Services Input -->
+		 <div class="search-input", style="display:flex; padding:5px;">
+			<p>City:</p><input style="margin-left:100px" class="city-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
+		 </div>
+		 <div style="display:flex; padding:5px;" >
+			<p>Province:</p><input style="margin-left:70px" class="province-input" type="text", placeholder="XXX-XXX-XXXX"/>
+		 </div>
+		 <div style="display:flex; padding:5px;">
+			<p>Specialty:</p><input style="margin-left:70px" class="specialty-input" type="text", placeholder="XXX-XXX-XXXX"/>
+		 </div>
+
+		<!-- Emergency Services Search Results -->
+		<div class="emergency-search">
+		<button class="button-search">Refresh</button>
+			<div class="search-result1">
+				<p>Calgary Children's Hospital</p>
+			</div>
+			<div class="search-result2">
+				<p>Calgary Children's Hospital</p>
+			</div>
+			<div class="search-result3">
+				<p>Calgary Children's Hospital</p>
+			</div>
+		</div>
 	</main>
 
 	<!-- footer partial will be injected here -->

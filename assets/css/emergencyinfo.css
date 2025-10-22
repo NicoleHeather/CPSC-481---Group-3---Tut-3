@@ -1,0 +1,67 @@
+.name-input {
+  border: none;
+  background: #e5e5e5;
+  border-radius: 20px;
+  padding: 12px;
+  text-align: center;
+  font-size: 1rem;
+  margin-left: 96px;
+}
+
+.phone-input {
+  border: none;
+  background: #e5e5e5;
+  border-radius: 20px;
+  padding: 12px;
+  text-align: center;
+  font-size: 1rem;
+  margin-left: 30px;
+}
+
+.city-input, .province-input, .specialty-input {
+  border: none;
+  background: #e5e5e5;
+  border-radius: 20px;
+  padding: 12px;
+  text-align: center;
+  font-size: 1rem;
+  margin-left: 30px;
+}
+
+.button-save {
+  border-radius: 20px;
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  margin-top: 5px;
+  margin-left: 100px;
+}
+
+.button-search {
+  border-radius: 20px;
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  padding: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.emergency-search {
+  margin-top: 10px;
+  background: #e5e5e5;
+  border-radius: 20px;
+  width: 360px;
+  height: 250px;
+}
+
+.search-result1, .search-result2, .search-result3 {
+  background: #fff;
+  border-radius: 10px;
+  padding: 0px;
+  margin: 30px;
+}
+
