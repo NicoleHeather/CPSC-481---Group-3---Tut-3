@@ -12,40 +12,38 @@
 	<!-- header partial will be injected here -->
 
 	<main class="container">
-		<div class="event">
-			<h1 style >Guided Hike</h1>
-			<div class="event-photo">
-				<img style="width:300px;height:200px;" src="../assets/img/cheakamus-lake-as-seen.jpg" alt="Chili's">
+		<div class="booking-event">
+			<h1 style >Booking Request</h1>
+			<div class="user-input">
+				<h2>Guided Hike</h2>
+				<label for="name">Full Name</label>
+				<br>
+				<input type="text" id="name" name="name" placeholder="Enter your full name">
+				<br>
+				<label for="email">Email</label>
+				<br>
+				<input type="text" id="email" email="name" placeholder="example@gmail.com">
+				<br>
+				<label for="phone">Phone</label>
+				<br>
+				<input type="text" id="phone" phone="phone" placeholder="XXX-XXX-XXXX">
+				<br>
+				<label for="date">Date</label>
+				<br>
+				<input type="text" id="date" date="date" placeholder="dd-mm-yyyy">
+				<br>
+				<label for="guest-number">Guest Number</label>
+				<br>
+				<input type="text" id="guest-number" guestnumber="guest-number" placeholder="0-20">
+				<br>
+				<div class="submit-info">
+					<button id="submit-info-btn">Send Booking Request</button>
+					<form id="booking-request-popup">
+						<p>Booking Request Successfully Sent!</p>
+						<input id="booking-request-confirm" type="submit" value="OK">
+					</form>
+				</div>
 			</div>
-			<div class="event-date">
-				<p>Date: Febuary 5th, 2025</p>
-			</div>
-			<div class="event-time">
-				<p>Time: 8AM - 6PM</p>
-			</div>
-			<div class="event-location">
-				<p>Location: Rocky View Trail - Banff</p>
-			</div>
-			<div class="event-cost">
-				<p>Expected Cost: 80$</p>
-			</div>
-			<div class="event-description">
-				Description: A guided hike through the beautiful Rocky View Trail in Banff National Park. 
-				Enjoy breathtaking views, fresh mountain air, and the company of fellow nature enthusiasts. 
-				Suitable for all skill levels.
-			</div>
-		</div>
-		<div class="event-booking">
-				<button id="booking-request-btn">Send Booking Request</button>
-					<div id="booking-request-form">
-						<form>
-							<div padding="50px">
-								<label for="title">Title:</label>
-								<input type="text" id="title" title="title">
-							</div>
-							<input id="submit-request" type="submit" value="Submit">
-						</form>
-					</div>
 		</div>
 	</main>
 
@@ -53,6 +51,6 @@
 
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
-	<script src="../assets/js/popupBooking.js"></script>
+	<script src="../assets/js/popupBookingRequest.js"></script>
 </body>
 </html>
