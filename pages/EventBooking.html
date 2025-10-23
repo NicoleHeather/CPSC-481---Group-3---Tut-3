@@ -6,13 +6,44 @@
 	<title>Event Booking - Prototype</title>
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/eventbooking.css">
 </head>
 <body>
 	<!-- header partial will be injected here -->
 
 	<main class="container">
 		<h1>Event Booking</h1>
-		<p>Booking UI placeholder.</p>
+		 <div class="booking-request_container">
+            <div class="booking-request_header">
+                <button class="back-button" onclick="window.history.back()">
+                    ←
+                </button>
+				<div class="vertical-separator"></div>
+                <p class="booking-request_title">Booking Request</p>
+            </div>
+            
+            <p class="event-header">Guided Hike</p>
+            
+            <div class="image-container">
+                <img 
+                    src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80" 
+                    alt="Event venue"
+                    class="event-image"
+                />
+            </div>
+            
+            <div class="description">
+                <p>
+                    Join us for an unforgettable guided hiking experience through the stunning landscapes of Banff National Park, a UNESCO World Heritage Site. 
+					Our expert local guides will lead you through some of the most scenic trails in the Canadian Rockies, sharing their knowledge of the area's geology, ecology, and history.
+                </p>
+            </div>
+            
+            <button class="btn continue-button">
+                Send Booking Request
+            </button>
+        </div>
+
 	</main>
 
 	<!-- footer partial will be injected here -->
