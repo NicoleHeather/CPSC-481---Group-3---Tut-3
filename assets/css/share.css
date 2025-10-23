@@ -11,7 +11,7 @@ html, body {
     background-color: #f9fafb;
 }
 
-.booking-request_container {
+.event-share_container {
     max-width: 48rem;
     margin: 2rem auto;
     background-color: white;
@@ -20,7 +20,7 @@ html, body {
     padding: 2rem;
 }
 
-.booking-request_header {
+.event-share_header {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,7 +30,7 @@ html, body {
     border-bottom: 2px solid #e5e7eb;
 }
 
-.booking-request_title {
+.event-share_title {
     font-size: 1.25rem;
     font-weight: 700;
     text-align: center;
