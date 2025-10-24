@@ -7,11 +7,19 @@
       startDate: '2026-05-01',
       endDate: '2026-05-14',
       images: [
-        '../assets/img/sample-event.svg',
-        '../assets/img/full-logo-white-outline.png',
-        '../assets/img/full-logo-monochrome.png'
+        '../assets/img/sample-event.svg'
       ],
       tags: ['Events']
+    },
+    {
+      id: 'trip-banff-2026',
+      title: 'Banff',
+      startDate: '2026-06-10',
+      endDate: '2026-06-17',
+      images: [
+        '../assets/img/guided-hike.svg'
+      ],
+      tags: ['Outdoors']
     }
   ];
 
@@ -27,29 +35,20 @@
     } catch (e) { return `${start} - ${end}`; }
   }
 
-  function createTripCard(trip) {
+  function createTripSlide(trip) {
     const article = document.createElement('article');
-    article.className = 'trip-card';
+    article.className = 'trip-slide';
     article.setAttribute('role', 'listitem');
     article.setAttribute('tabindex', '0');
     article.setAttribute('aria-label', `${trip.title}, ${formatDateRange(trip.startDate, trip.endDate)}`);
 
-    const carousel = document.createElement('div');
-    carousel.className = 'trip-carousel';
-    carousel.setAttribute('role', 'region');
-    carousel.setAttribute('aria-roledescription', 'carousel');
-    carousel.setAttribute('aria-label', `Images for ${trip.title}`);
-
-    trip.images.forEach((src, i) => {
-      const slide = document.createElement('div');
-      slide.className = 'slide';
-      const img = document.createElement('img');
-      img.src = src;
-      img.alt = `${trip.title} image ${i+1}`;
-      img.loading = 'lazy';
-      slide.appendChild(img);
-      carousel.appendChild(slide);
-    });
+    const hero = document.createElement('div');
+    hero.className = 'trip-hero';
+    const img = document.createElement('img');
+    img.src = (trip.images && trip.images[0]) || '../assets/img/sample-event.svg';
+    img.alt = `${trip.title} image`;
+    img.loading = 'lazy';
+    hero.appendChild(img);
 
     const body = document.createElement('div');
     body.className = 'trip-body';
@@ -61,74 +60,19 @@
     body.appendChild(h3);
     body.appendChild(dates);
 
-    const dots = document.createElement('div');
-    dots.className = 'carousel-dots';
-
-    article.appendChild(carousel);
+    article.appendChild(hero);
     article.appendChild(body);
-    article.appendChild(dots);
-
-    // wire carousel behavior after insertion
-    setTimeout(() => wireCarousel(article), 0);
 
     return article;
   }
 
-  function wireCarousel(card) {
-    const carousel = card.querySelector('.trip-carousel');
-    if (!carousel) return;
-    const slides = Array.from(card.querySelectorAll('.slide'));
-    const dots = card.querySelector('.carousel-dots');
-
-    // create dots
-    slides.forEach((_, i) => {
-      const btn = document.createElement('button');
-      btn.setAttribute('aria-label', `Show image ${i+1}`);
-      btn.addEventListener('click', () => {
-        slides[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      });
-      dots.appendChild(btn);
-    });
-
-    const dotButtons = Array.from(dots.querySelectorAll('button'));
-    if (dotButtons.length) dotButtons[0].classList.add('active');
-
-    // IntersectionObserver to detect visible slide
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const idx = slides.indexOf(entry.target);
-          dotButtons.forEach(b => b.classList.remove('active'));
-          if (dotButtons[idx]) dotButtons[idx].classList.add('active');
-        }
-      });
-    }, { root: carousel, threshold: 0.6 });
-
-    slides.forEach(s => io.observe(s));
-
-    // keyboard accessibility: left/right arrows to move slide
-    carousel.addEventListener('keydown', (ev) => {
-      if (ev.key === 'ArrowRight') {
-        ev.preventDefault();
-        const current = dotButtons.findIndex(b => b.classList.contains('active'));
-        const next = Math.min(slides.length - 1, current + 1);
-        slides[next].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      } else if (ev.key === 'ArrowLeft') {
-        ev.preventDefault();
-        const current = dotButtons.findIndex(b => b.classList.contains('active'));
-        const prev = Math.max(0, current - 1);
-        slides[prev].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-    });
-
-    // make carousel focusable for keyboard
-    carousel.tabIndex = 0;
-  }
-
-  function renderTrips(trips) {
+  function renderTripsAsSlides(trips) {
     const container = document.getElementById('upcoming-trips');
+    const dotsContainer = document.getElementById('upcoming-trips-dots');
     if (!container) return;
     container.innerHTML = '';
+    if (dotsContainer) dotsContainer.innerHTML = '';
+
     if (!trips || trips.length === 0) {
       const empty = document.createElement('div');
       empty.className = 'card';
@@ -137,27 +81,70 @@
       return;
     }
 
-    trips.forEach(t => container.appendChild(createTripCard(t)));
+    const slides = trips.map(createTripSlide);
+    slides.forEach(s => container.appendChild(s));
+
+    // create dots
+    if (dotsContainer) {
+      slides.forEach((_, i) => {
+        const btn = document.createElement('button');
+        btn.setAttribute('aria-label', `Show trip ${i+1}`);
+        btn.addEventListener('click', () => {
+          slides[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        });
+        dotsContainer.appendChild(btn);
+      });
+    }
+
+    // IntersectionObserver to highlight dot for visible slide
+    const dotButtons = dotsContainer ? Array.from(dotsContainer.querySelectorAll('button')) : [];
+    if (dotButtons.length) dotButtons[0].classList.add('active');
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = slides.indexOf(entry.target);
+          dotButtons.forEach(b => b.classList.remove('active'));
+          if (dotButtons[idx]) dotButtons[idx].classList.add('active');
+        }
+      });
+    }, { root: container, threshold: 0.6 });
+
+    slides.forEach(s => io.observe(s));
+
+    // keyboard nav
+    container.tabIndex = 0;
+    container.addEventListener('keydown', (ev) => {
+      if (ev.key === 'ArrowRight' || ev.key === 'Right') {
+        ev.preventDefault();
+        const active = dotButtons.findIndex(b => b.classList.contains('active'));
+        const next = Math.min(slides.length - 1, active + 1);
+        slides[next].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      } else if (ev.key === 'ArrowLeft' || ev.key === 'Left') {
+        ev.preventDefault();
+        const active = dotButtons.findIndex(b => b.classList.contains('active'));
+        const prev = Math.max(0, active - 1);
+        slides[prev].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    });
   }
 
-  // initialize after DOM ready
   function init() {
-    // try to load trips from a JSON endpoint (non-blocking), fallback to FALLBACK_TRIPS
     let loaded = false;
     fetch('../assets/data/trips.json').then(r => r.json()).then(data => {
       loaded = true;
-      renderTrips(data.trips || data);
+      renderTripsAsSlides(data.trips || data);
     }).catch(() => {
-      if (!loaded) renderTrips(FALLBACK_TRIPS);
+      if (!loaded) renderTripsAsSlides(FALLBACK_TRIPS);
     });
 
-    // in case fetch not available or returns error, always show fallback quickly
+    // fallback quick render
     setTimeout(() => {
       const list = document.getElementById('upcoming-trips');
       if (list && list.children.length === 0) {
-        renderTrips(FALLBACK_TRIPS);
+        renderTripsAsSlides(FALLBACK_TRIPS);
       }
-    }, 250);
+    }, 200);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();

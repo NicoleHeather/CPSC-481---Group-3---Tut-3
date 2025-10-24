@@ -20,9 +20,11 @@
         <h2>Upcoming Trips</h2>
       </div>
 
-      <div id="upcoming-trips" class="trip-list" role="list" aria-label="Upcoming trips">
-        <!-- Trip cards will be rendered here by assets/js/home.js -->
+      <div id="upcoming-trips" class="trip-carousel-outer" role="list" aria-roledescription="carousel" aria-label="Upcoming trips">
+        <!-- Trip slides will be rendered here by assets/js/home.js -->
       </div>
+
+      <div id="upcoming-trips-dots" class="carousel-dots" aria-hidden="false" style="margin-top:.5rem"></div>
 
       <div class="actions" style="margin-top:1rem;display:flex;flex-direction:column;gap:0.6rem;">
         <a href="../pages/CreateEvent.html" class="btn btn-large">Add Event</a>
