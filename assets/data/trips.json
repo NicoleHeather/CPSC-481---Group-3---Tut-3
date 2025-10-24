@@ -5,7 +5,7 @@
       "title": "Calgary",
       "startDate": "2026-05-01",
       "endDate": "2026-05-14",
-      "images": ["../assets/img/calgary.svg"],
+  "images": ["../assets/img/calgary.jpg"],
       "tags": ["Events"],
       "link": "../pages/EventBooking.html?id=trip-calgary-2026"
     },
