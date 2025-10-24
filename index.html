@@ -20,17 +20,11 @@
   <!-- header partial will be injected here -->
    
   <script>
-    (function(){
-      try {
-        var path = location.pathname.replace(/\\/g, '/');
-        if (path.endsWith('/index.html') || path === '/' || path === '') {
-          location.replace('pages/Home.html');
-        }
-      } catch (e) {
-        /* ignore */
-      }
-    })();
-  </script>
+  document.getElementById('login-form').addEventListener('submit', e => {
+    e.preventDefault();
+    window.location.href = '../pages/Home.html';
+  });
+</script>
 
 
   <main class="container">
