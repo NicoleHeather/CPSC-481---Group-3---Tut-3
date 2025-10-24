@@ -1,89 +1,23 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Budget - Prototype</title>
-  <link rel="stylesheet" href="../assets/css/variables.css">
-  <link rel="stylesheet" href="../assets/css/main.css">
-  <link rel="stylesheet" href="../assets/css/budget.css"><!-- page-specific styles -->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Budget - Prototype</title>
+	<link rel="stylesheet" href="../assets/css/variables.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body>
-  <!-- header partial will be injected here -->
+	<!-- header partial will be injected here -->
 
-  <main class="container">
-    <h1>Budget</h1>
+	<main class="container">
+		<h1>Budget</h1>
+		<p>Budget UI placeholder.</p>
+	</main>
 
-    <!-- VIEW A: Trip list -->
-    <section id="trip-list-view" class="budget-trips">
-      <h2 class="visually-hidden">Select a trip</h2>
-      <div id="trip-list" class="trip-list"></div>
-    </section>
+	<!-- footer partial will be injected here -->
 
-    <!-- VIEW B: Budget detail for a selected trip -->
-	<section id="budget-detail-view" class="hidden">
-	<div class="budget-detail-toolbar" style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
-		<button id="back-to-trips" class="btn btn-secondary" type="button">← Trips</button>
-		<button id="add-expense-btn" class="btn" type="button" style="margin-left:auto;">+ Add Expense</button>
-	</div>
-
-	<div class="budget-wrap">
-		<div class="donut">
-		<svg class="donut-svg" viewBox="0 0 200 200" role="img" aria-labelledby="budgetTitle">
-			<title id="budgetTitle">Budget distribution</title>
-			<circle class="donut-ring" cx="100" cy="100" r="80" />
-			<g id="donut-slices"></g>
-			<g class="donut-center">
-			<text id="donut-remaining-label" x="100" y="88" text-anchor="middle" class="donut-remaining">Remaining:</text>
-			<text id="donut-main" x="100" y="108" text-anchor="middle" class="donut-amount">$0</text>
-			<text id="donut-sub"  x="100" y="130" text-anchor="middle" class="donut-sub">$0 total</text>
-			</g>
-		</svg>
-		</div>
-
-		<div class="legend" id="donut-legend" aria-label="Budget categories"></div>
-	</div>
-	</section>
-
-	<!-- Modal: Add Expense -->
-	<div id="expense-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="expense-title">
-	<div class="modal__panel">
-		<h3 id="expense-title" style="margin:0 0 8px;">Add Expense</h3>
-		<form id="expense-form" class="modal__form">
-		<label class="field">
-			<span>Item name</span>
-			<input id="exp-name" type="text" required placeholder="e.g., McDonald’s">
-		</label>
-
-		<label class="field">
-			<span>Amount</span>
-			<input id="exp-amount" type="number" min="0" step="0.01" required placeholder="e.g., 12.49">
-		</label>
-
-		<label class="field">
-			<span>Category</span>
-			<select id="exp-category"></select>
-		</label>
-
-		<div id="new-cat-wrap" class="field hidden">
-			<span>New category name</span>
-			<input id="exp-newcat" type="text" placeholder="e.g., Snacks">
-		</div>
-
-		<div class="modal__actions">
-			<button type="button" id="expense-cancel" class="btn btn-secondary">Cancel</button>
-			<button type="submit" class="btn">Add</button>
-		</div>
-		</form>
-	</div>
-	</div>
-
-  </main>
-
-  <!-- footer partial will be injected here -->
-
-  <script src="../assets/js/include.js"></script>
-  <script src="../assets/js/main.js"></script>
-  <script src="../assets/js/budget.js"></script>
+	<script src="../assets/js/include.js"></script>
+	<script src="../assets/js/main.js"></script>
 </body>
 </html>

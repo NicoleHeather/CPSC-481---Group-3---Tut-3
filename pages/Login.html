@@ -1,37 +1,23 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login - Trips R Us</title>
-  <link rel="stylesheet" href="../assets/css/variables.css">
-  <link rel="stylesheet" href="../assets/css/main.css">
-  <link rel="stylesheet" href="../assets/css/login.css">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Login - Prototype</title>
+	<link rel="stylesheet" href="../assets/css/variables.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body>
-  <main class="login-container">
-    <!-- Logo image -->
-    <div class="logo-img">
-      <img src="../assets/img/full-logo-white-bg.png" alt="Trips R Us logo">
-    </div>
+	<!-- header partial will be injected here -->
 
-    <!-- Change profile -->
-    <button class="btn-secondary change-profile">Change Profile</button>
+	<main class="container">
+		<h1>Login</h1>
+		<p>Login placeholder.</p>
+	</main>
 
-    <!-- Login form -->
-    <form id="login-form" class="login-form">
-      <input type="text" id="username" name="username" placeholder="Username" required />
-      <input type="password" id="password" name="password" placeholder="Password" required />
-      <button type="submit" class="btn login-btn">Login</button>
-    </form>
-  </main>
+	<!-- footer partial will be injected here -->
 
-  <!-- No include.js, no header/footer -->
-  <script>
-    document.getElementById('login-form').addEventListener('submit', e => {
-      e.preventDefault();
-      window.location.href = '../pages/Home.html';
-    });
-  </script>
+	<script src="../assets/js/include.js"></script>
+	<script src="../assets/js/main.js"></script>
 </body>
 </html>
