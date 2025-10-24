@@ -11,6 +11,9 @@ body {
   line-height: 1.4;
 }
 
+/* Prevent accidental horizontal page scroll when swiping carousels */
+html, body { overflow-x: hidden; }
+
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -146,6 +149,8 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
 
 /* Make container touch-friendly */
 .trip-stack { -webkit-user-select:none; -ms-user-select:none; user-select:none; -webkit-touch-callout:none; }
+/* Hide overflow and restrict touch to vertical pans so horizontal swipes go to the carousel JS */
+.trip-stack { overflow: hidden; touch-action: pan-y; }
 .trip-slide .trip-hero img { width:100%; height:220px; object-fit:cover; display:block; }
 .carousel-dots { display:flex; gap:6px; justify-content:center; padding:8px; }
 .carousel-dots button { width:8px; height:8px; border-radius:50%; background:#ddd; border:0; }
