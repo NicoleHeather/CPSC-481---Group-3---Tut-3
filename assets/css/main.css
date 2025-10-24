@@ -153,7 +153,24 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
 .trip-stack { overflow: hidden; touch-action: pan-y; }
 .trip-slide .trip-hero img { width:100%; height:220px; object-fit:cover; display:block; }
 .carousel-dots { display:flex; gap:6px; justify-content:center; padding:8px; }
-.carousel-dots button { width:8px; height:8px; border-radius:50%; background:#ddd; border:0; }
+.carousel-dots button {
+  /* enforce exact square sizing and remove native button chrome so circles are perfect */
+  width:10px;
+  height:10px;
+  min-width:10px;
+  min-height:10px;
+  padding:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  line-height:0;
+  border-radius:50%;
+  background:#ddd;
+  border:0;
+  appearance:none;
+  -webkit-appearance:none;
+}
 .carousel-dots button.active { background:var(--color-primary); }
 .trip-body { padding:12px; }
 .trip-body h3 { margin:0 0 6px; font-size:1rem; }
