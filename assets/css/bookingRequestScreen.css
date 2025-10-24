@@ -1,6 +1,18 @@
 
+#name-input, #email-input, #phone-input, #date-input, #time-input, #guest-number-input {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+
+#name, #email, #phone, #date, #time, #guest-number {
+    padding: none;
+}
 
 #booking-request-popup {
+    font-size: large;
+    font-weight: bold;
     display: none;
     position: fixed;
     top: 50%;
@@ -10,6 +22,70 @@
     padding: 20px;
     border: 1px solid black;
     z-index: 1;
-    width: 475px;
-    height: 575px;
+    width: 30%;
+    height: 30%;
+}
+
+#booking-request-conflict {
+    font-size: large;
+    font-weight: bold;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: lightgrey;
+    padding: 20px;
+    border: 1px solid black;
+    z-index: 1;
+    width: 30%;
+    height: 30%;
+}
+
+input {
+    width:fit-content;
+    height:fit-content
+}
+
+.user-ipnut {
+    padding: 10px;
+    width: 75%;
+    display:flex;
+    flex-direction: column;
+}
+
+.submit-info {
+    padding-top: 20px;
+}
+
+#submit-info-btn {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 50%;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#booking-request-confirm, #booking-request-conflict-ok {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 150px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#success-message, #error-message {
+    text-align: center;
+}
+
+#success-container, #error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }

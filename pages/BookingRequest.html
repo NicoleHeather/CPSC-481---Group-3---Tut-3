@@ -16,31 +16,43 @@
 			<h1 style >Booking Request</h1>
 			<div class="user-input">
 				<h2>Guided Hike</h2>
-				<label for="name">Full Name</label>
-				<br>
-				<input type="text" id="name" name="name" placeholder="Enter your full name">
-				<br>
-				<label for="email">Email</label>
-				<br>
-				<input type="text" id="email" email="name" placeholder="example@gmail.com">
-				<br>
-				<label for="phone">Phone</label>
-				<br>
-				<input type="text" id="phone" phone="phone" placeholder="XXX-XXX-XXXX">
-				<br>
-				<label for="date">Date</label>
-				<br>
-				<input type="text" id="date" date="date" placeholder="dd-mm-yyyy">
-				<br>
-				<label for="guest-number">Guest Number</label>
-				<br>
-				<input type="text" id="guest-number" guestnumber="guest-number" placeholder="0-20">
-				<br>
+				<div id="name-input">
+					<label for="name">Full Name</label>
+					<input type="text" id="name" name="name" placeholder="Enter your full name">
+				</div>
+				<div id="email-input">
+					<label for="email">Email</label>
+					<input type="email" id="email" name="email" placeholder="example@gmail.com">
+				</div>
+				<div id="phone-input">
+					<label for="phone">Phone</label>
+					<input type="text" id="phone" name="phone" placeholder="XXX-XXX-XXXX">
+				</div>
+				<div id="date-input">
+					<label for="date">Date</label>
+					<input type="text" id="date" name="date" placeholder="dd-mm-yyyy">
+				</div>
+				<div id="time-input">
+					<label for="time">Time</label>
+					<input type="text" id="time" name="time" placeholder="XX:XX AM/PM">
+				</div>
+				<div id="guest-number-input">
+					<label for="guest-number">Guest Number</label>
+					<input type="number" id="guest-number" name="guest-number" placeholder="0-20">
+				</div>
 				<div class="submit-info">
 					<button id="submit-info-btn">Send Booking Request</button>
 					<form id="booking-request-popup">
-						<p>Booking Request Successfully Sent!</p>
-						<input id="booking-request-confirm" type="submit" value="OK">
+						<div>
+							<p id="success-message">Booking Request Successfully Sent!</p>
+							<input id="booking-request-confirm" type="submit" value="OK">
+						</div>
+					</form>
+					<form id="booking-request-conflict">
+						<div>
+							<P id="error-message">Error! This event conflicts with item "Chili's Reservation" at 6PM.</P>
+							<input id="booking-request-conflict-ok" type="submit" value="OK">
+						</div>
 					</form>
 				</div>
 			</div>
