@@ -1,0 +1,303 @@
+.form-container {
+    padding: 30px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #444;
+    font-size: 15px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-color: #f9fafc;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #4a6cf7;
+    box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+    background-color: white;
+}
+
+.date-time-group {
+    display: flex;
+    gap: 15px;
+}
+
+.date-time-group > div {
+    flex: 1;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.form-actions .btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.button-group button {
+    flex: 1;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn {
+    background-color: #f5f7fa;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.cancel-btn:hover {
+    background-color: #eaeef5;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.placeholder {
+    color: #999;
+}
+
+/* Fixes for sticky navigation and horizontal scrolling */
+.event-form-container {
+    max-width: 48rem;
+    margin: 2rem auto;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.event-form-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 1.5rem 2rem;
+    margin: 0;
+    border-bottom: 2px solid #e5e7eb;
+    background-color: white;
+}
+
+.event-form-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    color: #1f2937;
+    margin: 0;
+}
+
+.back-button {
+    position: absolute;
+    left: 2rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #374151;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+    border-radius: 6px;
+}
+
+.back-button:hover {
+    background-color: #f3f4f6;
+}
+
+/* Button styles to match your design */
+.btn-primary {
+    background: linear-gradient(90deg, #4a6cf7, #3a5ce5);
+    color: white;
+    box-shadow: 0 6px 18px rgba(74, 108, 247, 0.12);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(74, 108, 247, 0.16);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+}
+
+.btn-secondary {
+    background-color: #f5f7fa;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+    background-color: #eaeef5;
+    transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+    box-shadow: 0 6px 18px rgba(220, 53, 69, 0.12);
+}
+
+.btn-delete:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(220, 53, 69, 0.16);
+}
+
+.btn-delete:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+}
+
+/* Ensure no horizontal scrolling and proper sticky behavior */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+main.container {
+    flex: 1;
+    padding-bottom: 5rem; /* Space for bottom nav */
+    padding-top: 4rem; /* Space for header */
+    width: 100%;
+    overflow-y: auto;
+    max-width: 100%;
+}
+
+/* Ensure header and bottom nav stick properly */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    width: 100%;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    width: 100%;
+}
+
+
+
+* {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+    .event-form-container {
+        margin: 1rem auto;
+    }
+    
+    .form-container {
+        padding: 20px;
+    }
+    
+    .event-form-header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .event-form-title {
+        font-size: 1.25rem;
+    }
+    
+    .date-time-group {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .back-button {
+        left: 1.5rem;
+    }
+    
+    main.container {
+        padding-top: 3.5rem;
+        padding-bottom: 4.5rem;
+    }
+    
+    input, select, textarea {
+        padding: 12px 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .event-form-container {
+        margin: 0.5rem auto;
+    }
+    
+    .form-container {
+        padding: 16px;
+    }
+    
+    .event-form-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .form-actions .btn {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
