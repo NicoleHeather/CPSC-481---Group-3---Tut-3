@@ -12,14 +12,38 @@
 
   <main class="container">
     <h1>Home</h1>
-    <p>This is a simple home page in the pages folder. Use the nav to explore other prototype pages.</p>
 
-    <p>Click here to view sample page: <a href="/pages/SamplePage.html">Sample Page</a></p>
+    <section class="content">
+      <p class="lead">Quick access to your trips, search, and common categories.</p>
+
+      <div class="section-header">
+        <h2>Upcoming Trips</h2>
+      </div>
+
+      <div id="upcoming-trips" class="trip-list" role="list" aria-label="Upcoming trips">
+        <!-- Trip cards will be rendered here by assets/js/home.js -->
+      </div>
+
+      <div class="actions" style="margin-top:1rem;display:flex;flex-direction:column;gap:0.6rem;">
+        <a href="../pages/CreateEvent.html" class="btn btn-large">Add Event</a>
+        <a href="../pages/Search.html" class="btn btn-large btn-black">Search</a>
+      </div>
+
+      <div class="pills" style="margin-top:1rem; display:flex; gap:.5rem; flex-wrap:wrap;">
+        <button class="pill">Restaurants</button>
+        <button class="pill">Attractions</button>
+        <button class="pill">Hotels</button>
+        <button class="pill">Events</button>
+        <button class="pill">Live Music</button>
+      </div>
+
+    </section>
   </main>
 
   <!-- footer partial will be injected here -->
 
   <script src="../assets/js/include.js"></script>
   <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/home.js"></script>
 </body>
 </html>
