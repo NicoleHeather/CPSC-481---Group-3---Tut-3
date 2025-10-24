@@ -6,18 +6,98 @@
 	<title>Event Info - Prototype</title>
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/eventInfo.css">
 </head>
 <body>
 	<!-- header partial will be injected here -->
 
 	<main class="container">
-		<h1>Event Info</h1>
-		<p>Details about a single event will appear here.</p>
+
+		<!-- Event Info Container -->
+
+		<div class="event">
+			<h1 style >Chilis Reservation</h1>
+			<div class="event-photo">
+				<img style="width:300px;height:200px;" src="../assets/img/chilis-logo-restaurant-7.png" alt="Chili's">
+			</div>
+			<div class="event-date">
+				<p>Date: January 17th, 2025</p>
+			</div>
+			<div class="event-time">
+				<p>Time: 6 PM - 8PM</p>
+			</div>
+			<div class="event-location">
+				<p>Location: 184 Road St.</p>
+			</div>
+			<div class="event-cost">
+				<p>Expected Cost: 120$</p>
+			</div>
+			<div class="event-description">
+				Description: Restaurant reservation for 4 people.
+			</div>
+			<div class="event-options">
+				<button id="event-edit-btn">Edit</button>
+					<div id="editPopupForm">
+						<form>
+							<div padding="50px">
+								<label for="title">Title:</label>
+								<input type="text" id="title" title="title">
+							</div>
+							<br>
+							<div padding="50px">
+								<label for="date">Date:</label>
+								<input type="text" id="date" date="date"> (mm/dd/yyyy)
+							</div>
+							<br>
+							<div padding="50px">
+								<label for="time">Time:</label>
+								<input type="text" id="time" time="time">
+							</div>
+							<br>
+							<div padding="50px">
+								<label for="location">Location:</label>
+								<input type="text" id="location" location="location"> (ie. 123 Apple St.)
+							</div>
+							<br>
+							<div padding="50px">
+								<label for="cost">Expected Cost:</label>
+								<input type="text" id="cost" cost="cost">
+							</div>
+							<br>
+							<div padding="50px">
+								<label for="description">Description:</label>
+								<input type="text" id="description" description="description">
+								<br>
+								Max 200 Characters
+							</div>
+							<br>
+								<input id="save-edit" type="submit" value="Submit">
+								<!-- will need to change this to actually cancel -->
+								<input id="cancel-edit" type="submit" value="Cancel">
+						</form>
+					</div>
+			    <button id="event-remove-btn">Remove</button>
+    				<div id="removePopupForm">
+        				<form>
+            				<p>Are you sure you want to remove this event?</p>
+            				<input id="cancel-remove" type="submit" value="No">
+							<input id="yes-remove" type="submit" value="Yes">
+        				</form>
+    				</div>
+				<button id="event-share-btn">Share</button>
+			</div>
+		</div>
+
 	</main>
 
-	<!-- footer partial will be injected here -->
-
+	
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
+	<script src="../assets/js/popupEventInfo.js"></script>
 </body>
 </html>
+
+
+
+
+
