@@ -84,48 +84,60 @@
     const slides = trips.map(createTripSlide);
     slides.forEach(s => container.appendChild(s));
 
+    // put slides inside a stacked container
+    container.classList.add('trip-stack');
+
     // create dots
     if (dotsContainer) {
       slides.forEach((_, i) => {
         const btn = document.createElement('button');
         btn.setAttribute('aria-label', `Show trip ${i+1}`);
-        btn.addEventListener('click', () => {
-          slides[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        });
+        btn.addEventListener('click', () => showIndex(i));
         dotsContainer.appendChild(btn);
       });
     }
 
-    // IntersectionObserver to highlight dot for visible slide
     const dotButtons = dotsContainer ? Array.from(dotsContainer.querySelectorAll('button')) : [];
-    if (dotButtons.length) dotButtons[0].classList.add('active');
 
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const idx = slides.indexOf(entry.target);
-          dotButtons.forEach(b => b.classList.remove('active'));
-          if (dotButtons[idx]) dotButtons[idx].classList.add('active');
-        }
+    let current = 0;
+
+    function applyClasses() {
+      slides.forEach((s, idx) => {
+        s.classList.remove('active','next','next2','prev','inactive');
+        if (idx === current) s.classList.add('active');
+        else if (idx === current + 1) s.classList.add('next');
+        else if (idx === current + 2) s.classList.add('next2');
+        else if (idx === current - 1) s.classList.add('prev');
+        else s.classList.add('inactive');
       });
-    }, { root: container, threshold: 0.6 });
+      dotButtons.forEach(b => b.classList.remove('active'));
+      if (dotButtons[current]) dotButtons[current].classList.add('active');
+    }
 
-    slides.forEach(s => io.observe(s));
+    function showIndex(i) {
+      current = Math.max(0, Math.min(slides.length - 1, i));
+      applyClasses();
+    }
+
+    // initial
+    showIndex(0);
 
     // keyboard nav
     container.tabIndex = 0;
     container.addEventListener('keydown', (ev) => {
-      if (ev.key === 'ArrowRight' || ev.key === 'Right') {
-        ev.preventDefault();
-        const active = dotButtons.findIndex(b => b.classList.contains('active'));
-        const next = Math.min(slides.length - 1, active + 1);
-        slides[next].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      } else if (ev.key === 'ArrowLeft' || ev.key === 'Left') {
-        ev.preventDefault();
-        const active = dotButtons.findIndex(b => b.classList.contains('active'));
-        const prev = Math.max(0, active - 1);
-        slides[prev].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
+      if (ev.key === 'ArrowRight' || ev.key === 'Right') { showIndex(current + 1); }
+      else if (ev.key === 'ArrowLeft' || ev.key === 'Left') { showIndex(current - 1); }
+    });
+
+    // touch swipe support
+    let touchStartX = null;
+    container.addEventListener('touchstart', (ev) => { touchStartX = ev.touches[0].clientX; }, {passive:true});
+    container.addEventListener('touchend', (ev) => {
+      if (touchStartX == null) return;
+      const dx = (ev.changedTouches[0].clientX - touchStartX);
+      if (dx < -40) showIndex(current + 1);
+      else if (dx > 40) showIndex(current - 1);
+      touchStartX = null;
     });
   }
 

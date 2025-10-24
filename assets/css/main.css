@@ -132,8 +132,20 @@ a:not(.btn):not(.pill):hover { color: var(--color-accent); text-decoration: none
 a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline-offset: 3px; }
 
 /* Home / Trip card carousel styles */
-.trip-carousel-outer { display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scroll-behavior:smooth; padding:8px 4px; }
-.trip-slide { flex:0 0 88%; scroll-snap-align:center; position:relative; background: var(--color-surface); border-radius:12px; overflow:hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.12); border:1px solid rgba(0,0,0,0.04); }
+.trip-carousel-outer { padding:0; }
+
+/* Stacked card layout: slides positioned on top of each other and offset to the right for next cards */
+.trip-stack { position: relative; width: 100%; height: 320px; display:block; }
+.trip-stack .trip-slide { position:absolute; left:50%; top:0; transform: translateX(-50%) scale(1); width:86%; transition: transform .36s cubic-bezier(.2,.9,.2,1), opacity .36s ease; box-shadow: 0 12px 30px rgba(0,0,0,0.12); border-radius:12px; overflow:hidden; border:1px solid rgba(0,0,0,0.04); background: var(--color-surface); }
+.trip-stack .trip-slide img { display:block; width:100%; height:220px; object-fit:cover; }
+.trip-stack .trip-slide.active { z-index: 40; transform: translateX(-50%) scale(1); opacity:1; }
+.trip-stack .trip-slide.next { z-index: 30; transform: translateX(22%) scale(.96); opacity:1; }
+.trip-stack .trip-slide.next2 { z-index: 20; transform: translateX(50%) scale(.92); opacity:0.95; }
+.trip-stack .trip-slide.prev { z-index: 20; transform: translateX(-82%) scale(.92); opacity:0.9; }
+.trip-stack .trip-slide.inactive { z-index: 5; opacity:0; transform: translateX(120%) scale(.9); }
+
+/* Make container touch-friendly */
+.trip-stack { -webkit-user-select:none; -ms-user-select:none; user-select:none; -webkit-touch-callout:none; }
 .trip-slide .trip-hero img { width:100%; height:220px; object-fit:cover; display:block; }
 .carousel-dots { display:flex; gap:6px; justify-content:center; padding:8px; }
 .carousel-dots button { width:8px; height:8px; border-radius:50%; background:#ddd; border:0; }
