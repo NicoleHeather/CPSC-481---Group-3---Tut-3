@@ -183,3 +183,21 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
   main.container { padding-bottom: 120px; }
 }
 
+/* Quick actions / compact search + shortcuts (match existing site styles) */
+.full-width { width: 100%; display: block; }
+
+.quick-actions { display: grid; gap: 12px; margin-top: 1rem; }
+
+.search-compact { display:block; }
+.search-compact input[type="search"] { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.06); background: var(--color-surface); box-shadow: none; font-size: 0.95rem; }
+.search-compact input[type="search"]:focus { outline: 3px solid rgba(200,127,39,0.08); outline-offset: 2px; }
+
+.shortcut-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.shortcut { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:10px 8px; border-radius:10px; background: var(--color-surface); border:1px solid rgba(0,0,0,0.04); box-shadow: 0 8px 20px rgba(0,0,0,0.08); color:var(--color-text); font-weight:600; }
+.shortcut .icon { font-size:20px; }
+.shortcut:active { transform: translateY(1px); }
+
+@media (max-width:480px) {
+  .shortcut-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
