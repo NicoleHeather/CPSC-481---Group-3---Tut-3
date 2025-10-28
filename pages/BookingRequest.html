@@ -13,53 +13,58 @@
 
 	<!-- Add options to override envents and go to conflicting event details. Change popups to be white and round-->
 
-
 	<main class="container">
-		<div class="booking-event">
-			<h1 style >Booking Request</h1>
-			<div class="user-input">
-				<h2>Guided Hike</h2>
-				<div id="name-input">
-					<label for="name">Full Name</label>
+		<div id="background">
+			<div id="booking-event">
+				<h1 style >Booking Request</h1>
+				<div class="user-input">
+					<h2>Guided Hike</h2>
+					<div id="name-input">
+						<label for="name" style="font-weight:bold">Full Name: </label>
 					<input type="text" id="name" name="name" placeholder="Enter your full name">
+					</div>
+					<div id="email-input">
+						<label for="email" style="font-weight:bold">Email: </label>
+						<input type="email" id="email" name="email" placeholder="example@gmail.com">
+					</div>
+					<div id="phone-input">
+						<label for="phone" style="font-weight:bold">Phone: </label>
+						<input type="text" id="phone" name="phone" placeholder="XXX-XXX-XXXX">
+					</div>
+					<div id="date-input">
+						<label for="date" style="font-weight:bold">Date: </label>
+						<input type="text" id="date" name="date" placeholder="dd-mm-yyyy">
+					</div>
+					<div id="time-input">
+						<label for="time" style="font-weight:bold">Time: </label>
+						<input type="text" id="time" name="time" placeholder="XX:XX AM/PM">
+					</div>
+					<div id="guest-number-input">
+						<label for="guest-number" style="font-weight:bold">Guest Number: </label>
+						<input type="number" id="guest-number" name="guest-number" placeholder="0-20">
+					</div>
 				</div>
-				<div id="email-input">
-					<label for="email">Email</label>
-					<input type="email" id="email" name="email" placeholder="example@gmail.com">
+					<div class="submit-info" style="text-align:center">
+						<button id="submit-info-btn">Send Booking Request</button>
+					</div>
 				</div>
-				<div id="phone-input">
-					<label for="phone">Phone</label>
-					<input type="text" id="phone" name="phone" placeholder="XXX-XXX-XXXX">
-				</div>
-				<div id="date-input">
-					<label for="date">Date</label>
-					<input type="text" id="date" name="date" placeholder="dd-mm-yyyy">
-				</div>
-				<div id="time-input">
-					<label for="time">Time</label>
-					<input type="text" id="time" name="time" placeholder="XX:XX AM/PM">
-				</div>
-				<div id="guest-number-input">
-					<label for="guest-number">Guest Number</label>
-					<input type="number" id="guest-number" name="guest-number" placeholder="0-20">
-				</div>
-				<div class="submit-info">
-					<button id="submit-info-btn">Send Booking Request</button>
 					<form id="booking-request-popup">
 						<div id="success-container">
+							<img style="width:50%; height:30%;" src="../assets/img/Checkmark.png" alt="Trips R Us logo">
 							<p id="success-message">Booking Request Successfully Sent!</p>
 							<input id="booking-request-confirm" type="submit" value="OK">
 						</div>
 					</form>
 					<form id="booking-request-conflict">
 						<div id="error-container">
-							<P id="error-message">Error! This event conflicts with item "Chili's Reservation" at 6PM.</P>
-							<input id="booking-request-conflict-ok" type="submit" value="OK">
+							<img style="width:50%; height:30%;" src="../assets/img/Error.png" alt="Trips R Us logo">
+							<p id="error-message">Error! This event conflicts with item "Chili's Reservation" at 6PM.</p>
+							<input id="booking-request-conflict-ok" type="submit" value="Back to Booking">
+							<input id="booking-request-conflict-override" type="submit" value="Override Conflicting Event">
+							<input id="booking-request-conflict-view-event" type="submit" value="View Conflicting Event">
 						</div>
 					</form>
-				</div>
 			</div>
-		</div>
 	</main>
 
 	<!-- footer partial will be injected here -->

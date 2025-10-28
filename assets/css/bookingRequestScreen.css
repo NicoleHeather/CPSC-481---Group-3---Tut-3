@@ -7,7 +7,13 @@
 
 
 #name, #email, #phone, #date, #time, #guest-number {
-    padding: none;
+    border: none;
+    background: #e5e5e5;
+    border-radius: 20px;
+    padding: 12px;
+    text-align: center;
+    font-size: 1rem;
+    width: 90%;
 }
 
 #booking-request-popup {
@@ -22,8 +28,16 @@
     padding: 20px;
     border: none;
     z-index: 1;
-    width: 50%;
-    height: 50%;
+    width: 85%;
+    height: 60%;
+    border-radius: 20px;
+}
+
+.booking-event input {
+    margin-top: 5px;
+    padding: 10px;
+    font-size: medium;
+    border: 1px solid #ccc;
 }
 
 #booking-request-conflict {
@@ -36,10 +50,10 @@
     transform: translate(-50%, -50%);
     background-color: white;
     padding: 20px;
-    border: none;
     z-index: 1;
-    width: 50%;
-    height: 50%;
+    width: 85%;
+    height: 60%;
+    border-radius: 20px;
 }
 
 input {
@@ -59,23 +73,25 @@ input {
 }
 
 #submit-info-btn {
-    background: var(--color-primary);
-    color: white;
-    border: none;
-    padding: 15px;
-    width: 50%;
-    cursor: pointer;
-    font-weight: bold;
+  border-radius: 20px;
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  color: #fff;
+  padding: 12px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  width: 85%;
 }
 
-#booking-request-confirm, #booking-request-conflict-ok {
+#booking-request-confirm, #booking-request-conflict-ok, #booking-request-conflict-override, #booking-request-conflict-view-event {
     background: var(--color-primary);
     color: white;
-    border: none;
     padding: 15px;
-    width: 150px;
+    width: 85%;
     cursor: pointer;
     font-weight: bold;
+    border-radius: 20px;
 }
 
 #success-message, #error-message {
@@ -88,4 +104,5 @@ input {
     align-items: center;
     justify-content: center;
     gap: 20px;
+    border-radius: 20px;
 }
