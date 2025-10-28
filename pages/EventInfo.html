@@ -18,7 +18,7 @@
 		<div class="event">
 			<h1 style >Chilis Reservation</h1>
 			<div class="event-photo">
-				<img style="width:300px;height:200px;" src="../assets/img/chilis-logo-restaurant-7.png" alt="Chili's">
+				<img style="width:100%;height:100%;" src="../assets/img/chilis-logo-restaurant-7.png" alt="Chili's">
 			</div>
 			<div class="event-date">
 				<p>Date: January 17th, 2025</p>
@@ -39,41 +39,43 @@
 				<button id="event-edit-btn">Edit</button>
 					<div id="editPopupForm">
 						<form>
-							<div padding="50px">
+							<div>
 								<label for="title">Title:</label>
 								<input type="text" id="title" title="title">
 							</div>
 							<br>
-							<div padding="50px">
+							<div>
 								<label for="date">Date:</label>
-								<input type="text" id="date" date="date"> (mm/dd/yyyy)
+								<input type="text" id="date" date="date" placeholder="(mm/dd/yyyy)">
 							</div>
 							<br>
-							<div padding="50px">
+							<div>
 								<label for="time">Time:</label>
 								<input type="text" id="time" time="time">
 							</div>
 							<br>
-							<div padding="50px">
+							<div>
 								<label for="location">Location:</label>
-								<input type="text" id="location" location="location"> (ie. 123 Apple St.)
+								<input type="text" id="location" location="location" placeholder="123 Apple St.">
 							</div>
 							<br>
-							<div padding="50px">
+							<div>
 								<label for="cost">Expected Cost:</label>
 								<input type="text" id="cost" cost="cost">
 							</div>
 							<br>
-							<div padding="50px">
+							<div>
 								<label for="description">Description:</label>
 								<input type="text" id="description" description="description">
 								<br>
 								Max 200 Characters
 							</div>
 							<br>
+							<div id="edit-buttons">
 								<input id="save-edit" type="submit" value="Submit">
 								<!-- will need to change this to actually cancel -->
 								<input id="cancel-edit" type="submit" value="Cancel">
+							</div>
 						</form>
 					</div>
 			    <button id="event-remove-btn">Remove</button>
