@@ -75,10 +75,22 @@
 			gap: 0.5rem;
 		}
 
-		.filter-dates {
+		.filter-dates,
+		.filter-time,
+		.filter-category,
+		.filter-location,
+		.filter-type {
 			display: flex;
 			flex-direction: column;
 			gap: var(--spacing-sm);
+			margin-bottom: var(--spacing-md);
+		}
+
+		select, input[type="date"] {
+			padding: 0.3rem;
+			border-radius: 0.4rem;
+			border: 1px solid #ccc;
+			font-size: 1rem;
 		}
 
 		.modal-actions {
@@ -96,8 +108,7 @@
 </head>
 
 <body>
-	<!-- header partial will be injected here -->
-
+	<!-- header partial -->
 	<header class="search-header">
 		<button class="btn btn-secondary" id="filterBtn">Filter</button>
 		<div class="search-bar">
@@ -141,38 +152,59 @@
 		<div class="filter-content">
 			<h2>Filter Events</h2>
 			<div class="filter-options">
-				<b><body>Filter Options<body></b>
-				<label class="filter-option"><input type="checkbox" value="restaurant"> Restaurant</label>
-				<label class="filter-option"><input type="checkbox" value="event"> Event</label>
 
-				<b><body>Filter Dates<body></b>
-				<div class="filter-dates">
-					<label>Start Date: <input type="date" id="startDate"></label>
-					<label>End Date: <input type="date" id="endDate"></label>
+				<!-- Date + Time -->
+				<b>Filter Date & Time</b>
+				<div class="filter-date-time">
+					<label>Choose Date:
+						<input type="date" id="filterDate">
+					</label>
+					<div class="filter-time">
+						<label>Start Time:
+							<select id="startTime">
+								<option value="">-- Select --</option>
+							</select>
+						</label>
+						<label>End Time:
+							<select id="endTime">
+								<option value="">-- Select --</option>
+							</select>
+						</label>
+					</div>
 				</div>
 
-				<b><body>Filter Category<body></b>
-				<div class="filter-Category">
-					<label class="filter-option"><input type="checkbox" value="music"> Music</label>
+				<!-- Category -->
+				<b>Filter Category</b>
+				<div class="filter-category">
+					<label class="filter-option"><input type="checkbox" value="physical"> Physical</label>
 					<label class="filter-option"><input type="checkbox" value="entertainment"> Entertainment</label>
 					<label class="filter-option"><input type="checkbox" value="food"> Food</label>
 				</div>
 
-				<b><body>Filter filter-Location<body></b>				
-				<div class="filter-Location">
+				<!-- Location -->
+				<b>Filter Location</b>
+				<div class="filter-location">
 					<label class="filter-option"><input type="checkbox" value="Calgary"> Calgary</label>
 					<label class="filter-option"><input type="checkbox" value="Banff"> Banff</label>
 					<label class="filter-option"><input type="checkbox" value="Canmore"> Canmore</label>
+				</div>
+
+				<!-- Type -->
+				<b>Filter Type</b>
+				<div class="filter-type">
+					<label class="filter-option"><input type="checkbox" value="event"> Event</label>
+					<label class="filter-option"><input type="checkbox" value="restaurant"> Restaurant</label>
 				</div>
 			</div>
 
 			<div class="modal-actions">
 				<button class="btn btn-secondary" id="closeFilter">Close</button>
+				<button class="btn btn-primary" id="applyFilters">Apply</button>
 			</div>
 		</div>
 	</div>
 
-	<!-- footer partial will be injected here -->
+	<!-- footer partial -->
 	<nav class="bottom-nav">
 		<a href="../pages/Home.html" class="nav-item"><span class="label">Home</span></a>
 		<a href="../pages/Itinerary.html" class="nav-item"><span class="label">Itinerary</span></a>
@@ -184,7 +216,7 @@
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
 	<script>
-		// Filter modal toggle logic
+		// Modal toggle logic
 		const filterBtn = document.getElementById('filterBtn');
 		const filterModal = document.getElementById('filterModal');
 		const closeFilter = document.getElementById('closeFilter');
@@ -196,6 +228,24 @@
 			filterModal.style.display = 'none';
 			alert('Filters applied!');
 		});
+
+		// Populate 30-minute dropdowns
+		function populateTimeDropdown(selectId) {
+			const select = document.getElementById(selectId);
+			for (let hour = 0; hour < 24; hour++) {
+				for (let min = 0; min < 60; min += 30) {
+					const hh = hour.toString().padStart(2, "0");
+					const mm = min.toString().padStart(2, "0");
+					const label = `${hh}:${mm}`;
+					const option = document.createElement("option");
+					option.value = label;
+					option.textContent = label;
+					select.appendChild(option);
+				}
+			}
+		}
+		populateTimeDropdown("startTime");
+		populateTimeDropdown("endTime");
 	</script>
 </body>
 </html>
