@@ -1,0 +1,50 @@
+.week-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(120px, 1fr);
+  gap: 8px;
+  padding: 12px;
+  background: #fff;
+  border-top: 1px dashed rgba(0,0,0,0.12);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+}
+
+.day-cell {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  min-width: 120px;
+}
+
+.day-cell:focus,
+.day-cell:hover { outline: 3px solid rgba(255,127,39,0.18); outline-offset: 2px; }
+
+.day-name { display:block; font-weight: 700; font-size: 12px; color: var(--color-muted); margin-bottom: 2px; }
+.day-date { display:block; font-size: 12px; color: var(--color-muted); margin-bottom: 6px; }
+.day-meta { font-size: 13px; }
+
+/* Collapsible body inside trip-card */
+.trip-card__expand { padding: 8px 12px 12px; background: var(--color-surface); }
+
+/* Corner budget button on each itinerary card */
+.trip-card__budget-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+}
+
+/* Toggle hint on the header */
+.trip-card__header { cursor: pointer; }
+.trip-card__header::after {
+  content: '▾';
+  float: right;
+  opacity: .8;
+}
+.trip-card__header[aria-expanded="false"]::after { content: '▸'; }
+
+.day-list { margin: 6px 0 0; padding-left: 16px; }
+.day-list li { font-size: 12px; line-height: 1.25; margin: 3px 0; }
+.day-time { font-weight: 700; margin-right: 6px; }
+.day-more { color: var(--color-muted); font-style: italic; }
