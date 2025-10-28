@@ -7,7 +7,6 @@
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<style>
-		/* Account Settings Page Styles */
 		.settings-section {
 			background: var(--color-surface);
 			padding: var(--spacing-lg);
@@ -22,12 +21,6 @@
 			margin-bottom: var(--spacing-md);
 			font-size: 1.1rem;
 			color: var(--color-text);
-		}
-
-		.settings-section h2::after {
-			width: 32px;
-			height: 3px;
-			bottom: -6px;
 		}
 
 		.form-group {
@@ -164,11 +157,6 @@
 			border-bottom: none;
 		}
 
-		.settings-item label {
-			font-weight: 600;
-			color: var(--color-text);
-		}
-
 		.toggle-switch {
 			position: relative;
 			width: 50px;
@@ -201,12 +189,11 @@
 	</style>
 </head>
 <body>
-	<!-- header partial will be injected here -->
 
 	<main class="container">
 		<h1>Account Settings</h1>
 
-		<!-- Profile Information -->
+		<!-- Profile Info -->
 		<div class="settings-section">
 			<div class="profile-info">
 				<div class="profile-avatar">JD</div>
@@ -217,55 +204,25 @@
 			</div>
 		</div>
 
-		<!-- Personal Information -->
+		<!-- Personal Info -->
 		<div class="settings-section">
 			<h2>Personal Information</h2>
-			
-			<div class="form-group">
-				<label for="username">Username</label>
-				<input type="text" id="username" value="johndoe123" placeholder="Enter username">
-			</div>
-
-			<div class="form-group">
-				<label for="email">Email Address</label>
-				<input type="email" id="email" value="john.doe@example.com" placeholder="Enter email">
-			</div>
-
-			<div class="form-group">
-				<label for="firstName">First Name</label>
-				<input type="text" id="firstName" value="John" placeholder="Enter first name">
-			</div>
-
-			<div class="form-group">
-				<label for="lastName">Last Name</label>
-				<input type="text" id="lastName" value="Doe" placeholder="Enter last name">
-			</div>
-
+			<div class="form-group"><label>Username</label><input type="text" value="johndoe123"></div>
+			<div class="form-group"><label>Email Address</label><input type="email" value="john.doe@example.com"></div>
+			<div class="form-group"><label>First Name</label><input type="text" value="John"></div>
+			<div class="form-group"><label>Last Name</label><input type="text" value="Doe"></div>
 			<div class="form-actions">
 				<button class="btn-save">Save Changes</button>
 				<button class="btn-cancel">Cancel</button>
 			</div>
 		</div>
 
-		<!-- Security Settings -->
+		<!-- Security -->
 		<div class="settings-section">
 			<h2>Security</h2>
-			
-			<div class="form-group">
-				<label for="currentPassword">Current Password</label>
-				<input type="password" id="currentPassword" placeholder="Enter current password">
-			</div>
-
-			<div class="form-group">
-				<label for="newPassword">New Password</label>
-				<input type="password" id="newPassword" placeholder="Enter new password">
-			</div>
-
-			<div class="form-group">
-				<label for="confirmPassword">Confirm New Password</label>
-				<input type="password" id="confirmPassword" placeholder="Confirm new password">
-			</div>
-
+			<div class="form-group"><label>Current Password</label><input type="password"></div>
+			<div class="form-group"><label>New Password</label><input type="password"></div>
+			<div class="form-group"><label>Confirm New Password</label><input type="password"></div>
 			<div class="form-actions">
 				<button class="btn-save">Update Password</button>
 				<button class="btn-cancel">Cancel</button>
@@ -275,12 +232,11 @@
 		<!-- Preferences -->
 		<div class="settings-section">
 			<h2>Preferences</h2>
-			
 			<div class="form-group">
-				<label for="language">Language</label>
-				<select id="language">
-					<option value="en" selected>English</option>
-					<option value="fr">Français</option>
+				<label>Language</label>
+				<select>
+					<option selected>English</option>
+					<option>Français</option>
 				</select>
 			</div>
 
@@ -305,58 +261,38 @@
 			<div class="settings-item">
 				<div>
 					<label>Sign Out</label>
-					<p style="margin: 4px 0 0 0; font-size: 0.9rem; color: var(--color-muted);">Sign out of all devices</p>
+					<p style="margin:4px 0 0;font-size:0.9rem;color:var(--color-muted)">Sign out of all devices</p>
 				</div>
-				<button class="btn btn-secondary">Sign Out</button>
+				<button class="btn-cancel" onclick="window.location.href='../pages/Login.html'">Sign Out</button>
 			</div>
 
 			<div class="settings-item">
 				<div>
 					<label>Delete Account</label>
-					<p style="margin: 4px 0 0 0; font-size: 0.9rem; color: #dc2626;">Permanently delete your account</p>
+					<p style="margin:4px 0 0;font-size:0.9rem;color:#dc2626;">Permanently delete your account</p>
 				</div>
 				<button class="btn-danger">Delete Account</button>
 			</div>
 		</div>
 	</main>
 
-	<!-- footer partial will be injected here -->
+	<!-- Footer Nav (unchanged) -->
+	<!-- footer partial -->
 	<nav class="bottom-nav">
 		<a href="../pages/Home.html" class="nav-item"><span class="label">Home</span></a>
 		<a href="../pages/Itinerary.html" class="nav-item"><span class="label">Itinerary</span></a>
-		<a href="../pages/Search.html" class="nav-item"><span class="label">Search</span></a>
+		<a href="../pages/Search.html" class="nav-item"><span class="label"><strong>Search</strong></span></a>
 		<a href="../pages/Budget.html" class="nav-item"><span class="label">Budget</span></a>
-		<a href="../pages/AccountSettings.html" class="nav-item"><span class="label"><strong>Account</strong></span></a>
+		<a href="../pages/Account.html" class="nav-item"><span class="label">Account</span></a>
 	</nav>
 
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
+
 	<script>
-		// Toggle switch functionality
-		function toggleSwitch(element) {
-			element.classList.toggle('active');
+		function toggleSwitch(el) {
+			el.classList.toggle('active');
 		}
-
-		// Form save functionality (placeholder)
-		document.querySelectorAll('.btn-save').forEach(button => {
-			button.addEventListener('click', function() {
-				alert('Settings saved! (This is a prototype)');
-			});
-		});
-
-		// Account action buttons
-		document.querySelectorAll('.btn-secondary').forEach(button => {
-			button.addEventListener('click', function() {
-				alert('Action triggered! (This is a prototype)');
-			});
-		});
-
-		// Delete account confirmation
-		document.querySelector('.btn-danger').addEventListener('click', function() {
-			if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-				alert('Account deletion confirmed! (This is a prototype)');
-			}
-		});
 	</script>
 </body>
 </html>
