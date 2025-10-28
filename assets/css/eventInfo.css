@@ -7,7 +7,8 @@
     border: none;
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
-    width:100px
+    width:100px;
+    border-radius: 20px;
 }
 
 #editPopupForm {
@@ -18,16 +19,16 @@
     transform: translate(-50%, -50%);
     background-color: white;
     padding: 20px;
-    border: 1px solid black;
+    border-radius: 20px;
     z-index: 1;
     width: 90%;
-    height: 60%;
+    height: 75%;
     text-align: start;
 }
 
 #editPopupForm form input {
     border-radius: none;
-    padding: 5px;
+    padding: 5p
 }
 
 #cancel-edit, #save-edit {
@@ -38,12 +39,14 @@
     width: 30%;
     height: 80px;
     font-weight: bold;
+    border-radius: 20px;
 }
 
 #edit-buttons {
     display: inline;
     text-align: center;
     align-items: center;
+    border-radius: 20px;
 }
 
 #description {
@@ -60,7 +63,7 @@
     transform: translate(-50%, -50%);
     background-color: white;
     padding: 20px;
-    border: 1px solid black;
+    border-radius: 20px;
     z-index: 1;
     width: 85%;
     height: 25%;
@@ -71,6 +74,7 @@
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     margin-top: 10%;
+    border-radius: 20px;
 }
 
 #cancel-remove {
