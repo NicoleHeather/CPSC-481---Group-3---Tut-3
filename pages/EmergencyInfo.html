@@ -15,24 +15,27 @@
 
 		<!-- Personal Info Div -->
 		<h1>Emergency Info</h1>
-		<div class="contact-name" style="display:flex;">
-			<p>Name:</p><input class="name-input" type="text", placeholder="John Smith..."/><br>
+		<div id="contact-input">
+			<div class="contact-name" style="display:flex;">
+				<p>Name:</p><input class="name-input" type="text", placeholder="John Smith..."/><br>
+			</div>
+			<div class="contact-phone" style="display:flex;">
+				<p>Phone Number:</p><input class="phone-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
+			</div>
+			<button class="button-save">Save Info</button>
 		</div>
-		<div style="padding:5px"></div>
-		<div class="contact-phone" style="display:flex;">
-			<p>Phone Number:</p><input class="phone-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
-		</div>
-		<button class="button-save">Save Info</button>
 
 		<!-- Emergency Services Input -->
-		 <div class="search-input", style="display:flex; padding:5px;">
-			<p>City:</p><input style="margin-left:100px" class="city-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
+		 <div id="search-input-container">
+		 <div class="search-input", style="display:flex;">
+			<p>City:</p><input class="city-input" type="text", placeholder="Calgary..."/><br>
 		 </div>
-		 <div style="display:flex; padding:5px;" >
-			<p>Province:</p><input style="margin-left:70px" class="province-input" type="text", placeholder="XXX-XXX-XXXX"/>
+		 <div style="display:flex;">
+			<p>Province:</p><input class="province-input" type="text", placeholder="Alberta..."/>
 		 </div>
-		 <div style="display:flex; padding:5px;">
-			<p>Specialty:</p><input style="margin-left:70px" class="specialty-input" type="text", placeholder="XXX-XXX-XXXX"/>
+		 <div style="display:flex;">
+			<p>Specialty:</p><input class="specialty-input" type="text", placeholder="Children..."/>
+		 </div>
 		 </div>
 
 		<!-- Emergency Services Search Results -->
