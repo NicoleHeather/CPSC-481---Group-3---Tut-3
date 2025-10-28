@@ -18,12 +18,12 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: lightgrey;
+    background-color: white;
     padding: 20px;
-    border: 1px solid black;
+    border: none;
     z-index: 1;
-    width: 30%;
-    height: 30%;
+    width: 50%;
+    height: 50%;
 }
 
 #booking-request-conflict {
@@ -34,12 +34,12 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: lightgrey;
+    background-color: white;
     padding: 20px;
-    border: 1px solid black;
+    border: none;
     z-index: 1;
-    width: 30%;
-    height: 30%;
+    width: 50%;
+    height: 50%;
 }
 
 input {

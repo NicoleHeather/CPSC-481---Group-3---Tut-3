@@ -11,6 +11,9 @@
 <body>
 	<!-- header partial will be injected here -->
 
+	<!-- Add options to override envents and go to conflicting event details. Change popups to be white and round-->
+
+
 	<main class="container">
 		<div class="booking-event">
 			<h1 style >Booking Request</h1>
@@ -43,13 +46,13 @@
 				<div class="submit-info">
 					<button id="submit-info-btn">Send Booking Request</button>
 					<form id="booking-request-popup">
-						<div>
+						<div id="success-container">
 							<p id="success-message">Booking Request Successfully Sent!</p>
 							<input id="booking-request-confirm" type="submit" value="OK">
 						</div>
 					</form>
 					<form id="booking-request-conflict">
-						<div>
+						<div id="error-container">
 							<P id="error-message">Error! This event conflicts with item "Chili's Reservation" at 6PM.</P>
 							<input id="booking-request-conflict-ok" type="submit" value="OK">
 						</div>
