@@ -201,3 +201,88 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
   .shortcut-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* Primary shortcut: visually matches the primary button style used across the site */
+.shortcut.primary { background: linear-gradient(90deg,var(--color-primary), var(--color-accent)); color: #fff; border: none; box-shadow: 0 10px 28px rgba(200,30,45,0.12); }
+.shortcut.primary .icon { color: #fff; }
+.shortcut.primary:active { transform: translateY(0); box-shadow: 0 6px 18px rgba(200,30,45,0.10); }
+
+/* Floating Action Button (FAB) used for Add Event */
+.fab {
+  position: fixed;
+  right: 16px;
+  /* sit above bottom nav (bottom nav + safe-area) */
+  bottom: calc(80px + env(safe-area-inset-bottom));
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  line-height: 1;
+  color: #fff;
+  background: linear-gradient(90deg,var(--color-primary), var(--color-accent));
+  border: none;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.22), 0 6px 18px rgba(200,30,45,0.12);
+  z-index: 120;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.fab:focus { outline: 3px solid rgba(255,127,39,0.16); outline-offset: 3px; }
+.fab:active { transform: translateY(1px); box-shadow: 0 10px 28px rgba(0,0,0,0.18); }
+
+/* Slightly smaller FAB on very small screens */
+@media (max-width:420px) {
+  .fab { width: 48px; height: 48px; font-size: 22px; right: 12px; bottom: calc(72px + env(safe-area-inset-bottom)); }
+}
+
+/* hide FAB when panel/menu is open */
+.fab.hidden { display: none !important; }
+
+/* Bottom-sheet / side-panel for FAB actions */
+.sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.36); opacity: 0; pointer-events: none; transition: opacity .28s ease; z-index: 110; }
+.sheet-overlay.open { opacity: 1; pointer-events: auto; }
+
+.fab-panel { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; max-height: 72vh; background: var(--color-surface); border-radius: 14px 14px 0 0; box-shadow: 0 -16px 48px rgba(0,0,0,0.28); transform: translateY(110%); transition: transform .34s cubic-bezier(.2,.9,.2,1); z-index: 115; overflow: auto; }
+.fab-panel.open { transform: translateY(0); }
+.fab-panel-header { display:flex; align-items:center; justify-content:space-between; padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.04); }
+.fab-panel-header h4 { margin:0; font-size:1rem; }
+.fab-panel-content { padding: 8px 16px 20px; }
+.panel-actions { display:flex; gap:8px; flex-direction:column; }
+.panel-actions .btn { width:100%; }
+
+/* Desktop: present as a right-side sliding panel */
+@media (min-width: 900px) {
+  .fab-panel { top: 0; bottom: 0; right: 0; left: auto; width: 420px; max-height: none; border-radius: 12px 0 0 12px; transform: translateX(110%); }
+  .fab-panel.open { transform: translateX(0); }
+}
+
+
+/* Compact FAB menu (vertical stack above FAB) */
+.fab-menu { position: fixed; right: 16px; bottom: calc(144px + env(safe-area-inset-bottom)); display:flex; flex-direction:column-reverse; align-items:center; gap:10px; z-index: 118; pointer-events: none; }
+.fab-menu.open { pointer-events: auto; }
+.fab-menu-actions { display:flex; flex-direction:column; gap:10px; align-items:center; }
+.fab-action { width:44px; height:44px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:18px; background: linear-gradient(90deg,var(--color-primary), var(--color-accent)); color:#fff; border:none; box-shadow: 0 12px 30px rgba(0,0,0,0.18); cursor:pointer; transform: translateY(8px) scale(.95); opacity:0; transition: transform .18s cubic-bezier(.2,.9,.2,1), opacity .18s ease; }
+.fab-action.secondary, .fab-action.fab-action-secondary { background: var(--color-surface); color: var(--color-text); border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 10px 22px rgba(0,0,0,0.12); }
+.fab-menu.open .fab-action { transform: translateY(0) scale(1); opacity:1; }
+.fab-action:focus { outline: 3px solid rgba(255,127,39,0.12); outline-offset: 3px; }
+
+@media (max-width:480px) {
+  .fab-menu { right: 12px; bottom: calc(120px + env(safe-area-inset-bottom)); }
+  .fab-action { width:48px; height:48px; font-size:20px; }
+}
+
+/* Utility: visually hide content but keep it available to screen readers */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+

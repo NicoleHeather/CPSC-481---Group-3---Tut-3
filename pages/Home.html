@@ -26,8 +26,6 @@
     <section class="quick-actions" aria-labelledby="qa-heading">
       <h3 id="qa-heading" class="sr-only">Quick actions</h3>
 
-      <button class="btn btn-primary full-width" id="add-event">Add Event</button>
-
       <div class="search-compact" role="search">
         <input type="search" placeholder="Search trips, restaurants..." aria-label="Search" />
       </div>
@@ -42,9 +40,28 @@
   </main>
 
   <!-- footer partial will be injected here -->
+  <!-- Floating action button: Add Event -->
+  <button id="add-event" class="fab" aria-label="Add Event" title="Add Event">＋</button>
+
+  <!-- FAB panel (bottom-sheet on mobile, side-panel on desktop) -->
+  <div id="fab-panel-overlay" class="sheet-overlay" aria-hidden="true"></div>
+
+  <div id="fab-panel" class="fab-panel" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="fab-panel-title">
+    <div class="fab-panel-header">
+      <h4 id="fab-panel-title">Create</h4>
+      <button id="fab-panel-close" class="icon-btn" aria-label="Close panel">✕</button>
+    </div>
+    <div class="fab-panel-content">
+      <div class="panel-actions">
+        <button id="open-add-trip-btn" class="btn btn-large btn-primary">Add Trip</button>
+        <button id="open-add-event-btn" class="btn btn-large btn-secondary">Add Event</button>
+      </div>
+    </div>
+  </div>
 
   <script src="../assets/js/include.js"></script>
   <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/fab-panel.js"></script>
   <script src="../assets/js/home.js"></script>
 </body>
 </html>
