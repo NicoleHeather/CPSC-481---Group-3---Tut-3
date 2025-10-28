@@ -7,9 +7,6 @@
 
 
 #name, #email, #phone, #date, #time, #guest-number {
-    border: none;
-    background: #e5e5e5;
-    border-radius: 20px;
     padding: 12px;
     text-align: center;
     font-size: 1rem;
@@ -37,7 +34,6 @@
     margin-top: 5px;
     padding: 10px;
     font-size: medium;
-    border: 1px solid #ccc;
 }
 
 #booking-request-conflict {
