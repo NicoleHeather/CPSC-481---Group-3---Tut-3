@@ -17,41 +17,45 @@
 		<h1>Emergency Info</h1>
 		<div id="contact-input">
 			<div class="contact-name" style="display:flex;">
-				<p style="font-weight:bold">Name:</p><input class="name-input" type="text", placeholder="John Smith..."/><br>
+				<p>Name:</p><input class="name-input" type="text", placeholder="John Smith..."/><br>
 			</div>
 			<div class="contact-phone" style="display:flex;">
-				<p style="font-weight:bold">Phone Number:</p><input class="phone-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
+				<p>Phone Num:</p><input class="phone-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
 			</div>
 			<button class="button-save">Save Info</button>
-		</div>
 
 		<!-- Emergency Services Input -->
 		 <div id="search-input-container">
 		 <div class="search-input" style="display:flex;">
-			<p style="font-weight:bold">City:</p><input class="city-input" type="text", placeholder="Calgary..."/><br>
+			<p>City:</p><input class="city-input" type="text", placeholder="Calgary..."/><br>
 		 </div>
 		 <div style="display:flex;">
-			<p style="font-weight:bold">Province:</p><input class="province-input" type="text", placeholder="Alberta..."/>
+			<p>Province:</p><input class="province-input" type="text", placeholder="Alberta..."/>
 		 </div>
-		 <div style="display:flex; font-weight:bold;">
+		 <div style="display:flex;">
 			<p>Specialty:</p><input class="specialty-input" type="text", placeholder="Children, Cancer Research, etc"/>
 		 </div>
 		 </div>
+		</div>
 
 		<!-- Emergency Services Search Results -->
 		<div class="emergency-search">
 		<button class="button-search">Refresh</button>
 			<div class="search-result">
-				<p>Alberta Children's Hospital</p>
+				Alberta Children's Hospital
+				<button class="select-btn"> > </button>
 			</div>
 			<div class="search-result">
-				<p>South Health Campus</p>
+				South Health Campus
+				<button class="select-btn"> > </button>
 			</div>
 			<div class="search-result">
-				<p>Foothills Medical Center</p>
+				Foothills Medical Center
+				<button class="select-btn"> > </button>
 			</div>
 			<div class="search-result">
-				<p>Rockyview General Hospital</p>
+				Rockyview General Hospital
+				<button class="select-btn"> > </button>
 			</div>
 		</div>
 	</main>

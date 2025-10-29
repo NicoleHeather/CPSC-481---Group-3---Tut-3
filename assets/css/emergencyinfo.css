@@ -1,5 +1,8 @@
 #contact-input {
-  align-items: center;
+  border-radius: 0.5rem;
+  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  background-color: #f9fafb;
 }
 
 .name-input {
@@ -8,6 +11,8 @@
   padding: 5px;
   height: 10%;
   margin-left: 10%;
+  border-radius: 10px;
+  border: 1px solid lightgrey;
 }
 
 .phone-input {
@@ -16,6 +21,8 @@
   padding: 5px;
   height: 10%;
   margin-left: 10%;
+  border-radius: 10px;
+  border: 1px solid lightgrey;
 }
 
 .city-input, .province-input, .specialty-input {
@@ -24,12 +31,14 @@
   margin-top: 15px;
   padding: 5px;
   height: 10%;
+  border-radius: 10px;
+  border: 1px solid lightgrey;
 }
 
 .button-save {
   border-radius: 20px;
   font-weight: 600;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  background: var(--color-primary);
   color: #fff;
   padding: 12px 24px;
   border: none;
@@ -43,7 +52,7 @@
 .button-search {
   border-radius: 20px;
   font-weight: 600;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  background: var(--color-primary);
   color: #fff;
   padding: none;
   border: none;
@@ -54,15 +63,28 @@
 .emergency-search {
   border-radius: 20px;
   margin-top: 10px;
-  background: #e5e5e5;
+  background: #f9fafb;
   width: 100%;
   height: fit-content;
   padding: 5px;
+  border-radius: 0.5rem;
+  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 2rem;
 }
 
 .search-result {
-  background: #fff;
+  background: #f9fafb;
   padding: 5px;
   margin: 5px;
+  border-radius: 10px;
+  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 1rem;
 }
 
+.select-btn {
+  border:none;
+  background-color: #f9fafb;
+  font-weight: bold;
+  margin-left: 1px;
+  font-size: larger;
+}
