@@ -11,15 +11,106 @@
   <!-- header partial will be injected here -->
 
   <main class="container">
-    <h1>Home</h1>
-    <p>This is a simple home page in the pages folder. Use the nav to explore other prototype pages.</p>
+    <section class="content">
+      <div class="section-header">
+        <h2>Upcoming Trips</h2>
+      </div>
 
-    <p>Click here to view sample page: <a href="/pages/SamplePage.html">Sample Page</a></p>
+      <div id="upcoming-trips" class="trip-carousel-outer" role="list" aria-roledescription="carousel" aria-label="Upcoming trips">
+        <!-- Trip slides will be rendered here by assets/js/home.js -->
+      </div>
+
+      <div id="upcoming-trips-dots" class="carousel-dots" aria-hidden="false" style="margin-top:.5rem"></div>
+    </section>
+
+    <section class="quick-actions" aria-labelledby="qa-heading">
+      <!-- Visible card wrapper to group search + shortcuts -->
+      <div class="shortcuts-card card" role="group" aria-labelledby="qa-heading">
+        <div class="card-header">
+          <h3 id="qa-heading">Quick actions</h3>
+        </div>
+        <div class="card-body">
+          <div class="search-compact" role="search">
+            <input type="search" placeholder="Search trips, restaurants..." aria-label="Search" />
+            <button class="icon-btn search-btn" aria-label="Search">
+              <!-- Magnifying glass SVG -->
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                <circle cx="11" cy="11" r="6" stroke="none" fill="currentColor" />
+                <rect x="16" y="16" width="6" height="2" rx="1" transform="rotate(45 16 16)" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="shortcut-grid" role="group" aria-label="Shortcuts">
+            <button class="shortcut" aria-label="Restaurants">
+              <!-- Utensils / fork & knife (simple) -->
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <g fill="currentColor">
+                  <rect x="4" y="2" width="2" height="8" rx="0.5" />
+                  <rect x="7" y="2" width="2" height="8" rx="0.5" />
+                  <rect x="10" y="2" width="2" height="8" rx="0.5" />
+                  <rect x="6" y="12" width="8" height="2" rx="1" />
+                </g>
+              </svg>
+              <span class="shortcut-label">Restaurants</span>
+            </button>
+
+            <button class="shortcut" aria-label="Attractions">
+              <!-- Star icon -->
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <polygon fill="currentColor" points="12 2 14.9 8.6 22 9.3 16.5 13.9 18.2 21 12 17.4 5.8 21 7.5 13.9 2 9.3 9.1 8.6 12 2" />
+              </svg>
+              <span class="shortcut-label">Attractions</span>
+            </button>
+
+            <button class="shortcut" aria-label="Hotels">
+              <!-- Bed / hotel icon -->
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="3" y="7" width="18" height="6" rx="1.5" fill="currentColor" />
+                <rect x="3" y="15" width="4" height="2" rx="0.8" fill="currentColor" />
+                <rect x="17" y="15" width="4" height="2" rx="0.8" fill="currentColor" />
+                <rect x="8" y="9" width="4" height="2" rx="0.4" fill="white" />
+              </svg>
+              <span class="shortcut-label">Hotels</span>
+            </button>
+
+            <button class="shortcut" aria-label="Live Music">
+              <!-- Music note icon -->
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
+                <circle cx="8" cy="20" r="2" fill="currentColor" />
+              </svg>
+              <span class="shortcut-label">Live Music</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- footer partial will be injected here -->
+  <!-- Floating action button: Add Event -->
+  <button id="add-event" class="fab" aria-label="Add Event" title="Add Event">＋</button>
+
+  <!-- FAB panel (bottom-sheet on mobile, side-panel on desktop) -->
+  <div id="fab-panel-overlay" class="sheet-overlay" aria-hidden="true"></div>
+
+  <div id="fab-panel" class="fab-panel" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="fab-panel-title">
+    <div class="fab-panel-header">
+      <h4 id="fab-panel-title">Create</h4>
+      <button id="fab-panel-close" class="icon-btn" aria-label="Close panel">✕</button>
+    </div>
+    <div class="fab-panel-content">
+      <div class="panel-actions">
+        <button id="open-add-trip-btn" class="btn btn-large btn-primary">Add Trip</button>
+        <button id="open-add-event-btn" class="btn btn-large btn-secondary">Add Event</button>
+      </div>
+    </div>
+  </div>
 
   <script src="../assets/js/include.js"></script>
   <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/fab-panel.js"></script>
+  <script src="../assets/js/home.js"></script>
 </body>
 </html>
