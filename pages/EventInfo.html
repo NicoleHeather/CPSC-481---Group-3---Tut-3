@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<link rel="stylesheet" href="../assets/css/eventInfo.css">
 </head>
-<body>
+<body id="whole-page">
 	<!-- header partial will be injected here -->
 
 	<main class="container">
@@ -17,40 +17,30 @@
 
 		<div class="event">
 			<div id="event-info">
-			<h1 id="event-title" >Chilis Reservation</h1>
-			<div class="event-photo">
-				<img style="width:100%;height:100%;" src="../assets/img/chilis-logo-restaurant-7.png" alt="Chili's">
-			</div>
-			<div id="event-date" style="display:flex">
-				<p>
-					<label style="font-weight:bold; padding:5px;">Date: </label>
-					<p id="current-date">January 17th, 2025</p>
-				</p>
-			</div>
-			<div id="event-time">
-				<p>
-					<label style="font-weight:bold">Time: </label>
-					6PM - 8PM
-				</p>
-			</div>
-			<div id="event-location">
-				<p>
-					<label style="font-weight:bold">Location: </label>
-					184 Road St.
-				</p>
-			</div>
-			<div id="event-cost">
-				<p>
-					<label style="font-weight:bold">Expected Cost: </label>
-					120$
-				</p>
-			</div>
-			<div id="event-description">
-				<p>
-					<label style="font-weight:bold">Description: </label>
-					Restaurant reservation for 4 people.
-				</p>
-			</div>
+				<h1 id="event-title" >Chilis Reservation</h1>
+				<div class="event-photo">
+					<img style="width:100%;height:100%;" src="../assets/img/chilis-logo-restaurant-7.png" alt="Chili's">
+				</div>
+				<div id="event-date" style="display:flex">
+					<label style="font-weight:bold;">Date: </label>
+					<div style="margin-left:2%" id="current-date">January 17th, 2025</div>
+				</div>
+				<div id="event-time" style="display:flex;">
+					<label style="font-weight:bold;">Time: </label>
+					<div style="margin-left:2%" id="current-time">6PM - 8PM</div>
+				</div>
+				<div id="event-location" style="display:flex">
+					<label style="font-weight:bold;">Location: </label>
+					<div style="margin-left:2%" id="current-location">184 Road St.</div>
+				</div>
+				<div id="event-cost" style="display:flex">
+					<label style="font-weight:bold;">Expected Cost: </label>
+					<div style="margin-left:2%" id="current-cost">120$</div>
+				</div>
+				<div id="event-description">
+					<label style="font-weight:bold;">Description: </label>
+					<div id="current-description">Restaurant reservation at Chili's for 4 people. Note to self: remember to bring John's birthday gift.</div>
+				</div>
 			</div>
 			<div class="event-options">
 				<button id="event-edit-btn">Edit</button>
@@ -83,13 +73,14 @@
 							<br>
 							<div>
 								<label for="description" style="font-weight:bold">Description:</label>
-								<input type="text" id="description" description="description">
 								<br>
-								Max 200 Characters
+								<textarea id="description" name="description" rows="4" cols="50"></textarea>
+								<br>
+								Max 300 Characters
 							</div>
 							<br>
 							<div id="edit-buttons">
-								<input id="save-edit" type="submit" value="Submit">
+								<input id="save-edit" type="submit" value="Save">
 								<!-- will need to change this to actually cancel -->
 								<input id="cancel-edit" type="submit" value="Cancel">
 							</div>
@@ -98,10 +89,14 @@
 			    <button id="event-remove-btn">Remove</button>
     				<div id="removePopupForm">
         				<form>
-            				Are you sure you want to remove this event?
+							<img style="width:50%;height:5%;" src="../assets/img/R.png" alt="Chili's">
+            				<br>
+							Are you sure you want to remove this event?
 							<br>
-            				<input id="cancel-remove" type="submit" value="No">
-							<input id="yes-remove" type="submit" value="Yes">
+							<div id="remove-btns">
+            					<input id="cancel-remove" type="submit" value="No">
+								<input id="yes-remove" type="submit" value="Yes">
+							</div>
         				</form>
     				</div>
 				<button id="event-share-btn">Share</button>
@@ -109,8 +104,6 @@
 		</div>
 
 	</main>
-
-	
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
 	<script src="../assets/js/popupEventInfo.js"></script>
