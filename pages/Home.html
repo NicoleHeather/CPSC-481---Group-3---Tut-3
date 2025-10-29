@@ -24,17 +24,66 @@
     </section>
 
     <section class="quick-actions" aria-labelledby="qa-heading">
-      <h3 id="qa-heading" class="sr-only">Quick actions</h3>
+      <!-- Visible card wrapper to group search + shortcuts -->
+      <div class="shortcuts-card card" role="group" aria-labelledby="qa-heading">
+        <div class="card-header">
+          <h3 id="qa-heading">Quick actions</h3>
+        </div>
+        <div class="card-body">
+          <div class="search-compact" role="search">
+            <input type="search" placeholder="Search trips, restaurants..." aria-label="Search" />
+            <button class="icon-btn search-btn" aria-label="Search">
+              <!-- Magnifying glass SVG -->
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                <circle cx="11" cy="11" r="6" stroke="none" fill="currentColor" />
+                <rect x="16" y="16" width="6" height="2" rx="1" transform="rotate(45 16 16)" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
 
-      <div class="search-compact" role="search">
-        <input type="search" placeholder="Search trips, restaurants..." aria-label="Search" />
-      </div>
+          <div class="shortcut-grid" role="group" aria-label="Shortcuts">
+            <button class="shortcut" aria-label="Restaurants">
+              <!-- Utensils / fork & knife (simple) -->
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <g fill="currentColor">
+                  <rect x="4" y="2" width="2" height="8" rx="0.5" />
+                  <rect x="7" y="2" width="2" height="8" rx="0.5" />
+                  <rect x="10" y="2" width="2" height="8" rx="0.5" />
+                  <rect x="6" y="12" width="8" height="2" rx="1" />
+                </g>
+              </svg>
+              <span class="shortcut-label">Restaurants</span>
+            </button>
 
-      <div class="shortcut-grid" role="group" aria-label="Shortcuts">
-        <button class="shortcut"><span class="icon">🍽</span><span>Restaurants</span></button>
-        <button class="shortcut"><span class="icon">⭐</span><span>Attractions</span></button>
-        <button class="shortcut"><span class="icon">🏨</span><span>Hotels</span></button>
-        <button class="shortcut"><span class="icon">🎟</span><span>Events</span></button>
+            <button class="shortcut" aria-label="Attractions">
+              <!-- Star icon -->
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <polygon fill="currentColor" points="12 2 14.9 8.6 22 9.3 16.5 13.9 18.2 21 12 17.4 5.8 21 7.5 13.9 2 9.3 9.1 8.6 12 2" />
+              </svg>
+              <span class="shortcut-label">Attractions</span>
+            </button>
+
+            <button class="shortcut" aria-label="Hotels">
+              <!-- Bed / hotel icon -->
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="3" y="7" width="18" height="6" rx="1.5" fill="currentColor" />
+                <rect x="3" y="15" width="4" height="2" rx="0.8" fill="currentColor" />
+                <rect x="17" y="15" width="4" height="2" rx="0.8" fill="currentColor" />
+                <rect x="8" y="9" width="4" height="2" rx="0.4" fill="white" />
+              </svg>
+              <span class="shortcut-label">Hotels</span>
+            </button>
+
+            <button class="shortcut" aria-label="Live Music">
+              <!-- Music note icon -->
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
+                <circle cx="8" cy="20" r="2" fill="currentColor" />
+              </svg>
+              <span class="shortcut-label">Live Music</span>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   </main>
