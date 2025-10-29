@@ -214,6 +214,9 @@
       ],
     },
   ];
+
+  try { localStorage.setItem('ITINERARIES', JSON.stringify(ITINERARIES)); } catch (_) {}
+
   // --- Helpers ---
   const $ = (sel, node = document) => node.querySelector(sel);
   const listEl = document.getElementById('itinerary-list');

@@ -1,0 +1,80 @@
+/* Container for the day grid */
+.calendar {
+  --slot-height: 42px;  /* height of each 30-min row */
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.08);
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+  overflow: hidden;
+}
+
+/* Left rail for times */
+.calendar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 72px; right: 0; bottom: 0;
+  background: linear-gradient(#fafafa, #fff);
+}
+
+/* Grid: 48 rows (00:00 to 23:30), 2 columns (time rail + content) */
+.calendar {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+}
+
+/* time cell */
+.time-cell {
+  height: var(--slot-height);
+  border-bottom: 1px dashed rgba(0,0,0,.08);
+  padding: 6px 8px;
+  font-size: 12px;
+  color: var(--color-muted);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+/* content cell (holds slot and events overlay) */
+.slot-cell {
+  height: var(--slot-height);
+  border-bottom: 1px dashed rgba(0,0,0,.08);
+  position: relative;
+}
+
+/* click target for choosing a start time */
+.slot-hit {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+}
+
+/* events layer */
+.events-layer {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  bottom: 0;
+}
+
+/* individual event block */
+.event-block {
+  position: absolute;
+  left: 6px; right: 6px;
+  border-radius: 10px;
+  padding: 6px 8px;
+  background: rgba(200,16,46,0.12);
+  border: 1px solid rgba(200,16,46,0.28);
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  font-size: 12px;
+  line-height: 1.25;
+  overflow: hidden;
+}
+.event-title { font-weight: 700; display:block; }
+.event-time  { color: var(--color-muted); font-size: 11px; }
+
+/* helper */
+.no-events {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
