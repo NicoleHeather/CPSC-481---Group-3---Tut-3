@@ -6,18 +6,71 @@
 	<title>Booking Request - Prototype</title>
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/bookingRequestScreen.css">
 </head>
-<body>
+<body id="whole-screen">
 	<!-- header partial will be injected here -->
 
+	<!-- Add options to override envents and go to conflicting event details. Change popups to be white and round-->
+
 	<main class="container">
-		<h1>Booking Request</h1>
-		<p>Booking request placeholder.</p>
+		<div id="background">
+			<div id="booking-event">
+				<h1 style >Booking Request</h1>
+				<div class="user-input">
+					<h2>Guided Hike</h2>
+					<div id="name-input">
+						<label for="name">Full Name: </label>
+					<input type="text" id="name" name="name" placeholder="Enter your full name">
+					</div>
+					<div id="email-input">
+						<label for="email">Email: </label>
+						<input type="email" id="email" name="email" placeholder="example@gmail.com">
+					</div>
+					<div id="phone-input">
+						<label for="phone">Phone: </label>
+						<input type="text" id="phone" name="phone" placeholder="XXX-XXX-XXXX">
+					</div>
+					<div id="date-input">
+						<label for="date">Date: </label>
+						<input type="text" id="date" name="date" placeholder="dd-mm-yyyy">
+					</div>
+					<div id="time-input">
+						<label for="time">Time: </label>
+						<input type="text" id="time" name="time" placeholder="XX:XX AM/PM">
+					</div>
+					<div id="guest-number-input">
+						<label for="guest-number">Guest Number: </label>
+						<input type="number" id="guest-number" name="guest-number" placeholder="0-20">
+					</div>
+				</div>
+					<div class="submit-info" style="text-align:center">
+						<button id="submit-info-btn">Send Booking Request</button>
+					</div>
+				</div>
+					<form id="booking-request-popup">
+						<div id="success-container">
+							<img style="width:50%; height:30%;" src="../assets/img/Checkmark.png" alt="Trips R Us logo">
+							<p id="success-message">Booking Request Successfully Sent!</p>
+							<input id="booking-request-confirm" type="submit" value="OK">
+						</div>
+					</form>
+					<form id="booking-request-conflict">
+						<div id="error-container">
+							<img style="width:50%; height:30%;" src="../assets/img/Error.png" alt="Trips R Us logo">
+							<p id="error-message">Error! This event conflicts with item "Chili's Reservation" at 6PM.</p>
+							<input id="booking-request-conflict-ok" type="submit" value="Back to Booking">
+							<input id="booking-request-conflict-override" type="submit" value="Override Conflicting Event">
+							<input id="booking-request-conflict-view-event" type="submit" value="View Conflicting Event">
+						</div>
+					</form>
+			</div>
 	</main>
 
 	<!-- footer partial will be injected here -->
 
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
+	<script src="../assets/js/popupBookingRequest.js"></script>
 </body>
 </html>
