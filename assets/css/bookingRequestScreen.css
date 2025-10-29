@@ -118,4 +118,7 @@ input {
 #choose-itinerary {
     border-radius: 10px;
     border: 1px solid lightgrey;
+    padding: 15px;
+    width: 85%;
+    color: black;
 }
