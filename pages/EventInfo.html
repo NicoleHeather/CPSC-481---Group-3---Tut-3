@@ -39,9 +39,7 @@
 				</div>
 				<div id="event-description">
 					<label style="font-weight:bold;">Description: </label>
-					<div id="current-description">Restaurant reservation at Chili's for 4 people.<br>
-						Note to self: remember to bring John's birthday gift.
-					</div>
+					<div id="current-description">Restaurant reservation at Chili's for 4 people. Note to self: remember to bring John's birthday gift.</div>
 				</div>
 			</div>
 			<div class="event-options">
@@ -75,13 +73,14 @@
 							<br>
 							<div>
 								<label for="description" style="font-weight:bold">Description:</label>
-								<input type="text" id="description" description="description">
+								<br>
+								<textarea id="description" name="description" rows="4" cols="50"></textarea>
 								<br>
 								Max 300 Characters
 							</div>
 							<br>
 							<div id="edit-buttons">
-								<input id="save-edit" type="submit" value="Submit">
+								<input id="save-edit" type="submit" value="Save">
 								<!-- will need to change this to actually cancel -->
 								<input id="cancel-edit" type="submit" value="Cancel">
 							</div>
@@ -94,8 +93,10 @@
             				<br>
 							Are you sure you want to remove this event?
 							<br>
-            				<input id="cancel-remove" type="submit" value="No">
-							<input id="yes-remove" type="submit" value="Yes">
+							<div id="remove-btns">
+            					<input id="cancel-remove" type="submit" value="No">
+								<input id="yes-remove" type="submit" value="Yes">
+							</div>
         				</form>
     				</div>
 				<button id="event-share-btn">Share</button>
