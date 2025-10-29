@@ -3,7 +3,7 @@
     font-weight: 600;
     background: var(--color-primary);
     color: white;
-    margin-top: 60px;
+    margin-top: 40px;
     padding: 12px;
     border-radius: 20px;
     width: 300px;
@@ -14,14 +14,11 @@
     font-weight: 600;
     background: var(--color-primary);
     color: white;
-    margin-left: 70px;
-    margin-top: 30px;
+    margin-top: 20px;
     padding: 12px;
-    border: none;
-    cursor: pointer;
     border-radius: 20px;
-    width: 25%;
-    height: 50%;
+    width: 300px;
+    border: none;
 }
 
 #booking-request-form {
@@ -41,4 +38,10 @@
 
 .event-date, .event-time, .event-location, .event-cost, .event-description {
    padding: 5px;
+}
+
+.event { 
+    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    padding: 1rem;
+    background-color: #f9fafb;
 }
