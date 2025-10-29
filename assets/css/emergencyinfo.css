@@ -1,5 +1,10 @@
 #contact-input {
   align-items: center;
+  border-radius: 10px;
+  border: 5px lightgrey;
+  background-color: #e5e5e5;
+  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
+  padding: 5px;
 }
 
 .name-input {
@@ -8,6 +13,8 @@
   padding: 5px;
   height: 10%;
   margin-left: 10%;
+  border-radius: 10px;
+  border: 1px solid lightgrey;
 }
 
 .phone-input {
@@ -16,6 +23,8 @@
   padding: 5px;
   height: 10%;
   margin-left: 10%;
+  border-radius: 10px;
+  border: 1px solid lightgrey;
 }
 
 .city-input, .province-input, .specialty-input {
@@ -24,6 +33,8 @@
   margin-top: 15px;
   padding: 5px;
   height: 10%;
+  border-radius: 10px;
+  border: 1px solid lightgrey;
 }
 
 .button-save {
