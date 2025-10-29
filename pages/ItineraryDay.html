@@ -1,23 +1,70 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width,initial-scale=1" />
-	<title>Itinerary (Day) - Prototype</title>
-	<link rel="stylesheet" href="../assets/css/variables.css">
-	<link rel="stylesheet" href="../assets/css/main.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Itinerary (Day) - Prototype</title>
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <!-- Reuse modal + donut styles from Budget -->
+  <link rel="stylesheet" href="../assets/css/budget.css">
+  <!-- New, day-view specific styles -->
+  <link rel="stylesheet" href="../assets/css/itinerary-day.css">
 </head>
 <body>
-	<!-- header partial will be injected here -->
+  <!-- header partial injected by include.js -->
 
-	<main class="container">
-		<h1>Itinerary (Day)</h1>
-		<p>Day view placeholder.</p>
-	</main>
+  <main class="container">
+    <h1 id="day-title">Itinerary (Day)</h1>
+    <p id="day-subtitle" class="page-header page-header--accent" style="margin-top:8px;"></p>
 
-	<!-- footer partial will be injected here -->
+    <div class="day-toolbar" style="display:flex; gap:10px; align-items:center; margin:12px 0;">
+      <a class="btn btn-secondary" href="./ItineraryWeek.html">← Week</a>
+      <button id="add-event-btn" class="btn" type="button" style="margin-left:auto;">+ Add Event</button>
+    </div>
 
-	<script src="../assets/js/include.js"></script>
-	<script src="../assets/js/main.js"></script>
+    <!-- Timeline container -->
+    <section id="calendar" class="calendar" aria-label="Daily schedule"></section>
+  </main>
+
+  <!-- Add Event Modal -->
+  <div id="event-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="event-title">
+    <div class="modal__panel">
+      <h3 id="event-title" style="margin:0 0 8px;">Add Event</h3>
+      <form id="event-form" class="modal__form">
+        <label class="field">
+          <span>Title</span>
+          <input id="ev-title" type="text" required placeholder="e.g., Lunch at OEB">
+        </label>
+
+        <label class="field">
+          <span>Start time</span>
+          <select id="ev-start" required></select>
+        </label>
+
+        <label class="field">
+          <span>Duration</span>
+          <select id="ev-dur" required>
+            <option value="30">30 min</option>
+            <option value="60" selected>1 hour</option>
+            <option value="90">1.5 hours</option>
+            <option value="120">2 hours</option>
+          </select>
+        </label>
+
+        <div class="modal__actions">
+          <button type="button" id="ev-cancel" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn">Add</button>
+        </div>
+        <div id="ev-error" style="color:#c8102e; font-size:13px; margin-top:4px; display:none;"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- footer partial injected by include.js -->
+
+  <script src="../assets/js/include.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/itinerary-day.js"></script>
 </body>
 </html>

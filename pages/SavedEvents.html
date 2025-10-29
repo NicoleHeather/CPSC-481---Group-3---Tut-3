@@ -2,22 +2,250 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 	<title>Saved Events - Prototype</title>
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
-</head>
-<body>
-	<!-- header partial will be injected here -->
+	<style>
+		/* Match Search Page Header */
+		.search-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: var(--spacing-sm) var(--spacing-md);
+			background: var(--color-primary);
+			color: #fff;
+		}
 
+		.search-bar {
+			flex: 1;
+			margin: 0 var(--spacing-sm);
+			display: flex;
+			align-items: center;
+			background: #fff;
+			border-radius: 1.5rem;
+			padding: 0.3rem 0.8rem;
+		}
+
+		.search-bar input {
+			border: none;
+			flex: 1;
+			font-size: 1rem;
+			outline: none;
+			background: transparent;
+		}
+
+		main.container {
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+			padding-bottom: 90px;
+		}
+
+		.remove-btn {
+			margin-top: var(--spacing-sm);
+			background: var(--color-error, #c0392b);
+			color: #fff;
+			border: none;
+			padding: 0.5rem 1rem;
+			border-radius: var(--radius);
+			cursor: pointer;
+			font-size: 0.9rem;
+			transition: background 0.2s;
+		}
+
+		.remove-btn:hover {
+			background: #a93226;
+		}
+
+		.no-saved {
+			text-align: center;
+			margin-top: 2rem;
+			color: var(--color-text-secondary);
+			font-size: 1.1rem;
+		}
+
+		/* Filter modal (same style as Search.html) */
+		.filter-modal {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.6);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			z-index: 999;
+		}
+
+		.filter-content {
+			background: var(--color-surface);
+			padding: var(--spacing-lg);
+			border-radius: var(--radius);
+			width: 90%;
+			max-width: 380px;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+		}
+
+		.filter-content h2 {
+			margin-top: 0;
+			text-align: center;
+		}
+
+		.filter-options {
+			display: grid;
+			gap: var(--spacing-sm);
+			margin: var(--spacing-md) 0;
+		}
+
+		.filter-option {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		select, input[type="date"] {
+			padding: 0.3rem;
+			border-radius: 0.4rem;
+			border: 1px solid #ccc;
+			font-size: 1rem;
+		}
+
+		.modal-actions {
+			display: flex;
+			justify-content: space-between;
+			margin-top: var(--spacing-md);
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Header (Same as Search Page, with Back button) -->
+	<header class="search-header">
+		<button class="btn btn-secondary" id="filterBtn">Filter</button>
+		<div class="search-bar">
+			<input type="text" placeholder="Search saved events..." id="searchInput">
+		</div>
+		<a href="../pages/Search.html" class="btn btn-secondary">Back</a>
+	</header>
+
+	<!-- Main -->
 	<main class="container">
 		<h1>Saved Events</h1>
-		<p>Saved events placeholder.</p>
+
+		<section class="cards-grid" id="savedEventsSection">
+			<article class="event-card" style="background-image:url('https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=1200&q=80')">
+				<div class="event-card__overlay">
+					<h4 class="event-card__title">Jazz Night</h4>
+					<p class="event-card__subtitle">Mission • 9:00 PM</p>
+					<div class="price-badge">$25</div>
+					<button class="remove-btn" id="removeBtn">Remove from Saved</button>
+				</div>
+			</article>
+		</section>
 	</main>
 
-	<!-- footer partial will be injected here -->
+	<!-- Filter Modal -->
+	<div class="filter-modal" id="filterModal">
+		<div class="filter-content">
+			<h2>Filter Events</h2>
+			<div class="filter-options">
+
+				<!-- Date + Time -->
+				<b>Filter Date & Time</b>
+				<div class="filter-date-time">
+					<label>Choose Date:
+						<input type="date" id="filterDate">
+					</label>
+					<div class="filter-time">
+						<label>Start Time:
+							<select id="startTime">
+								<option value="">-- Select --</option>
+							</select>
+						</label>
+						<label>End Time:
+							<select id="endTime">
+								<option value="">-- Select --</option>
+							</select>
+						</label>
+					</div>
+				</div>
+
+				<!-- Category -->
+				<b>Filter Category</b>
+				<div class="filter-category">
+					<label class="filter-option"><input type="checkbox" value="hotel"> Hotel</label>
+					<label class="filter-option"><input type="checkbox" value="restaurant"> Restaurant</label>
+					<label class="filter-option"><input type="checkbox" value="attraction"> Attraction</label>
+					<label class="filter-option"><input type="checkbox" value="music"> Music</label>
+				</div>
+
+				<!-- Location -->
+				<b>Filter Location</b>
+				<div class="filter-location">
+					<label class="filter-option"><input type="checkbox" value="Calgary"> Calgary</label>
+					<label class="filter-option"><input type="checkbox" value="Banff"> Banff</label>
+					<label class="filter-option"><input type="checkbox" value="Canmore"> Canmore</label>
+				</div>
+			</div>
+
+			<div class="modal-actions">
+				<button class="btn btn-secondary" id="closeFilter">Close</button>
+				<button class="btn btn-primary" id="applyFilters">Apply</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<nav class="bottom-nav">
+		<a href="../pages/Home.html" class="nav-item"><span class="label">Home</span></a>
+		<a href="../pages/Itinerary.html" class="nav-item"><span class="label">Itinerary</span></a>
+		<a href="../pages/Search.html" class="nav-item"><span class="label"><strong>Search</strong></span></a>
+		<a href="../pages/Budget.html" class="nav-item"><span class="label">Budget</span></a>
+		<a href="../pages/Account.html" class="nav-item"><span class="label">Account</span></a>
+	</nav>
 
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
+	<script>
+		// Modal toggle logic (same as Search.html)
+		const filterBtn = document.getElementById('filterBtn');
+		const filterModal = document.getElementById('filterModal');
+		const closeFilter = document.getElementById('closeFilter');
+		const applyFilters = document.getElementById('applyFilters');
+
+		filterBtn.addEventListener('click', () => filterModal.style.display = 'flex');
+		closeFilter.addEventListener('click', () => filterModal.style.display = 'none');
+		applyFilters.addEventListener('click', () => {
+			filterModal.style.display = 'none';
+			alert('Filters applied!');
+		});
+
+		// Populate 30-minute dropdowns
+		function populateTimeDropdown(selectId) {
+			const select = document.getElementById(selectId);
+			for (let hour = 0; hour < 24; hour++) {
+				for (let min = 0; min < 60; min += 30) {
+					const hh = hour.toString().padStart(2, "0");
+					const mm = min.toString().padStart(2, "0");
+					const label = `${hh}:${mm}`;
+					const option = document.createElement("option");
+					option.value = label;
+					option.textContent = label;
+					select.appendChild(option);
+				}
+			}
+		}
+		populateTimeDropdown("startTime");
+		populateTimeDropdown("endTime");
+
+		// Remove saved event logic
+		const removeBtn = document.getElementById('removeBtn');
+		const savedSection = document.getElementById('savedEventsSection');
+
+		removeBtn.addEventListener('click', () => {
+			savedSection.innerHTML = '<p class="no-saved">No saved events yet.</p>';
+		});
+	</script>
 </body>
 </html>

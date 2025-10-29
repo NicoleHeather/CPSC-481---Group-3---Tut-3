@@ -6,18 +6,293 @@
 	<title>Account Settings - Prototype</title>
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<style>
+		.settings-section {
+			background: var(--color-surface);
+			padding: var(--spacing-lg);
+			border-radius: var(--radius);
+			box-shadow: 0 14px 40px rgba(0,0,0,0.16);
+			margin-bottom: var(--spacing-lg);
+			border: 1px solid rgba(0,0,0,0.04);
+		}
+
+		.settings-section h2 {
+			margin-top: 0;
+			margin-bottom: var(--spacing-md);
+			font-size: 1.1rem;
+			color: var(--color-text);
+		}
+
+		.form-group {
+			margin-bottom: var(--spacing-md);
+		}
+
+		.form-group label {
+			display: block;
+			margin-bottom: var(--spacing-xs);
+			font-weight: 600;
+			color: var(--color-text);
+		}
+
+		.form-group input,
+		.form-group select {
+			width: 100%;
+			padding: var(--spacing-sm) var(--spacing-md);
+			border: 2px solid rgba(0,0,0,0.1);
+			border-radius: var(--radius);
+			font-size: 1rem;
+			background: var(--color-surface);
+			transition: border-color 0.2s ease;
+		}
+
+		.form-group input:focus,
+		.form-group select:focus {
+			outline: none;
+			border-color: var(--color-primary);
+		}
+
+		.form-actions {
+			display: flex;
+			gap: var(--spacing-sm);
+			margin-top: var(--spacing-md);
+		}
+
+		.btn-save {
+			background: var(--color-primary);
+			color: white;
+			padding: var(--spacing-sm) var(--spacing-md);
+			border: none;
+			border-radius: var(--radius);
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.btn-save:hover {
+			background: #a00d25;
+			transform: translateY(-1px);
+		}
+
+		.btn-cancel {
+			background: transparent;
+			color: var(--color-muted);
+			padding: var(--spacing-sm) var(--spacing-md);
+			border: 2px solid rgba(0,0,0,0.1);
+			border-radius: var(--radius);
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.btn-cancel:hover {
+			border-color: var(--color-muted);
+			color: var(--color-text);
+		}
+
+		.danger-zone {
+			border-left: 4px solid #dc2626;
+			background: #fef2f2;
+		}
+
+		.danger-zone h2 {
+			color: #dc2626;
+		}
+
+		.btn-danger {
+			background: #dc2626;
+			color: white;
+			padding: var(--spacing-sm) var(--spacing-md);
+			border: none;
+			border-radius: var(--radius);
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.btn-danger:hover {
+			background: #b91c1c;
+			transform: translateY(-1px);
+		}
+
+		.profile-info {
+			display: flex;
+			align-items: center;
+			gap: var(--spacing-md);
+			margin-bottom: var(--spacing-lg);
+		}
+
+		.profile-avatar {
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-size: 1.5rem;
+			font-weight: 700;
+		}
+
+		.profile-details h3 {
+			margin: 0;
+			font-size: 1.2rem;
+		}
+
+		.profile-details p {
+			margin: 0;
+			color: var(--color-muted);
+			font-size: 0.9rem;
+		}
+
+		.settings-item {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: var(--spacing-md) 0;
+			border-bottom: 1px solid rgba(0,0,0,0.05);
+		}
+
+		.settings-item:last-child {
+			border-bottom: none;
+		}
+
+		.toggle-switch {
+			position: relative;
+			width: 50px;
+			height: 24px;
+			background: #ccc;
+			border-radius: 12px;
+			cursor: pointer;
+			transition: background 0.3s;
+		}
+
+		.toggle-switch.active {
+			background: var(--color-primary);
+		}
+
+		.toggle-switch::after {
+			content: '';
+			position: absolute;
+			top: 2px;
+			left: 2px;
+			width: 20px;
+			height: 20px;
+			background: white;
+			border-radius: 50%;
+			transition: transform 0.3s;
+		}
+
+		.toggle-switch.active::after {
+			transform: translateX(26px);
+		}
+	</style>
 </head>
 <body>
-	<!-- header partial will be injected here -->
 
 	<main class="container">
 		<h1>Account Settings</h1>
-		<p>Account settings placeholder.</p>
+
+		<!-- Profile Info -->
+		<div class="settings-section">
+			<div class="profile-info">
+				<div class="profile-avatar">JD</div>
+				<div class="profile-details">
+					<h3>John Doe</h3>
+					<p>john.doe@example.com</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Personal Info -->
+		<div class="settings-section">
+			<h2>Personal Information</h2>
+			<div class="form-group"><label>Username</label><input type="text" value="johndoe123"></div>
+			<div class="form-group"><label>Email Address</label><input type="email" value="john.doe@example.com"></div>
+			<div class="form-group"><label>First Name</label><input type="text" value="John"></div>
+			<div class="form-group"><label>Last Name</label><input type="text" value="Doe"></div>
+			<div class="form-actions">
+				<button class="btn-save">Save Changes</button>
+				<button class="btn-cancel">Cancel</button>
+			</div>
+		</div>
+
+		<!-- Security -->
+		<div class="settings-section">
+			<h2>Security</h2>
+			<div class="form-group"><label>Current Password</label><input type="password"></div>
+			<div class="form-group"><label>New Password</label><input type="password"></div>
+			<div class="form-group"><label>Confirm New Password</label><input type="password"></div>
+			<div class="form-actions">
+				<button class="btn-save">Update Password</button>
+				<button class="btn-cancel">Cancel</button>
+			</div>
+		</div>
+
+		<!-- Preferences -->
+		<div class="settings-section">
+			<h2>Preferences</h2>
+			<div class="form-group">
+				<label>Language</label>
+				<select>
+					<option selected>English</option>
+					<option>Français</option>
+				</select>
+			</div>
+
+			<div class="settings-item">
+				<label>Email Notifications</label>
+				<div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+			</div>
+
+			<div class="settings-item">
+				<label>Push Notifications</label>
+				<div class="toggle-switch active" onclick="toggleSwitch(this)"></div>
+			</div>
+
+			<div class="form-actions">
+				<button class="btn-save">Save Preferences</button>
+				<button class="btn-cancel">Cancel</button>
+			</div>
+		</div>
+
+		<!-- Account Actions -->
+		<div class="settings-section danger-zone">
+			<div class="settings-item">
+				<div>
+					<label>Sign Out</label>
+					<p style="margin:4px 0 0;font-size:0.9rem;color:var(--color-muted)">Sign out of all devices</p>
+				</div>
+				<button class="btn-cancel" onclick="window.location.href='../pages/Login.html'">Sign Out</button>
+			</div>
+
+			<div class="settings-item">
+				<div>
+					<label>Delete Account</label>
+					<p style="margin:4px 0 0;font-size:0.9rem;color:#dc2626;">Permanently delete your account</p>
+				</div>
+				<button class="btn-danger">Delete Account</button>
+			</div>
+		</div>
 	</main>
 
-	<!-- footer partial will be injected here -->
+	<!-- Footer Nav (unchanged) -->
+	<!-- footer partial -->
+	<nav class="bottom-nav">
+		<a href="../pages/Home.html" class="nav-item"><span class="label">Home</span></a>
+		<a href="../pages/Itinerary.html" class="nav-item"><span class="label">Itinerary</span></a>
+		<a href="../pages/Search.html" class="nav-item"><span class="label"><strong>Search</strong></span></a>
+		<a href="../pages/Budget.html" class="nav-item"><span class="label">Budget</span></a>
+		<a href="../pages/Account.html" class="nav-item"><span class="label">Account</span></a>
+	</nav>
 
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
+
+	<script>
+		function toggleSwitch(el) {
+			el.classList.toggle('active');
+		}
+	</script>
 </body>
 </html>

@@ -6,13 +6,58 @@
 	<title>Emergency Info - Prototype</title>
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/emergencyinfo.css">
 </head>
-<body>
+<body style="align-items: center;">
 	<!-- header partial will be injected here -->
 
-	<main class="container">
+	<main class="container" style="align-items: center;">
+
+		<!-- Personal Info Div -->
 		<h1>Emergency Info</h1>
-		<p>Emergency info placeholder.</p>
+		<div id="contact-input">
+			<div class="contact-name" style="display:flex;">
+				<p>Name:</p><input class="name-input" type="text", placeholder="John Smith..."/><br>
+			</div>
+			<div class="contact-phone" style="display:flex;">
+				<p>Phone Num:</p><input class="phone-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
+			</div>
+			<button class="button-save">Save Info</button>
+
+		<!-- Emergency Services Input -->
+		 <div id="search-input-container">
+		 <div class="search-input" style="display:flex;">
+			<p>City:</p><input class="city-input" type="text", placeholder="Calgary..."/><br>
+		 </div>
+		 <div style="display:flex;">
+			<p>Province:</p><input class="province-input" type="text", placeholder="Alberta..."/>
+		 </div>
+		 <div style="display:flex;">
+			<p>Specialty:</p><input class="specialty-input" type="text", placeholder="Children, Cancer Research, etc"/>
+		 </div>
+		 </div>
+		</div>
+
+		<!-- Emergency Services Search Results -->
+		<div class="emergency-search">
+		<button class="button-search">Refresh</button>
+			<div class="search-result">
+				Alberta Children's Hospital
+				<button class="select-btn"> > </button>
+			</div>
+			<div class="search-result">
+				South Health Campus
+				<button class="select-btn"> > </button>
+			</div>
+			<div class="search-result">
+				Foothills Medical Center
+				<button class="select-btn"> > </button>
+			</div>
+			<div class="search-result">
+				Rockyview General Hospital
+				<button class="select-btn"> > </button>
+			</div>
+		</div>
 	</main>
 
 	<!-- footer partial will be injected here -->

@@ -1,23 +1,61 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width,initial-scale=1" />
-	<title>Itinerary (Week) - Prototype</title>
-	<link rel="stylesheet" href="../assets/css/variables.css">
-	<link rel="stylesheet" href="../assets/css/main.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Itinerary (Week) - Prototype</title>
+
+  <!-- Global + shared styles -->
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <!-- Reuse Budget trip-card styles -->
+  <link rel="stylesheet" href="../assets/css/budget.css">
+  <!-- NEW: lightweight styles for week rows -->
+  <link rel="stylesheet" href="../assets/css/itinerary.css">
 </head>
 <body>
-	<!-- header partial will be injected here -->
+  <!-- header partial injected by include.js -->
 
-	<main class="container">
-		<h1>Itinerary (Week)</h1>
-		<p>Week view placeholder.</p>
-	</main>
+  <main class="container">
+    <h1>Itinerary (Week)</h1>
 
-	<!-- footer partial will be injected here -->
+    <!-- LIST of itineraries; one is “expanded” -->
+    <section id="itinerary-list" class="trip-list" aria-label="Itineraries"></section>
 
-	<script src="../assets/js/include.js"></script>
-	<script src="../assets/js/main.js"></script>
+		<!-- Popup: Budget for a single itinerary -->
+	<div id="iw-budget-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="iw-budget-title">
+	<div class="modal__panel">
+		<div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+		<h3 id="iw-budget-title" style="margin:0;">Trip Budget</h3>
+		<button id="iw-budget-close" class="btn btn-secondary" type="button" style="margin-left:auto;">Close</button>
+		</div>
+
+		<div class="budget-wrap">
+		<div class="donut">
+			<svg class="donut-svg" viewBox="0 0 200 200" role="img" aria-labelledby="iwBudgetTitle">
+			<title id="iwBudgetTitle">Budget distribution</title>
+			<circle class="donut-ring" cx="100" cy="100" r="80" />
+			<g id="iw-donut-slices"></g>
+			<g class="donut-center">
+				<text id="iw-donut-remaining-label" x="100" y="88" text-anchor="middle" class="donut-remaining">Remaining:</text>
+				<text id="iw-donut-main" x="100" y="108" text-anchor="middle" class="donut-amount">$0</text>
+				<text id="iw-donut-sub"  x="100" y="130" text-anchor="middle" class="donut-sub">$0 total</text>
+			</g>
+			</svg>
+		</div>
+
+		<div class="legend" id="iw-donut-legend" aria-label="Budget categories"></div>
+		</div>
+	</div>
+	</div>
+
+  </main>
+
+  <!-- footer partial injected by include.js -->
+
+  <script src="../assets/js/include.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <!-- NEW: behavior for the week page -->
+  <script src="../assets/js/itinerary-week.js"></script>
 </body>
 </html>

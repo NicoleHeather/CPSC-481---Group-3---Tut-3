@@ -6,18 +6,111 @@
 	<title>Share - Prototype</title>
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/share.css">
 </head>
 <body>
 	<!-- header partial will be injected here -->
 
 	<main class="container">
-		<h1>Share</h1>
-		<p>Share page placeholder.</p>
+		<h1>Event</h1>
+		<div class="event-share_container">
+            <div class="event-share_header">
+                <p class="event-share_title">Share Event</p>
+            </div>
+            <div class="email-share-container">
+                <div class="email-share-header">
+                    <svg class="mail-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                    <h3 class="email-share-title">Share with friends</h3>
+                </div>
+                
+                <div class="email-input-wrapper">
+                    <input 
+                        type="email" 
+                        id="emailInput" 
+                        class="email-input" 
+                        placeholder="Enter email address"
+                    />
+                    <button class="add-email-button" onclick="addEmail()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                    </button>
+                </div>
+				<div id="exampleContainer" class="example-container">
+                    <p class="example-label">Added Emails:</p>
+                    <div class="email-tags">
+                        <div class="email-tag example-tag">
+                            <span>example1@gmail.com</span>
+                            <button class="remove-email-button" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="email-tag example-tag">
+                            <span>example2@outlook.com</span>
+                            <button class="remove-email-button" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="emailListContainer" class="email-list-container" style="display: none;">
+                    <p class="email-count" id="emailCount">0 recipients:</p>
+                    <div class="email-tags" id="emailTags"></div>
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+            </div>
+            <button class="btn continue-button" onclick="shareEvent()">
+                Share Event
+            </button>
+        </div>
 	</main>
+
+	<div id="successPopup" class="popup-overlay">
+        <div class="success-popup">
+            <div class="success-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <div class="popup-title">Successfully Shared!</div>
+            <p class="popup-message">Your event has been shared with the selected recipients.</p>
+            <button class="btn" onclick="closePopup()">OK</button>
+        </div>
+    </div>
 
 	<!-- footer partial will be injected here -->
 
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
+	
+	<script>
+		function shareEvent() {
+			const popup = document.getElementById('successPopup');
+			popup.classList.add('active');
+		}
+		
+		function closePopup() {
+			const popup = document.getElementById('successPopup');
+			popup.classList.remove('active');
+		}
+		
+		document.getElementById('successPopup').addEventListener('click', function(e) {
+			if (e.target === this) {
+				closePopup();
+			}
+		});
+		
+	</script>
 </body>
 </html>
