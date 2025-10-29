@@ -1,16 +1,3 @@
-* {
-    box-sizing: border-box;
-}
-
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    overflow-x: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f9fafb;
-}
-
 .event-share_container {
     max-width: 48rem;
     margin: 2rem auto;
@@ -209,11 +196,6 @@ html, body {
     margin: 0;
 }
 
-.btn {
-    background-color: #111827;
-    color: white;
-}
-
 .continue-button {
     width: 100%;
     padding: 0.75rem 1.5rem;
@@ -323,7 +305,6 @@ html, body {
     background: #3a5ce5;
 }
 
-/* Responsive design */
 @media (max-width: 640px) {
     .container {
         padding: 0.5rem;
