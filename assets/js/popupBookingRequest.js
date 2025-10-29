@@ -13,12 +13,12 @@ bookingConfirmtButton.addEventListener('click', function () {
     //If the time input is the same as the conflicting event time, show conflict popup.
     if (value == "6:00 PM" || value == "6 PM") {
         bookingConflictForm.style.display = 'flex';
-        background.style.background = 'lightgrey';
-        cardBackground.style.background = 'lightgrey';
+        background.style.background = 'grey';
+        cardBackground.style.background = 'grey';
     }
     else {
         bookingConfrimForm.style.display = 'flex';
-        background.style.background = 'lightgrey';
-        cardBackground.style.background = 'lightgrey';
+        background.style.background = 'grey';
+        cardBackground.style.background = 'grey';
     }
 });
