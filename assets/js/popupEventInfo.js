@@ -5,6 +5,8 @@ const removeButton = document.getElementById('event-remove-btn');
 const removePopupForm = document.getElementById('removePopupForm');
 const background = document.getElementById('whole-page');
 const shareButton = document.getElementById('event-share-btn');
+const modal = document.querySelector('.modal');
+const modal2 = document.querySelector('.modal-2');
 
 // Stored event info
 const currentTitle = document.querySelector('#event-title');
@@ -21,21 +23,14 @@ const timeInput = document.getElementById('time');
 const locationInput = document.getElementById('location');
 const costInput = document.getElementById('cost');
 const descriptionInput = document.getElementById('description');
-const header = document.querySelector('#whole-page');
-const footer = document.getElementsByClassName('.site-footer');
 
 removeButton.addEventListener('click', function () {
     removePopupForm.style.display = 'block';
-    background.style.background = 'grey';
-    //header.style.background = 'lightgrey';
-    //footer.style.background = 'lightgrey';
+    modal2.style.display = 'block';
 });
  
 
 editButton.addEventListener('click', function () {
-
-    console.log(header);
-    console.log(footer);
 
     titleInput.value = currentTitle.textContent;
     dateInput.value = currentDate.textContent;
@@ -45,9 +40,6 @@ editButton.addEventListener('click', function () {
     descriptionInput.value = currentDescription.textContent;
 
     editPopupForm.style.display = 'block';
-    background.style.background = 'grey';
-    header.style.background.color = 'grey';
-
-    //footer.style.background = 'lightgrey';
+    modal.style.display = 'block';
     
 });
