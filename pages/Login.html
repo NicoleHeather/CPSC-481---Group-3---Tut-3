@@ -10,31 +10,36 @@
 </head>
 <body>
   <main class="login-container">
-    <!-- Top quote area (invisible card) - editable in-place -->
-  <div class="quote-card" contenteditable="true" aria-label="Inspirational quote">
-   Plan Less, Explore More<br>
-   <span class="quote-accent">.. Calgary Awaits</span>
-  </div>
+    <!-- Top quote area (moved out of the stack so it sits near the page top) -->
+    <div class="quote-card quote-card--backdrop" contenteditable="true" aria-label="Inspirational quote">
+      Plan Less, Explore More<br>
+      <span class="quote-accent">.. Calgary Awaits</span>
+    </div>
 
-    <div class="card login-card">
-      <!-- Logo image (intrinsic size attributes added to avoid layout shift) -->
-      <div class="logo-img">
-        <img src="../assets/img/full-logo-v2.png" alt="Trips R Us logo" width="720" height="144" class="login-logo">
-      </div>
+    <!-- Stack containing login card so we can offset it independently -->
+    <div class="login-stack">
+      <div class="card login-card">
+        <!-- Logo image (intrinsic size attributes added to avoid layout shift) -->
+        <div class="logo-img">
+          <img src="../assets/img/full-logo-v3.png" alt="Trips R Us logo" width="720" height="144" class="login-logo">
+        </div>
 
-          <!-- Create account / switch to existing -->
-          <button class="btn create-account">Create new account</button>
-          <a href="#" class="muted-link">I already have an account</a>
+        <!-- Create account / switch to existing -->
+        <button class="btn create-account">Create new account</button>
+        <a href="#" class="muted-link">I already have an account</a>
 
-    <!-- Change profile -->
-    <!-- <button class="btn-secondary change-profile">Change Profile</button> -->
+        <!-- Change profile -->
+        <!-- <button class="btn-secondary change-profile">Change Profile</button> -->
 
-    <!-- Login form -->
-    <!-- <form id="login-form" class="login-form">
-      <input type="text" id="username" name="username" placeholder="Username" required />
-      <input type="password" id="password" name="password" placeholder="Password" required />
-      <button type="submit" class="btn login-btn">Login</button>
-    </form> -->
+        <!-- Login form -->
+        <!-- <form id="login-form" class="login-form">
+          <input type="text" id="username" name="username" placeholder="Username" required />
+          <input type="password" id="password" name="password" placeholder="Password" required />
+          <button type="submit" class="btn login-btn">Login</button>
+        </form> -->
+      </div> <!-- end .login-card -->
+
+    </div> <!-- end .login-stack -->
   </main>
 
   <!-- No include.js, no header/footer -->
