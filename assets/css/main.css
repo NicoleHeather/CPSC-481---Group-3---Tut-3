@@ -283,12 +283,6 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
 .icon svg, .icon { width:30px; height:30px; display:block; }
 .search-btn svg { width:30px; height:30px; display:block; fill: currentColor; color: var(--color-primary); }
 
-/* Material Symbols sizing when used inside shortcut tiles */
-.shortcut .material-symbols-outlined { font-size: 30px; line-height: 1; display: block; color: var(--color-primary); }
-
-/* size Material Symbols inside the search button to match visual weight */
-.search-btn .material-symbols-outlined { font-size: 20px; line-height: 1; display:block; color: var(--color-primary); }
-
 /* Keep the small label consistent and legible */
 .shortcut .shortcut-label { color: var(--color-text); font-weight:700; font-size:0.92rem; margin-top:6px; }
 
