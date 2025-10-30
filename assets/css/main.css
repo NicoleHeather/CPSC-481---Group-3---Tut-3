@@ -108,6 +108,27 @@ main.container { padding-bottom: 92px; }
 .site-logo img { display: block; width: 100%; height: auto; }
 .brand-logo { display: inline-block; width: 140px; height: auto; }
 .brand-logo img { display: block; width: 100%; height: auto; }
+
+/* Login page logo sizing */
+.logo-img { text-align: center; margin: 18px 0 22px; }
+.login-logo {
+  display: block;
+  max-width: 100%;
+  /* larger visual size: scales between 220px and 560px for more presence */
+  width: clamp(220px, 36vw, 560px);
+  height: auto; /* preserve intrinsic aspect ratio from width/height attrs */
+  margin: 0 auto;
+}
+
+/* Optionally provide a fixed-height variant if you need a strict header box */
+.login-logo--fixed {
+  width: auto;
+  height: 56px;
+  max-height: 56px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
 .btn-primary { background: var(--color-primary); color: #fff; }
 .btn-secondary { background: var(--color-accent); color: #fff; }
 .btn-black { background: #111; color: #fff; border: none; }

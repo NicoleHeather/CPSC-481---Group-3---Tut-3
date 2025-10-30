@@ -45,16 +45,19 @@
 /* ---------- Logo image ---------- */
 
 .logo-img {
-  width: 140px;
-  height: 140px;
-  margin-top: 40px;
+  /* let the image size be controlled by the image class (responsive) */
+  text-align: center;
+  margin: 18px 0 22px;
 }
 
-
-.logo-img img {
-  width: 90%;
+/* Target the specific login-logo class to avoid forcing a small size */
+.logo-img img.login-logo {
+  display: block;
+  max-width: 100%;
+  width: clamp(220px, 36vw, 560px);
   height: auto;
   object-fit: contain;
+  margin: 0 auto;
 }
 
 
