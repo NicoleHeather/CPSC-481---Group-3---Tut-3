@@ -11,8 +11,6 @@ bookingConfirmtButton.addEventListener('click', function () {
     
     value = time.value;
 
-    console.log(modal);
-
     //If the time input is the same as the conflicting event time, show conflict popup.
     if (value == "6:00 PM" || value == "6 PM") {
         bookingConflictForm.style.display = 'flex';
