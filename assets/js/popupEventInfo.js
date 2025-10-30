@@ -21,7 +21,7 @@ const timeInput = document.getElementById('time');
 const locationInput = document.getElementById('location');
 const costInput = document.getElementById('cost');
 const descriptionInput = document.getElementById('description');
-const header = document.querySelector('header');
+const header = document.querySelector('#whole-page');
 const footer = document.getElementsByClassName('.site-footer');
 
 removeButton.addEventListener('click', function () {
@@ -31,7 +31,6 @@ removeButton.addEventListener('click', function () {
     //footer.style.background = 'lightgrey';
 });
  
-
 
 editButton.addEventListener('click', function () {
 
@@ -47,7 +46,8 @@ editButton.addEventListener('click', function () {
 
     editPopupForm.style.display = 'block';
     background.style.background = 'grey';
-    //header.style.background = 'grey';
+    header.style.background.color = 'grey';
+
     //footer.style.background = 'lightgrey';
     
 });

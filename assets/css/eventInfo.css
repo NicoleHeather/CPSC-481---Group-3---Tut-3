@@ -122,3 +122,9 @@
 .event-options {
     text-align: center;
 }
+
+#whole-page {
+    background-color: grey;
+    z-index: 1;
+    position: relative;
+}
