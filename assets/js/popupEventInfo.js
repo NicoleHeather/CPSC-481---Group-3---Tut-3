@@ -21,14 +21,21 @@ const timeInput = document.getElementById('time');
 const locationInput = document.getElementById('location');
 const costInput = document.getElementById('cost');
 const descriptionInput = document.getElementById('description');
+const header = document.querySelector('#whole-page');
+const footer = document.getElementsByClassName('.site-footer');
 
 removeButton.addEventListener('click', function () {
     removePopupForm.style.display = 'block';
-    background.style.background = 'lightgrey';
+    background.style.background = 'grey';
+    //header.style.background = 'lightgrey';
+    //footer.style.background = 'lightgrey';
 });
  
 
 editButton.addEventListener('click', function () {
+
+    console.log(header);
+    console.log(footer);
 
     titleInput.value = currentTitle.textContent;
     dateInput.value = currentDate.textContent;
@@ -38,5 +45,9 @@ editButton.addEventListener('click', function () {
     descriptionInput.value = currentDescription.textContent;
 
     editPopupForm.style.display = 'block';
-    background.style.background = 'lightgrey';
+    background.style.background = 'grey';
+    header.style.background.color = 'grey';
+
+    //footer.style.background = 'lightgrey';
+    
 });
