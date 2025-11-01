@@ -78,28 +78,12 @@ input {
 }
 
 #submit-info-btn {
-  border-radius: 20px;
-  font-weight: 600;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
-  color: #fff;
-  padding: 12px;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
   width: 85%;
-  border: none;
 }
 
 #booking-request-confirm, #booking-request-conflict-ok, #booking-request-conflict-override, #booking-request-conflict-view-event {
-    background: var(--color-accent);
-    color: white;
-    padding: 15px;
     width: 85%;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 20px;
-    border: none;
-    font-size: large;
+    font-size: "large";
 }
 
 #success-message, #error-message {

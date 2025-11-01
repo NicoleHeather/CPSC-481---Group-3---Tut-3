@@ -6,17 +6,9 @@
 }
 
 #event-remove-btn, #event-edit-btn, #event-share-btn {
-    font-weight: 600;
-    background: var(--color-accent);
-    color: white;
     margin-top: 10%;
-    padding: 12px;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
     width: 100px;
     height: 50px;
-    border-radius: 20px;
 }
 
 #event-date, #event-time, #event-location, #event-cost {
@@ -64,14 +56,8 @@
 }
 
 #cancel-edit, #save-edit {
-    background: var(--color-accent);
-    color: white;
-    border: none;
-    padding: 15px;
     width: 40%;
     height: 80px;
-    font-weight: bold;
-    border-radius: 20px;
     font-size: larger;
 }
 
@@ -103,26 +89,17 @@
 }
 
 #cancel-remove, #yes-remove {
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
     width: 125px;
     height: 50px;
-    border-radius: 20px;
     font-size: x-large;
 }
 
 #cancel-remove {
-    background: var(--color-primary);
-    color: white;
-    border: none;
     margin-right: 10%;
 }
 
 #yes-remove {
     background: green;
-    color: white;
-    border: none;
 }
 
 .event-options {
