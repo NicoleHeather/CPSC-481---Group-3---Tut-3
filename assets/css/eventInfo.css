@@ -7,7 +7,7 @@
 
 #event-remove-btn, #event-edit-btn, #event-share-btn {
     font-weight: 600;
-    background: var(--color-primary);
+    background: var(--color-accent);
     color: white;
     margin-top: 10%;
     padding: 12px;
@@ -72,7 +72,7 @@
     height: 80px;
     font-weight: bold;
     border-radius: 20px;
-    font-size: "xx-large";
+    font-size: larger;
 }
 
 #cancel-edit {
@@ -99,19 +99,17 @@
     border-radius: 20px;
     z-index: 1;
     width: 90%;
-    height: 75%;
+    height: 40%;
 }
 
 #cancel-remove, #yes-remove {
     font-weight: 600;
     cursor: pointer;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
-    margin-top: 10%;
     width: 125px;
-    height: 125px;
+    height: 50px;
     border-radius: 20px;
     font-size: x-large;
-    margin-top: 40%;
 }
 
 #cancel-remove {
