@@ -19,35 +19,36 @@
     <!-- Stack containing login card so we can offset it independently -->
     <div class="login-stack">
       <div class="card login-card">
-        <!-- Logo image (intrinsic size attributes added to avoid layout shift) -->
-        <div class="logo-img">
-          <img src="../assets/img/full-logo-v3.png" alt="Trips R Us logo" width="720" height="144" class="login-logo">
+        <div class="card-header">
+          <!-- Logo image (intrinsic size attributes added to avoid layout shift) -->
+          <div class="logo-img">
+            <img src="../assets/img/full-logo-v3.png" alt="Trips R Us logo" width="720" height="144" class="login-logo">
+          </div>
         </div>
 
-        <!-- Create account / switch to existing -->
-        <button class="btn">Create new account</button>
-        <p><a href="#" class="muted-link">I already have an account</a></p>
+        <div class="card-body">
+          <!-- default state: create account CTA (replaced when toggling) -->
+          <button class="btn btn-large">Create new account</button>
+        </div>
 
-        <!-- Change profile -->
-        <!-- <button class="btn-secondary change-profile">Change Profile</button> -->
-
-        <!-- Login form -->
-        <!-- <form id="login-form" class="login-form">
-          <input type="text" id="username" name="username" placeholder="Username" required />
-          <input type="password" id="password" name="password" placeholder="Password" required />
-          <button type="submit" class="btn login-btn">Login</button>
-        </form> -->
+        <div class="card-footer">
+          <p><a href="#" class="muted-link">I already have an account</a></p>
+        </div>
       </div> <!-- end .login-card -->
 
     </div> <!-- end .login-stack -->
   </main>
 
+  <!-- Template contains the login form so JS can inject it into the card body -->
+  <template id="login-template">
+    <form id="login-form" class="login-form" novalidate>
+      <input type="text" id="username" name="username" placeholder="Username" required autocomplete="username" />
+      <input type="password" id="password" name="password" placeholder="Password" required autocomplete="current-password" />
+      <button type="submit" class="btn btn-large">Login</button>
+    </form>
+  </template>
+
   <!-- No include.js, no header/footer -->
-  <script>
-    document.getElementById('login-form').addEventListener('submit', e => {
-      e.preventDefault();
-      window.location.href = '../pages/Home.html';
-    });
-  </script>
+  <script src="../assets/js/login.js" defer></script>
 </body>
 </html>
