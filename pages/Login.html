@@ -19,35 +19,69 @@
     <!-- Stack containing login card so we can offset it independently -->
     <div class="login-stack">
       <div class="card login-card">
-        <!-- Logo image (intrinsic size attributes added to avoid layout shift) -->
-        <div class="logo-img">
-          <img src="../assets/img/full-logo-v3.png" alt="Trips R Us logo" width="720" height="144" class="login-logo">
+        <div class="card-header">
+          <!-- Logo image (intrinsic size attributes added to avoid layout shift) -->
+          <div class="logo-img">
+            <img src="../assets/img/full-logo-v3.png" alt="Trips R Us logo" width="720" height="144" class="login-logo">
+          </div>
         </div>
 
-        <!-- Create account / switch to existing -->
-        <button class="btn create-account">Create new account</button>
-        <a href="#" class="muted-link">I already have an account</a>
+        <div class="card-body">
+          <!-- default state: create account CTA (replaced when toggling) -->
+          <button class="btn btn-large">Create new account</button>
+        </div>
 
-        <!-- Change profile -->
-        <!-- <button class="btn-secondary change-profile">Change Profile</button> -->
-
-        <!-- Login form -->
-        <!-- <form id="login-form" class="login-form">
-          <input type="text" id="username" name="username" placeholder="Username" required />
-          <input type="password" id="password" name="password" placeholder="Password" required />
-          <button type="submit" class="btn login-btn">Login</button>
-        </form> -->
+        <div class="card-footer">
+          <p><a href="#" class="muted-link">I already have an account</a></p>
+        </div>
       </div> <!-- end .login-card -->
 
     </div> <!-- end .login-stack -->
   </main>
 
+  <!-- Template contains the login form so JS can inject it into the card body -->
+  <template id="login-template">
+      <form id="login-form" class="login-form" novalidate>
+        <div class="form-group">
+          <input type="text" id="username" name="username" placeholder="Username" required autocomplete="username" />
+        </div>
+
+        <div class="form-group">
+          <input type="password" id="password" name="password" placeholder="Password" required autocomplete="current-password" />
+        </div>
+
+        <button type="submit" class="btn btn-large">Login</button>
+
+        <div class="form-row form-help">
+          <p><a href="#" id="forgot-password-trigger" class="muted-link">Forgot password?</a></p>
+        </div>
+      </form>
+  </template>
+
   <!-- No include.js, no header/footer -->
-  <script>
-    document.getElementById('login-form').addEventListener('submit', e => {
-      e.preventDefault();
-      window.location.href = '../pages/Home.html';
-    });
-  </script>
+  
+    <!-- Password reset modal (hidden by default) -->
+    <div id="reset-modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title">
+      <div class="modal-backdrop" data-modal-close></div>
+      <div class="modal-panel" role="document">
+        <header class="modal-header">
+          <h2 id="reset-modal-title">Reset password</h2>
+        </header>
+        <div class="modal-body">
+          <p>Enter the email associated with your account and we'll send a password reset link.</p>
+          <form id="reset-form" novalidate>
+            <div class="form-group">
+              <input type="email" id="reset-email" name="email" placeholder="Email address" required autocomplete="email" />
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-cancel" data-modal-close>Cancel</button>
+              <button type="submit" class="btn btn-large">Send reset link</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/login.js" defer></script>
 </body>
 </html>

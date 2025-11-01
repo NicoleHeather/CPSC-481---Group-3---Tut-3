@@ -9,7 +9,12 @@
   /* align items from the top so we can position the stack precisely */
   justify-content: flex-start;
   gap: 0; /* gap will be handled by the internal stack */
-  min-height: 100vh;
+  /* fix the container to the viewport and prevent scrolling caused by visual transforms
+     (transforms can visually move elements outside the viewport and create scrollbars).
+     Use box-sizing so padding is included in the 100vh height. */
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
   background: var(--color-bg);
   /* increase top padding to move both quote and card downward; keep some bottom padding */
   padding: 12vh 12px 10vh 12px;
@@ -83,10 +88,19 @@
      or the pseudo-element background size/position. Transforms do not resize
      or reflow the background-image on the container's ::before pseudo. */
   --login-stack-offset: clamp(10vh, 13vh, 18vh);
-  transform: translateY(calc(44vh));
+  /* pull the stack up slightly so the card sits higher on the viewport */
+  transform: translateY(calc(38vh));
+  transition: transform 260ms ease;
   will-change: transform;
   gap: clamp(0.12rem, 0.9vh, 0.45rem);
   width: 100%;
+}
+
+/* When the login form is visible, pull the card upward so users don't need to scroll */
+.login-stack.has-form {
+  /* also move the stack up a bit when the form is visible so it remains fully visible
+     without needing to scroll on smaller viewports */
+  transform: translateY(calc(20vh));
 }
 .quote-card:focus {
   box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.12);
@@ -156,7 +170,7 @@
   /* let the image size be controlled by the image class (responsive) */
   text-align: center;
   /* reduced bottom spacing so the button sits closer to the logo */
-  margin: 8px 0 8px; /* top right bottom */
+  margin: 6px 0 6px; /* top right bottom - slightly tighter */
   overflow: visible; /* allow the scaled image to overflow without clipping */
 }
 
@@ -177,85 +191,281 @@
 
 /* Plain card variant for login form: use site's card padding but remove shadow/border for a plain look */
 .login-card {
-  background: var(--color-surface);
+  /* Use a neutral, off-white background instead of any blue-tinted surface
+     to keep the card visually neutral against the hero image. */
+  background: var(--color-bg);
   box-shadow: none;
   border: none;
-  padding: 14px; /* reduced padding to fit content */
+  /* tighten padding so the card closely fits its inner controls */
+  padding: 10px 12px;
   border-radius: 12px;
   width: 92%;
   max-width: 520px;
   box-sizing: border-box;
   margin: 0 auto; /* keep horizontally centered */
-  /* center as part of the stacked group; small bottom margin for breathing room */
-  margin: 0 auto;
-  margin-bottom: clamp(3vh, 6vh, 10vh);
+  /* reduce bottom breathing room so card sits closer to the quote/header */
+  margin-bottom: clamp(2vh, 4vh, 6vh);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0px; /* slightly reduced gap inside card to tighten vertical spacing */
+  gap: 6px; /* slightly tighter gap inside card to fit elements */
 }
+
+/* Card body / footer layout for the login card */
+.login-card .card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 0 6px;
+}
+.login-stack.has-form .login-card { margin-bottom: clamp(2vh,4vh,6vh); }
+.login-card .card-footer {
+  padding: 8px 6px 12px 6px;
+}
+.login-card .card-footer p { margin: 0; }
+
+/* Hide the login form by default; show when the card has .is-login */
+/* The login form will be injected into .card-body; ensure it displays correctly there */
+/* Form-specific styles removed: inputs and form-layout are handled by main.css */
+
+
+/* Buttons and form visuals are handled globally in main.css; login-specific button/form styles removed. */
+/* Keep only hero/layout styles in this file. */
+/* ==========================================================================
+   Login Page Styles — Trips R Us Prototype
+   ========================================================================== */
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* align items from the top so we can position the stack precisely */
+  justify-content: flex-start;
+  gap: 0; /* gap will be handled by the internal stack */
+  /* fix the container to the viewport and prevent scrolling caused by visual transforms
+     (transforms can visually move elements outside the viewport and create scrollbars).
+     Use box-sizing so padding is included in the 100vh height. */
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: var(--color-bg);
+  /* increase top padding to move both quote and card downward; keep some bottom padding */
+  padding: 12vh 12px 10vh 12px;
+  text-align: center;
+}
+
+/* Background image behind the login content with 60% opacity */
+.login-container {
+  position: relative; /* establish stacking context for the pseudo element */
+}
+.login-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* layered background: subtle gray tint, then a tuned top gradient for contrast,
+     then the hero image. Ensure the pseudo-element spans the viewport to avoid
+     thin seams at the edge (use fixed inset and cover). */
+  content: "";
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  pointer-events: none;
+  z-index: -1;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  background:
+    linear-gradient(rgba(100,100,100,0.12), rgba(100,100,100,0.12)),
+    linear-gradient(rgba(0,0,0,0.56) 0%, rgba(0,0,0,0.36) 30%, rgba(0,0,0,0.12) 60%, rgba(0,0,0,0) 85%),
+    url("../img/login-background-2.png");
+  opacity: 0.85;
+  background-size: cover, cover;
+  background-position: top center, center center;
+  background-repeat: no-repeat, no-repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ensure direct children render above the background */
+.login-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Top quote area (invisible card) ---------- */
+.quote-card {
+  /* match the login card width so both elements align visually */
+  --quote-top-offset: clamp(0.5vh, 1.5vh, 3vh);
+  width: 92%;
+  max-width: 520px;
+  margin: 0 auto;
+  color: #fff;
+  text-align: center;
+  font-size: clamp(1.6rem, 3.5vw, 1.8rem);
+  font-weight: 600;
+  line-height: 1.15;
+  background: transparent; /* invisible card */
+  padding: 8px 16px;
+  border-radius: 12px;
+  /* move the quote up by 10vh relative to the default top offset */
+  margin-top: calc(var(--quote-top-offset) - 8vh);
+  /* allow the author to type but keep it visually minimal */
+  outline: none;
+  /* subtle text-shadow for the main quote line to improve contrast without a backdrop */
+  text-shadow: 0 4px 14px rgba(0,0,0,0.5);
+}
+.login-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Use transform to move the stack visually without affecting document flow
+     or the pseudo-element background size/position. Transforms do not resize
+     or reflow the background-image on the container's ::before pseudo. */
+  --login-stack-offset: clamp(10vh, 13vh, 18vh);
+  /* pull the stack up slightly so the card sits higher on the viewport */
+  transform: translateY(calc(38vh));
+  transition: transform 260ms ease;
+  will-change: transform;
+  gap: clamp(0.12rem, 0.9vh, 0.45rem);
+  width: 100%;
+}
+
+/* When the login form is visible, pull the card upward so users don't need to scroll */
+.login-stack.has-form {
+  /* also move the stack up a bit when the form is visible so it remains fully visible
+     without needing to scroll on smaller viewports */
+  transform: translateY(calc(20vh));
+}
+.quote-card:focus {
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.12);
+}
+
+/* Optional helper: if contrast is still low on some images, apply a subtle translucent backdrop
+   by adding the `.quote-card--backdrop` class to the element (keeps the card visually 'invisible'
+   while improving readability). */
+.quote-card--backdrop {
+  /* Temporarily disabled backdrop: keep rules here for easy re-enable. */
+  background: transparent; /* was rgba(0,0,0,0.35) */
+  padding: 12px 18px;
+  border-radius: 14px;
+  backdrop-filter: none; /* blur disabled */
+  -webkit-backdrop-filter: none;
+  box-shadow: none; /* remove box shadow */
+  z-index: 1;
+}
+
+/* ---------- Quote accent (secondary line) ---------- */
+.quote-accent {
+  display: block; /* place on its own line */
+  margin-top: 6px;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 4.4vw, 2rem);
+  letter-spacing: 0.6px;
+  text-transform: none; /* keep original casing */
+  text-shadow: 0 6px 22px rgba(0,0,0,0.66), 0 1px 0 rgba(255,255,255,0.02);
+}
+
+/* ---------- Brand Banner ---------- */
+.brand-banner {
+  font-size: clamp(1rem, 3.5vw, 1.6rem);
+  line-height: 1.15;
+  opacity: 0.98;
+  margin-bottom: 40px;
+}
+
+.banner-shape {
+  background: var(--color-primary);
+  /* improve readability on busy photos */
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  text-shadow: 0 6px 18px rgba(0,0,0,0.62), 0 1px 0 rgba(255,255,255,0.02);
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(0 0, 100% 0, 70% 70%, 30% 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-name {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.brand-name span {
+  color: var(--color-accent);
+}
+
+/* ---------- Logo image ---------- */
+
+.logo-img {
+  /* let the image size be controlled by the image class (responsive) */
+  text-align: center;
+  /* reduced bottom spacing so the button sits closer to the logo */
+  margin: 6px 0 6px; /* top right bottom - slightly tighter */
+  overflow: visible; /* allow the scaled image to overflow without clipping */
+}
+
+/* Target the specific login-logo class to avoid forcing a small size */
+.logo-img img.login-logo {
+  display: block;
+  max-width: 100%;
+  /* balanced visual size */
+  width: clamp(180px, 34vw, 520px);
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto;
+  /* visually scale the logo by 25% while keeping layout flow intact */
+  /* transform: scale(1.12); */
+  transform-origin: center top;
+  will-change: transform;
+}
+
+/* Plain card variant for login form: use site's card padding but remove shadow/border for a plain look */
+.login-card {
+  /* Use a neutral, off-white background instead of any blue-tinted surface
+     to keep the card visually neutral against the hero image. */
+  background: var(--color-bg);
+  box-shadow: none;
+  border: none;
+  /* tighten padding so the card closely fits its inner controls */
+  padding: 10px 12px;
+  border-radius: 12px;
+  width: 92%;
+  max-width: 520px;
+  box-sizing: border-box;
+  margin: 0 auto; /* keep horizontally centered */
+  /* reduce bottom breathing room so card sits closer to the quote/header */
+  margin-bottom: clamp(2vh, 4vh, 6vh);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px; /* slightly tighter gap inside card to fit elements */
+}
+
+/* Card body / footer layout for the login card */
+.login-card .card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 0 6px;
+}
+.login-stack.has-form .login-card { margin-bottom: clamp(2vh,4vh,6vh); }
+.login-card .card-footer {
+  padding: 8px 6px 12px 6px;
+}
+.login-card .card-footer p { margin: 0; }
+
+/* Hide the login form by default; show when the card has .is-login */
+/* The login form will be injected into .card-body; ensure it displays correctly there */
+/* Form-specific rules removed (main.css now controls inputs and buttons) */
 
 
 /* ---------- Buttons / Form ---------- */
-.change-profile {
-  border-radius: 20px;
-  margin-bottom: 8px;
-  background: #e5e5e5;
-  padding: 8px 14px;
-  border: none;
-  font-weight: 600;
-  color: var(--color-text);
-  cursor: pointer;
-}
-
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  max-width: 360px; /* allow slightly wider inputs inside the card */
-  margin-top: 6px;
-}
-
-.login-form input {
-  border: none;
-  background: #e5e5e5;
-  border-radius: 20px;
-  padding: 12px;
-  text-align: center;
-  font-size: 1rem;
-}
-
-.login-btn {
-  border-radius: 20px;
-  font-weight: 600;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
-  color: #fff;
-  padding: 12px;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.login-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.16);
-}
-
-/* Create-account primary button inside the card */
-.create-account {
-  width: 100%;
-  display: inline-block;
-  padding: 12px 18px;
-  border-radius: 28px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
-  color: #fff;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  box-shadow: none;
-}
-.create-account:active { transform: translateY(1px); }
+/* Buttons and form visuals are handled globally in main.css; login-specific button styles removed. */
 
 .muted-link {
   display: inline-block;
