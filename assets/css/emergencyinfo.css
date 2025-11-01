@@ -38,7 +38,7 @@
 .button-save {
   border-radius: 20px;
   font-weight: 600;
-  background: var(--color-primary);
+  background: var(--color-accent);
   color: #fff;
   padding: 12px 24px;
   border: none;
@@ -52,7 +52,7 @@
 .button-search {
   border-radius: 20px;
   font-weight: 600;
-  background: var(--color-primary);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
   color: #fff;
   padding: none;
   border: none;
