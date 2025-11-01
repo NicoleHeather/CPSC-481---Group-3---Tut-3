@@ -174,7 +174,7 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
 /* Hide overflow and restrict touch to vertical pans so horizontal swipes go to the carousel JS */
 .trip-stack { overflow: hidden; touch-action: pan-y; }
 .trip-slide .trip-hero img { width:100%; height:220px; object-fit:cover; display:block; }
-.carousel-dots { display:flex; gap:6px; justify-content:center; padding:8px; }
+.carousel-dots { display:flex; gap:6px; justify-content:center; padding:0px; }
 .carousel-dots button {
   /* enforce exact square sizing and remove native button chrome so circles are perfect */
   width:10px;
@@ -210,29 +210,29 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
 
 .quick-actions { display: grid; gap: 12px; margin-top: 1rem; }
 
-.search-compact { position: relative; display:block; }
-.search-compact input[type="search"] { width:100%; padding: 10px 44px 10px 12px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.06); background: #fff; box-shadow: none; font-size: 0.95rem; }
+.search-compact { position: relative; display:block; /* ensure the wrapper enforces a single rounded corner */ border-radius: 12px; overflow: hidden; }
+.search-compact input[type="search"] { width:100%; padding: 10px 44px 10px 12px; border-radius: 0; border: 1px solid rgba(0,0,0,0.06); background: #fff; box-shadow: none; font-size: 0.95rem; }
 .search-compact input[type="search"]:focus { outline: 3px solid rgba(200,127,39,0.08); outline-offset: 2px; }
 .search-btn {
   position: absolute;
   right: 0; /* attach to the input's right edge */
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
   width: 44px; /* match input right padding space */
-  height: calc(100% - 10px);
-  border-radius: 0 8px 8px 0; /* round only the right side */
+  height: 100%;
+  border-radius: 0; /* let the wrapper control the outer rounding */
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: var(--color-surface);
   color: var(--color-primary);
-  border: 1px solid rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.06);
   border-left: none; /* visually join with input */
   font-size: 16px;
   box-shadow: 0 10px 26px rgba(0,0,0,0.08);
   cursor: pointer;
   transition: transform .14s ease, box-shadow .14s ease, border-color .12s ease;
   z-index: 2;
+  box-sizing: border-box;
 }
 .search-btn:hover {
   transform: translateY(-6px);
@@ -244,11 +244,11 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
   box-shadow: 0 18px 40px rgba(0,0,0,0.12);
 }
 .search-btn:active { transform: translateY(1px); box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
-.search-btn svg { width:20px; height:20px; display:block; fill: currentColor; }
+.search-btn svg { width:30px; height:30px; display:block; fill: currentColor; }
 
 /* make the input look connected to the button: remove right border and round left corners only */
 .search-compact input[type="search"] {
-  border-radius: 8px 0 0 8px;
+  border-radius: 12px 0 0 12px;
   border-right: none;
 }
 
@@ -258,7 +258,7 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
 
 .shortcut-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .shortcut { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:12px 8px; border-radius:10px; background: #fff; border:1px solid rgba(0,0,0,0.04); color:var(--color-text); font-weight:600; transition: transform .12s ease, box-shadow .12s ease; }
-.shortcut .icon { font-size:20px; line-height:1; }
+.shortcut .icon { font-size:30px; line-height:1; }
 .shortcut .shortcut-label { display:block; margin-top:6px; font-size:0.92rem; }
 .shortcut:active { transform: translateY(1px); }
 
@@ -271,13 +271,15 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
   /* Use the page background as the card shell so inner tiles (white) pop visually */
   padding: 10px;
   background: var(--color-bg);
+  /* very light tint of the primary color to subtly separate the card shell */
+  /* background: rgba(var(--color-primary-rgb), 0.05); */
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.04);
   border: 1px solid rgba(0,0,0,0.03);
 }
 .shortcuts-card .card-header { padding: 6px 8px 10px; }
 .shortcuts-card .card-header h3 { margin:0; font-size: 0.95rem; font-weight:700; color:var(--color-text); }
-.shortcuts-card .card-body { padding: 6px 6px 12px; }
+.shortcuts-card .card-body { padding: 6px 6px 12px; display: grid; gap: 8px; }
 
 /* Make inner shortcut tiles visibly pop against the card shell: white surface, outline & hover lift */
 .shortcuts-card .shortcut {
@@ -297,11 +299,17 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
 }
 
 /* Make icon color match the brand accent so it reads clearly */
-.shortcut .icon { width:20px; height:20px; display:block; color: var(--color-primary); }
+.shortcut .icon { width:30px; height:30px; display:block; color: var(--color-primary); }
 
 /* Generic SVG sizing/coloring: fill/stroke use currentColor */
-.icon svg, .icon { width:20px; height:20px; display:block; }
-.search-btn svg { width:20px; height:20px; display:block; fill: currentColor; color: var(--color-primary); }
+.icon svg, .icon { width:30px; height:30px; display:block; }
+.search-btn svg { width:30px; height:30px; display:block; fill: currentColor; color: var(--color-primary); }
+
+/* Material Symbols sizing when used inside shortcut tiles */
+.shortcut .material-symbols-outlined { font-size: 30px; line-height: 1; display: block; color: var(--color-primary); }
+
+/* size Material Symbols inside the search button to match visual weight */
+.search-btn .material-symbols-outlined { font-size: 20px; line-height: 1; display:block; color: var(--color-primary); }
 
 /* Keep the small label consistent and legible */
 .shortcut .shortcut-label { color: var(--color-text); font-weight:700; font-size:0.92rem; margin-top:6px; }
