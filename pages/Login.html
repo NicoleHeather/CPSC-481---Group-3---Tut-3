@@ -51,10 +51,37 @@
         </div>
 
         <button type="submit" class="btn btn-large">Login</button>
+
+        <div class="form-row form-help">
+          <p><a href="#" id="forgot-password-trigger" class="muted-link">Forgot password?</a></p>
+        </div>
       </form>
   </template>
 
   <!-- No include.js, no header/footer -->
-  <script src="../assets/js/login.js" defer></script>
+  
+    <!-- Password reset modal (hidden by default) -->
+    <div id="reset-modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title">
+      <div class="modal-backdrop" data-modal-close></div>
+      <div class="modal-panel" role="document">
+        <header class="modal-header">
+          <h2 id="reset-modal-title">Reset password</h2>
+        </header>
+        <div class="modal-body">
+          <p>Enter the email associated with your account and we'll send a password reset link.</p>
+          <form id="reset-form" novalidate>
+            <div class="form-group">
+              <input type="email" id="reset-email" name="email" placeholder="Email address" required autocomplete="email" />
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn btn-cancel" data-modal-close>Cancel</button>
+              <button type="submit" class="btn btn-large">Send reset link</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/js/login.js" defer></script>
 </body>
 </html>

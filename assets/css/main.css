@@ -605,6 +605,23 @@ select:-moz-autofill {
   -moz-text-fill-color: var(--color-text) !important;
 }
 
+/* ---------------------------------------------------------------------------
+   Modal (password reset) styles
+   Kept intentionally lightweight and responsive. Scoped to a single modal id
+   in the Login page to avoid interfering with other UI components.
+   --------------------------------------------------------------------------- */
+.modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 9999; }
+.modal.open, .modal[aria-hidden="false"] { display: flex; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.46); }
+.modal-panel { position: relative; background: var(--color-surface); border-radius: 12px; max-width: 520px; width: calc(100% - 32px); margin: 16px; box-shadow: 0 30px 80px rgba(0,0,0,0.38); z-index: 2; padding: 18px; }
+.modal-header h2 { margin: 0 0 8px 0; font-size: 1.125rem; }
+.modal-body { color: var(--color-text); }
+.modal .form-group input { width: 100%; }
+.modal .form-actions { display:flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+.modal .btn-cancel { background: transparent; border: 2px solid rgba(0,0,0,0.06); }
+.modal .btn-large { min-width: 160px; }
+
+
 
 
 
