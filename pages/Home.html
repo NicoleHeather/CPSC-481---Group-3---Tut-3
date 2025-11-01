@@ -14,14 +14,14 @@
   <main class="container">
     <section class="content">
       <div class="section-header">
-        <h2>Upcoming Trips</h2>
+        <h2>Upcoming Itineraries</h2>
       </div>
 
-      <div id="upcoming-trips" class="trip-carousel-outer" role="list" aria-roledescription="carousel" aria-label="Upcoming trips">
+      <div id="upcoming-trips" class="trip-carousel-outer" role="list" aria-roledescription="carousel" aria-label="Upcoming itineraries">
         <!-- Trip slides will be rendered here by assets/js/home.js -->
       </div>
 
-  <div id="upcoming-trips-dots" class="carousel-dots" aria-hidden="false"></div>
+  <div id="upcoming-trips-dots" class="carousel-dots" aria-hidden="false" aria-label="Upcoming itineraries pager"></div>
     </section>
 
     <section class="quick-actions" aria-labelledby="qa-heading">
@@ -68,7 +68,7 @@
 
   <!-- footer partial will be injected here -->
   <!-- Floating action button: Add Event -->
-  <button id="add-event" class="fab" aria-label="Add Event" title="Add Event">＋</button>
+  <button id="add-event" class="fab" aria-label="Create Event" title="Create Event">＋</button>
 
   <!-- FAB panel (bottom-sheet on mobile, side-panel on desktop) -->
   <div id="fab-panel-overlay" class="sheet-overlay" aria-hidden="true"></div>
@@ -80,8 +80,8 @@
     </div>
     <div class="fab-panel-content">
       <div class="panel-actions">
-        <button id="open-add-trip-btn" class="btn btn-large btn-primary">Add Trip</button>
-        <button id="open-add-event-btn" class="btn btn-large btn-secondary">Add Event</button>
+  <button id="open-add-trip-btn" class="btn btn-large btn-primary">Create Itinerary</button>
+  <button id="open-add-event-btn" class="btn btn-large btn-secondary">Create Event</button>
       </div>
     </div>
   </div>
