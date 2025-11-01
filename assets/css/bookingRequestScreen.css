@@ -35,7 +35,7 @@
     border: none;
     z-index: 1;
     width: 85%;
-    height: 75%;
+    height: 50%;
     border-radius: 20px;
 }
 
@@ -57,7 +57,7 @@
     padding: 20px;
     z-index: 1;
     width: 85%;
-    height: 75%;
+    height: 60%;
     border-radius: 20px;
 }
 
@@ -91,7 +91,7 @@ input {
 }
 
 #booking-request-confirm, #booking-request-conflict-ok, #booking-request-conflict-override, #booking-request-conflict-view-event {
-    background: var(--color-primary);
+    background: var(--color-accent);
     color: white;
     padding: 15px;
     width: 85%;
@@ -99,6 +99,7 @@ input {
     font-weight: bold;
     border-radius: 20px;
     border: none;
+    font-size: large;
 }
 
 #success-message, #error-message {
