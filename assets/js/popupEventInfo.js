@@ -36,6 +36,7 @@ editButton.addEventListener('click', function () {
     dateInput.value = currentDate.textContent;
     timeInput.value = currentTime.textContent;
     locationInput.value = currentLocation.textContent;
+    
     costInput.value = currentCost.textContent;
     descriptionInput.value = currentDescription.textContent;
 
