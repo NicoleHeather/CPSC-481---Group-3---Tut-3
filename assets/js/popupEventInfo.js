@@ -34,17 +34,9 @@ editButton.addEventListener('click', function () {
 
     titleInput.value = currentTitle.textContent;
     dateInput.value = currentDate.textContent;
-
-    dateInput.style.color = 'grey';
-
     timeInput.value = currentTime.textContent;
-
-    timeInput.style.color = 'grey';
-
     locationInput.value = currentLocation.textContent;
-
-    locationInput.style.color = 'grey';
-
+    
     costInput.value = currentCost.textContent;
     descriptionInput.value = currentDescription.textContent;
 
