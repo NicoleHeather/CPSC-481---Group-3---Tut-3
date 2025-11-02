@@ -1,14 +1,35 @@
+.event {
+    border-radius: 0.5rem;
+    box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    padding: 1rem;
+    background-color: #f9fafb;
+}
+
 #event-remove-btn, #event-edit-btn, #event-share-btn {
-    font-weight: 600;
-    background: var(--color-primary);
-    color: white;
-    margin-top: 120px;
-    padding: 12px;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-    width:100px;
-    border-radius: 20px;
+    margin-top: 10%;
+    width: 100px;
+    height: 50px;
+}
+
+#event-date, #event-time, #event-location, #event-cost {
+    margin-top: 1%;
+}
+
+#title, #date, #time, #location, #cost, #description {
+    color: black;
+    border: grey solid, 1px;
+}
+
+#title, #date, #time, #location, #cost {
+    padding: 1px;
+    text-align: center;
+    font-size: 1rem;
+    width: 60%;
+    border-radius: 10px;
+}
+
+#event-description {
+    margin-top: 1%;
 }
 
 #editPopupForm {
@@ -26,20 +47,22 @@
     text-align: start;
 }
 
-#editPopupForm form input {
-    border-radius: none;
-    padding: 5p
+#description {
+    width: 90%;
+    height: 200px;
+    border-radius: 10px;
+    text-align: start;
+    font-family: Verdana;
 }
 
 #cancel-edit, #save-edit {
-    background: var(--color-primary);
-    color: white;
-    border: none;
-    padding: 15px;
-    width: 30%;
+    width: 40%;
     height: 80px;
-    font-weight: bold;
-    border-radius: 20px;
+    font-size: larger;
+}
+
+#cancel-edit {
+    margin-left: 17%;
 }
 
 #edit-buttons {
@@ -47,10 +70,6 @@
     text-align: center;
     align-items: center;
     border-radius: 20px;
-}
-
-#description {
-    width: 80%;
 }
 
 #removePopupForm {
@@ -65,36 +84,38 @@
     padding: 20px;
     border-radius: 20px;
     z-index: 1;
-    width: 85%;
-    height: 25%;
+    width: 90%;
+    height: 40%;
 }
 
 #cancel-remove, #yes-remove {
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-    margin-top: 10%;
-    border-radius: 20px;
+    width: 125px;
+    height: 50px;
+    font-size: x-large;
 }
 
 #cancel-remove {
-    background: var(--color-primary);
-    color: white;
-    border: none;
-    padding: 15px;
-    width: 100px;
-    height: 100px;
+    margin-right: 10%;
 }
 
 #yes-remove {
     background: green;
-    color: white;
-    border: none;
-    padding: 15px;
-    width: 100px;
-    height: 100px;
 }
 
 .event-options {
     text-align: center;
+}
+
+.modal, .modal-2 {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 9999; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }

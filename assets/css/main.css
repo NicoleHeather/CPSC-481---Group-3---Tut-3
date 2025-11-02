@@ -11,6 +11,9 @@ body {
   line-height: 1.4;
 }
 
+/* Prevent accidental horizontal page scroll when swiping carousels */
+html, body { overflow-x: hidden; }
+
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -43,6 +46,19 @@ body {
 .btn:active { transform: translateY(0); box-shadow: 0 6px 12px rgba(0,0,0,0.06); }
 .hidden { display:none !important; }
 
+/* Buttons, pills and bottom-nav: keep stable text color (no global-link hover overrides) */
+.btn, .btn:visited, .btn:hover, .btn:focus, .btn:active {
+  color: white;
+}
+
+.pill, .pill:visited, .pill:hover, .pill:focus, .pill:active {
+  color: inherit;
+}
+
+.bottom-nav .nav-item, .bottom-nav .nav-item:visited, .bottom-nav .nav-item:hover, .bottom-nav .nav-item:active, .bottom-nav .nav-item:focus {
+  color: #ffffff;
+}
+
 /* Header small layout */
 .header-inner { display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .header-left, .header-right { width:40px; display:flex; align-items:center; }
@@ -63,10 +79,11 @@ h1::after { content: ''; position: absolute; left:0; bottom:-10px; width:48px; h
 /* Bottom navigation */
 
 .bottom-nav { position:fixed; left:0; right:0; bottom:0; display:flex; justify-content:space-around; align-items:center; background: var(--color-primary); color: #fff; padding: calc(3px + env(safe-area-inset-bottom)) 8px calc(3px + env(safe-area-inset-bottom)); z-index: 50; box-shadow: 0 -6px 18px rgba(0,0,0,0.18); border-top: 1px solid rgba(0,0,0,0.08); box-sizing: border-box; overflow-x: hidden; width: 100%; }
-.bottom-nav .nav-item { text-decoration:none; color: #ffffff; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:12px; gap:0px; padding:4px 10px; border-radius:8px; flex:0 1 auto; margin:0 4px; min-width: 0; }
+.bottom-nav .nav-item { text-decoration:none; color: #ffffff; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:12px; gap:6px; padding:4px 10px; border-radius:8px; flex:0 1 auto; margin:0 4px; min-width: 0; text-align: center; }
 .bottom-nav .nav-item:active { opacity:0.96; transform: translateY(0.5px); }
+.bottom-nav .nav-item .icon { display:flex; align-items:center; justify-content:center; width:28px; height:28px; }
 .bottom-nav .nav-item .icon svg { width:28px; height:28px; color: #ffffff; filter: drop-shadow(0 1px 0 rgba(0,0,0,0.12)); }
-.bottom-nav .nav-item .label { display:block; color: rgba(255,255,255,0.98); font-size:13px; font-weight:600; }
+.bottom-nav .nav-item .label { display:block; color: rgba(255,255,255,0.98); font-size:13px; font-weight:600; margin:0; line-height:1; }
 
 /* avoid content being hidden under bottom nav */
 main.container { padding-bottom: 92px; }
@@ -92,6 +109,27 @@ main.container { padding-bottom: 92px; }
 .site-logo img { display: block; width: 100%; height: auto; }
 .brand-logo { display: inline-block; width: 140px; height: auto; }
 .brand-logo img { display: block; width: 100%; height: auto; }
+
+/* Login page logo sizing */
+.logo-img { text-align: center; margin: 18px 0 22px; }
+.login-logo {
+  display: block;
+  max-width: 100%;
+  /* larger visual size: scales between 220px and 560px for more presence */
+  width: clamp(220px, 36vw, 560px);
+  height: auto; /* preserve intrinsic aspect ratio from width/height attrs */
+  margin: 0 auto;
+}
+
+/* Optionally provide a fixed-height variant if you need a strict header box */
+.login-logo--fixed {
+  width: auto;
+  height: 56px;
+  max-height: 56px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
 .btn-primary { background: var(--color-primary); color: #fff; }
 .btn-secondary { background: var(--color-accent); color: #fff; }
 .btn-black { background: #111; color: #fff; border: none; }
@@ -112,8 +150,478 @@ main.container { padding-bottom: 92px; }
 .event-card__subtitle { margin: 0; font-size: .85rem; opacity: .9; }
 .price-badge { position:absolute; top: .6rem; right: .6rem; background: rgba(255,255,255,.92); color: #000; padding: .25rem .5rem; border-radius: .4rem; font-weight:700; }
 
-/* Global link styles */
+/* Global link styles (only affect regular links, not UI buttons/pills) */
 a { color: #000; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-a:hover { color: var(--color-accent); text-decoration: none; }
-a:focus { outline: 3px solid rgba(200,127,39,0.16); outline-offset: 3px; }
+/* only change hover/focus for links that are not styled UI elements */
+a:not(.btn):not(.pill):hover { color: var(--color-accent); text-decoration: none; }
+a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline-offset: 3px; }
+
+/* Home / Trip card carousel styles */
+.trip-carousel-outer { padding:0; }
+
+/* Stacked card layout: slides positioned on top of each other and offset to the right for next cards */
+.trip-stack { position: relative; width: 100%; height: 320px; display:block; }
+.trip-stack .trip-slide { position:absolute; left:50%; top:0; transform: translateX(-50%) scale(1); width:86%; transition: transform .36s cubic-bezier(.2,.9,.2,1), opacity .36s ease; box-shadow: 0 12px 30px rgba(0,0,0,0.12); border-radius:12px; overflow:hidden; border:1px solid rgba(0,0,0,0.04); background: var(--color-surface); }
+.trip-stack .trip-slide img { display:block; width:100%; height:220px; object-fit:cover; }
+.trip-stack .trip-slide.active { z-index: 40; transform: translateX(-50%) scale(1); opacity:1; }
+.trip-stack .trip-slide.next { z-index: 30; transform: translateX(22%) scale(.96); opacity:1; }
+.trip-stack .trip-slide.next2 { z-index: 20; transform: translateX(50%) scale(.92); opacity:0.95; }
+.trip-stack .trip-slide.prev { z-index: 20; transform: translateX(-82%) scale(.92); opacity:0.9; }
+.trip-stack .trip-slide.inactive { z-index: 5; opacity:0; transform: translateX(120%) scale(.9); }
+
+/* Make container touch-friendly */
+.trip-stack { -webkit-user-select:none; -ms-user-select:none; user-select:none; -webkit-touch-callout:none; }
+/* Hide overflow and restrict touch to vertical pans so horizontal swipes go to the carousel JS */
+.trip-stack { overflow: hidden; touch-action: pan-y; }
+.trip-slide .trip-hero img { width:100%; height:220px; object-fit:cover; display:block; }
+.carousel-dots { display:flex; gap:6px; justify-content:center; padding:0px; }
+.carousel-dots button {
+  /* enforce exact square sizing and remove native button chrome so circles are perfect */
+  width:10px;
+  height:10px;
+  min-width:10px;
+  min-height:10px;
+  padding:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  line-height:0;
+  border-radius:50%;
+  background:#ddd;
+  border:0;
+  appearance:none;
+  -webkit-appearance:none;
+}
+.carousel-dots button.active { background:var(--color-primary); }
+.trip-body { padding:12px; }
+.trip-body h3 { margin:0 0 6px; font-size:1rem; }
+.trip-dates { margin:0; font-size:.9rem; color:var(--color-muted); }
+.pill { background: #f2f4f6; border: 1px solid rgba(0,0,0,.06); padding:8px 10px; border-radius:999px; font-weight:600; }
+.pill:active, .pill:focus { transform: translateY(1px); }
+
+/* make sure main content is not covered by bottom nav on small screens */
+@media (max-width:700px) {
+  main.container { padding-bottom: 120px; }
+}
+
+/* Quick actions / compact search + shortcuts (match existing site styles) */
+.full-width { width: 100%; display: block; }
+
+.quick-actions { display: grid; gap: 12px; margin-top: 1rem; }
+
+.search-compact { position: relative; display:block; /* ensure the wrapper enforces a single rounded corner */ border-radius: 12px; overflow: hidden; }
+.search-compact input[type="search"] { width:100%; padding: 10px 44px 10px 12px; border-radius: 0; border: 1px solid rgba(0,0,0,0.06); background: #fff; box-shadow: none; font-size: 0.95rem; }
+.search-compact input[type="search"]:focus { outline: 3px solid rgba(200,127,39,0.08); outline-offset: 2px; }
+.search-btn {
+  position: absolute;
+  right: 0; /* attach to the input's right edge */
+  top: 0;
+  width: 44px; /* match input right padding space */
+  height: 100%;
+  border-radius: 0; /* let the wrapper control the outer rounding */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-left: none; /* visually join with input */
+  font-size: 16px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform .14s ease, box-shadow .14s ease, border-color .12s ease;
+  z-index: 2;
+  box-sizing: border-box;
+}
+.search-btn:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 60px rgba(0,0,0,0.16);
+}
+.search-btn:focus {
+  outline: 3px solid rgba(200,30,45,0.08);
+  outline-offset: 3px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+}
+.search-btn:active { transform: translateY(1px); box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+.search-btn svg { width:30px; height:30px; display:block; fill: currentColor; }
+
+/* make the input look connected to the button: remove right border and round left corners only */
+.search-compact input[type="search"] {
+  border-radius: 12px 0 0 12px;
+  border-right: none;
+}
+
+/* Align section headers to match card headers (so Upcoming Trips and Quick actions line up) */
+.section-header { padding-left: 16px; margin-bottom: 6px; }
+.section-header h2 { margin: 0 0 24px 0; }
+
+.shortcut-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.shortcut { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:12px 8px; border-radius:10px; background: #fff; border:1px solid rgba(0,0,0,0.04); color:var(--color-text); font-weight:600; transition: transform .12s ease, box-shadow .12s ease; }
+.shortcut .icon { font-size:30px; line-height:1; }
+.shortcut .shortcut-label { display:block; margin-top:6px; font-size:0.92rem; }
+.shortcut:active { transform: translateY(1px); }
+
+@media (max-width:480px) {
+  .shortcut-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Shortcuts card styling */
+.shortcuts-card.card {
+  /* Use the page background as the card shell so inner tiles (white) pop visually */
+  padding: 10px;
+  background: var(--color-bg);
+  /* very light tint of the primary color to subtly separate the card shell */
+  /* background: rgba(var(--color-primary-rgb), 0.05); */
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.03);
+}
+.shortcuts-card .card-header { padding: 6px 8px 10px; }
+.shortcuts-card .card-header h3 { margin:0; font-size: 0.95rem; font-weight:700; color:var(--color-text); }
+.shortcuts-card .card-body { padding: 6px 6px 12px; display: grid; gap: 8px; }
+
+/* Make inner shortcut tiles visibly pop against the card shell: white surface, outline & hover lift */
+.shortcuts-card .shortcut {
+  background: var(--color-surface);
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  transition: transform .14s ease, box-shadow .14s ease, border-color .12s ease, background-color .12s ease;
+}
+.shortcuts-card .shortcut:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 60px rgba(0,0,0,0.16);
+}
+.shortcuts-card .shortcut:focus {
+  outline: 3px solid rgba(200,30,45,0.08);
+  outline-offset: 3px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+}
+
+/* Make icon color match the brand accent so it reads clearly */
+.shortcut .icon { width:30px; height:30px; display:block; color: var(--color-primary); }
+
+/* Generic SVG sizing/coloring: fill/stroke use currentColor */
+.icon svg, .icon { width:30px; height:30px; display:block; }
+.search-btn svg { width:30px; height:30px; display:block; fill: currentColor; color: var(--color-primary); }
+
+/* Material Symbols sizing when used inside shortcut tiles */
+.shortcut .material-symbols-outlined { font-size: 30px; line-height: 1; display: block; color: var(--color-primary); }
+
+/* size Material Symbols inside the search button to match visual weight */
+.search-btn .material-symbols-outlined { font-size: 20px; line-height: 1; display:block; color: var(--color-primary); }
+
+/* Keep the small label consistent and legible */
+.shortcut .shortcut-label { color: var(--color-text); font-weight:700; font-size:0.92rem; margin-top:6px; }
+
+
+/* Primary shortcut: visually matches the primary button style used across the site */
+.shortcut.primary { background: linear-gradient(90deg,var(--color-primary), var(--color-accent)); color: #fff; border: none; box-shadow: 0 10px 28px rgba(200,30,45,0.12); }
+.shortcut.primary .icon { color: #fff; }
+.shortcut.primary:active { transform: translateY(0); box-shadow: 0 6px 18px rgba(200,30,45,0.10); }
+
+/* Floating Action Button (FAB) used for Add Event */
+.fab {
+  position: fixed;
+  right: 16px;
+  /* sit above bottom nav (bottom nav + safe-area) */
+  bottom: calc(80px + env(safe-area-inset-bottom));
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  line-height: 1;
+  color: #fff;
+  background: linear-gradient(90deg,var(--color-primary), var(--color-accent));
+  border: none;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.22), 0 6px 18px rgba(200,30,45,0.12);
+  z-index: 120;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.fab:focus { outline: 3px solid rgba(255,127,39,0.16); outline-offset: 3px; }
+.fab:active { transform: translateY(1px); box-shadow: 0 10px 28px rgba(0,0,0,0.18); }
+
+/* Slightly smaller FAB on very small screens */
+@media (max-width:420px) {
+  .fab { width: 48px; height: 48px; font-size: 22px; right: 12px; bottom: calc(72px + env(safe-area-inset-bottom)); }
+}
+
+/* hide FAB when panel/menu is open */
+.fab.hidden { display: none !important; }
+
+/* Bottom-sheet / side-panel for FAB actions */
+.sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.36); opacity: 0; pointer-events: none; transition: opacity .28s ease; z-index: 110; }
+.sheet-overlay.open { opacity: 1; pointer-events: auto; }
+
+.fab-panel { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; max-height: 72vh; background: var(--color-surface); border-radius: 14px 14px 0 0; box-shadow: 0 -16px 48px rgba(0,0,0,0.28); transform: translateY(110%); transition: transform .34s cubic-bezier(.2,.9,.2,1); z-index: 115; overflow: auto; }
+.fab-panel.open { transform: translateY(0); }
+.fab-panel-header { display:flex; align-items:center; justify-content:space-between; padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.04); }
+.fab-panel-header h4 { margin:0; font-size:1rem; }
+.fab-panel-content { padding: 8px 16px 20px; }
+.panel-actions { display:flex; gap:8px; flex-direction:column; }
+.panel-actions .btn { width:100%; }
+
+/* Desktop: present as a right-side sliding panel */
+@media (min-width: 900px) {
+  .fab-panel { top: 0; bottom: 0; right: 0; left: auto; width: 420px; max-height: none; border-radius: 12px 0 0 12px; transform: translateX(110%); }
+  .fab-panel.open { transform: translateX(0); }
+}
+
+
+/* Compact FAB menu (vertical stack above FAB) */
+.fab-menu { position: fixed; right: 16px; bottom: calc(144px + env(safe-area-inset-bottom)); display:flex; flex-direction:column-reverse; align-items:center; gap:10px; z-index: 118; pointer-events: none; }
+.fab-menu.open { pointer-events: auto; }
+.fab-menu-actions { display:flex; flex-direction:column; gap:10px; align-items:center; }
+.fab-action { width:44px; height:44px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:18px; background: linear-gradient(90deg,var(--color-primary), var(--color-accent)); color:#fff; border:none; box-shadow: 0 12px 30px rgba(0,0,0,0.18); cursor:pointer; transform: translateY(8px) scale(.95); opacity:0; transition: transform .18s cubic-bezier(.2,.9,.2,1), opacity .18s ease; }
+.fab-action.secondary, .fab-action.fab-action-secondary { background: var(--color-surface); color: var(--color-text); border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 10px 22px rgba(0,0,0,0.12); }
+.fab-menu.open .fab-action { transform: translateY(0) scale(1); opacity:1; }
+.fab-action:focus { outline: 3px solid rgba(255,127,39,0.12); outline-offset: 3px; }
+
+@media (max-width:480px) {
+  .fab-menu { right: 12px; bottom: calc(120px + env(safe-area-inset-bottom)); }
+  .fab-action { width:48px; height:48px; font-size:20px; }
+}
+
+/* Utility: visually hide content but keep it available to screen readers */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Account Settings form styles (extracted from pages/AccountSettings.html)
+   Moved here so form styling is shared across pages.
+   --------------------------------------------------------------------------- */
+.settings-section {
+  background: var(--color-surface);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.16);
+  margin-bottom: var(--spacing-lg);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.settings-section h2 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-md);
+  font-size: 1.1rem;
+  color: var(--color-text);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  background: var(--color-surface);
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.btn-save {
+  background: var(--color-primary);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-save:hover {
+  background: #a00d25;
+  transform: translateY(-1px);
+}
+
+.btn-cancel {
+  background: transparent;
+  color: var(--color-muted);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+  border-color: var(--color-muted);
+  color: var(--color-text);
+}
+
+.danger-zone {
+  border-left: 4px solid #dc2626;
+  background: #fef2f2;
+}
+
+.danger-zone h2 {
+  color: #dc2626;
+}
+
+.btn-danger {
+  background: #dc2626;
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.profile-details h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.profile-details p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.settings-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.settings-item:last-child {
+  border-bottom: none;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 50px;
+  height: 24px;
+  background: #ccc;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle-switch.active {
+  background: var(--color-primary);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.toggle-switch.active::after {
+  transform: translateX(26px);
+}
+
+/* ---------------------------------------------------------------------------
+   Normalize browser autofill appearance so saved credentials use the site's
+   form background and text color instead of the browser's default blue/yellow.
+   Uses the inset box-shadow trick to override the autofill background.
+   --------------------------------------------------------------------------- */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-surface) inset !important;
+  box-shadow: 0 0 0 1000px var(--color-surface) inset !important;
+  -webkit-text-fill-color: var(--color-text) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Firefox */
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+  box-shadow: 0 0 0 1000px var(--color-surface) inset !important;
+  -moz-text-fill-color: var(--color-text) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Modal (password reset) styles
+   Kept intentionally lightweight and responsive. Scoped to a single modal id
+   in the Login page to avoid interfering with other UI components.
+   --------------------------------------------------------------------------- */
+.modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 9999; }
+.modal.open, .modal[aria-hidden="false"] { display: flex; }
+.modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.46); }
+.modal-panel { position: relative; background: var(--color-surface); border-radius: 12px; max-width: 520px; width: calc(100% - 32px); margin: 16px; box-shadow: 0 30px 80px rgba(0,0,0,0.38); z-index: 2; padding: 18px; }
+.modal-header h2 { margin: 0 0 8px 0; font-size: 1.125rem; }
+.modal-body { color: var(--color-text); }
+.modal .form-group input { width: 100%; }
+.modal .form-actions { display:flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+.modal .btn-cancel { background: transparent; border: 2px solid rgba(0,0,0,0.06); }
+.modal .btn-large { min-width: 160px; }
+
+
+
+
 

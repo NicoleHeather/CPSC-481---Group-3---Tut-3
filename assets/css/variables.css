@@ -8,6 +8,9 @@
   --color-text: #111827; /* near-black for legibility */
   --color-muted: #6b7280;
 
+  /* RGB form of primary used for subtle tints with alpha */
+  --color-primary-rgb: 200, 16, 46;
+
   --radius: 8px;
   --spacing-xs: 4px;
   --spacing-sm: 8px;

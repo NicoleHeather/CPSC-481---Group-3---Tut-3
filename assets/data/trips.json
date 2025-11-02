@@ -1,0 +1,22 @@
+{
+  "trips": [
+    {
+      "id": "trip-calgary-2026",
+      "title": "Calgary",
+      "startDate": "2026-05-01",
+      "endDate": "2026-05-14",
+  "images": ["../assets/img/calgary.jpg"],
+      "tags": ["Events"],
+      "link": "../pages/EventBooking.html?id=trip-calgary-2026"
+    },
+    {
+      "id": "trip-banff-2026",
+      "title": "Banff",
+      "startDate": "2026-06-10",
+      "endDate": "2026-06-17",
+        "images": ["../assets/img/banff.jpg"],
+      "tags": ["Outdoors"],
+      "link": "../pages/EventBooking.html?id=trip-banff-2026"
+    }
+  ]
+}
