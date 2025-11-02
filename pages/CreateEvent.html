@@ -6,13 +6,63 @@
 	<title>Create Event - Prototype</title>
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/createEvent.css">
 </head>
 <body>
 	<!-- header partial will be injected here -->
 
 	<main class="container">
 		<h1>Create Event</h1>
-		<p>Create event placeholder.</p>
+		<div class="form-container">
+            <div class="form-group">
+                <label for="event-title">Event Title</label>
+                <input type="text" id="event-title" placeholder="Enter event title">
+            </div>
+            
+            <div class="form-group">
+                <label for="event-type">Event Type</label>
+                <select id="event-type">
+                    <option value="" disabled selected>Select event type</option>
+                    <option value="conference">Conference</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="meetup">Meetup</option>
+                    <option value="seminar">Seminar</option>
+                    <option value="social">Social Gathering</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Date & Time</label>
+                <div class="date-time-group">
+                    <div>
+                        <input type="date" id="event-date">
+                    </div>
+                    <div>
+                        <input type="time" id="event-time">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="event-cost">Cost</label>
+                <input type="text" id="event-cost" placeholder="Enter cost (e.g., $50 or Free)">
+            </div>
+            
+            <div class="form-group">
+                <label for="event-location">Location</label>
+                <input type="text" id="event-location" placeholder="Enter event location">
+            </div>
+            
+            <div class="form-group">
+                <label for="event-description">Description (Optional)</label>
+                <textarea id="event-description" placeholder="Add event description..."></textarea>
+            </div>
+            
+            <div class="form-actions">
+				<a type="submit" class="btn">Create Event</a>
+				<a type="button" class="btn">Cancel</a>
+				<a type="button" href="Share.html" class="btn">Share</a>
+            </div>
 	</main>
 
 	<!-- footer partial will be injected here -->
