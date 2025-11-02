@@ -98,18 +98,10 @@
         <p class="trip-card__row">Trip Status: ${trip.status}</p>
       </div>
       <div class="trip-card__rail"></div>
-<div class="trip-card__cta" style="display:flex; gap:8px;">
-  <button class="btn btn-primary view-budget-btn" type="button">View budget</button>
-  <button class="btn btn-secondary add-expense-btn" type="button">Add</button>
-</div>
-
+      <button class="trip-card__cta btn btn-primary" type="button">View budget</button>
     `;
-   el.querySelector('.view-budget-btn').addEventListener('click', () => showBudget(trip));
-el.querySelector('.add-expense-btn').addEventListener('click', () => {
-  currentTrip = trip;     // select the correct trip
-  openModal();            // open the expense modal directly
-});
-
+    el.querySelector('.trip-card__cta').addEventListener('click', () => showBudget(trip));
+    return el;
   }
 
   function renderTripList() {
