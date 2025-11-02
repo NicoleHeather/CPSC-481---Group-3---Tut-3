@@ -369,9 +369,12 @@
   const iwMain   = document.getElementById('iw-donut-main');
   const iwSub    = document.getElementById('iw-donut-sub');
   const iwHead   = document.getElementById('iw-donut-remaining-label');
+  let currentTrip = null;
+
   const COLORS = ['#ff7f27', '#1abc9c', '#3498db', '#9b59b6', '#e74c3c', '#f1c40f', '#2ecc71'];
 
   function openBudgetPopup(trip) {
+    currentTrip = trip;
     renderDonut(trip);
     iwModal.classList.remove('hidden');
   }
@@ -458,6 +461,75 @@
     iwMain.textContent = `$${remaining.toLocaleString()}`;
     iwSub.textContent  = `$${TOTAL_BUDGET.toLocaleString()} total`;
   }
+
+  // --- Add Expense (inside Week's budget popup) ---
+const iwAddBtn    = document.getElementById('iw-add-expense-btn');
+const iwExpModal  = document.getElementById('iw-expense-modal');
+const iwForm      = document.getElementById('iw-expense-form');
+const iwNameInput = document.getElementById('iw-exp-name');
+const iwAmtInput  = document.getElementById('iw-exp-amount');
+const iwCatSelect = document.getElementById('iw-exp-category');
+const iwNewWrap   = document.getElementById('iw-new-cat-wrap');
+const iwNewInput  = document.getElementById('iw-exp-newcat');
+const iwCancelBtn = document.getElementById('iw-exp-cancel');
+
+function refreshIwCategorySelect(trip) {
+  iwCatSelect.innerHTML = '';
+  (trip.categories || []).forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.name; opt.textContent = c.name;
+    iwCatSelect.appendChild(opt);
+  });
+  const newOpt = document.createElement('option');
+  newOpt.value = '__NEW__'; newOpt.textContent = 'New category…';
+  iwCatSelect.appendChild(newOpt);
+}
+
+function openIwExpenseModal() {
+  if (!currentTrip) return;
+  iwNameInput.value = '';
+  iwAmtInput.value = '';
+  iwNewInput.value = '';
+  iwNewWrap.classList.add('hidden');
+  refreshIwCategorySelect(currentTrip);
+  iwExpModal.classList.remove('hidden');
+  iwCatSelect.focus();
+}
+function closeIwExpenseModal() { iwExpModal.classList.add('hidden'); }
+
+iwAddBtn?.addEventListener('click', openIwExpenseModal);
+iwCancelBtn?.addEventListener('click', closeIwExpenseModal);
+iwExpModal?.addEventListener('click', (e) => { if (e.target === iwExpModal) closeIwExpenseModal(); });
+
+iwCatSelect?.addEventListener('change', () => {
+  if (iwCatSelect.value === '__NEW__') iwNewWrap.classList.remove('hidden');
+  else iwNewWrap.classList.add('hidden');
+});
+
+iwForm?.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!currentTrip) return;
+
+  const name = (iwNameInput.value || '').trim();
+  const amt  = parseFloat(iwAmtInput.value);
+  if (!name || isNaN(amt) || amt < 0) return;
+
+  let categoryName = iwCatSelect.value;
+  if (categoryName === '__NEW__') {
+    categoryName = (iwNewInput.value || '').trim();
+    if (!categoryName) return;
+  }
+
+  // Upsert the category bucket total
+  const cats = currentTrip.categories || (currentTrip.categories = []);
+  const existing = cats.find(c => c.name.toLowerCase() === categoryName.toLowerCase());
+  if (existing) existing.amount += amt;
+  else cats.push({ name: categoryName, amount: amt });
+
+  closeIwExpenseModal();
+  renderDonut(currentTrip);   // live update the donut + legend
+});
+
 
   // initial paint
   render();

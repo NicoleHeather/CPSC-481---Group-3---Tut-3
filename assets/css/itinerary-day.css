@@ -78,3 +78,44 @@
   font-size: 13px;
   color: var(--color-muted);
 }
+
+/* Optional: nicer textarea sizing in the modal */
+#ev-notes {
+  resize: vertical;
+}
+
+/* Optional: align readonly inputs visually */
+#ev-date[readonly],
+#ev-end[readonly] {
+  background: #fafafa;
+}
+
+/* Center the content inside each event block */
+.event-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* vertical center */
+  align-items: center;       /* horizontal center */
+  text-align: center;
+  padding: 8px 10px;         /* a little breathing room */
+}
+
+/* Optional: small spacing between title and time */
+.event-block .event-time { margin-top: 2px; }
+
+/* Stronger override to center event content */
+.calendar .events-layer .event-block {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;  /* vertical center */
+  align-items: center !important;      /* horizontal center */
+  text-align: center !important;
+  padding: 8px 10px;                   /* breathing room */
+  z-index: 2;                          /* sit above grid lines */
+}
+
+/* Keep inner lines tidy */
+.calendar .events-layer .event-block .event-title { display: block; font-weight: 700; }
+.calendar .events-layer .event-block .event-time  { display: block; margin-top: 2px; }
+
+

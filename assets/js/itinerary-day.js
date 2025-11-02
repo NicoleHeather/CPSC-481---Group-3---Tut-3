@@ -53,9 +53,7 @@
   // ---- Build grid ----
   const calendar = $('#calendar');
   const rows = [];
-  for (let i = 0; i < 48; i++) {
-    rows.push(i);
-  }
+  for (let i = 0; i < 48; i++) rows.push(i);
 
   // left rail (times) and slot surface
   rows.forEach(i => {
@@ -85,8 +83,6 @@
   // events overlay
   const overlay = document.createElement('div');
   overlay.className = 'events-layer';
-  // attach overlay to the content column (grid column 2)
-  // The overlay needs to span all rows; we position absolutely within calendar
   calendar.appendChild(overlay);
 
   // ---- Helpers for time math ----
@@ -99,8 +95,14 @@
     const h = Math.floor(i / 2);
     const m = i % 2 ? 30 : 0;
     return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-    }
-
+  }
+  function addMinutesToTime(timeStr, mins) {
+    const [h, m] = timeStr.split(':').map(Number);
+    const total = h * 60 + m + mins;
+    const hh = Math.floor((total % (24*60)) / 60);
+    const mm = total % 60;
+    return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+  }
   function pxTopFromIndex(i) {
     const slotH = parseFloat(getComputedStyle(calendar).getPropertyValue('--slot-height')) || 42;
     return i * slotH;
@@ -110,11 +112,6 @@
   function renderEvents() {
     overlay.innerHTML = '';
     if (!day || !day.activities || day.activities.length === 0) {
-      // Optional helper message (only if truly empty)
-      // const tip = document.createElement('div');
-      // tip.className = 'no-events';
-      // tip.textContent = 'No events yet — click a time slot or “+ Add Event”.';
-      // overlay.appendChild(tip);
       return;
     }
 
@@ -129,11 +126,17 @@
       const block = document.createElement('div');
       block.className = 'event-block';
       block.style.top = `${top}px`;
-      block.style.height = `${height - 4}px`; // little visual breathing room
+      block.style.height = `${height - 4}px`;
+
+      const endTime = addMinutesToTime(ev.time, durMins);
+      const where = ev.location ? ` • ${ev.location}` : '';
+      const cost = (ev.cost != null && ev.cost !== '' && !isNaN(ev.cost))
+        ? ` • $${Number(ev.cost).toLocaleString()}`
+        : '';
 
       block.innerHTML = `
         <span class="event-title">${ev.title || 'Untitled'}</span>
-        <span class="event-time">${ev.time} • ${durMins} min</span>
+        <span class="event-time">${ev.time}–${endTime} • ${durMins} min${where}${cost}</span>
       `;
 
       overlay.appendChild(block);
@@ -141,14 +144,20 @@
   }
 
   // ---- Add Event modal ----
-  const modal = $('#event-modal');
-  const form = $('#event-form');
-  const btnOpen = $('#add-event-btn');
-  const btnCancel = $('#ev-cancel');
-  const selStart = $('#ev-start');
-  const selDur = $('#ev-dur');
+  const modal      = $('#event-modal');
+  const form       = $('#event-form');
+  const btnOpen    = $('#add-event-btn');
+  const btnCancel  = $('#ev-cancel');
+  const selStart   = $('#ev-start');
+  const selDur     = $('#ev-dur');
   const inputTitle = $('#ev-title');
-  const err = $('#ev-error');
+  const inputDate  = $('#ev-date');
+  const inputEnd   = $('#ev-end');
+  const inputLoc   = $('#ev-location');
+  const inputCost  = $('#ev-cost');
+  const inputNotes = $('#ev-notes');
+  const counter    = $('#ev-count');
+  const err        = $('#ev-error');
 
   // populate start-time dropdown (00:00 to 23:30)
   for (let i = 0; i < 48; i++) {
@@ -158,16 +167,40 @@
     selStart.appendChild(opt);
   }
 
+  // initialize date field
+  inputDate.value = dateISO
+    ? new Date(dateISO + 'T00:00:00').toLocaleDateString(undefined, { year:'numeric', month:'long', day:'numeric' })
+    : '';
+
+  function updateEndPreview() {
+    const start = selStart.value || '00:00';
+    const dur = Number(selDur.value || 60);
+    inputEnd.value = `${addMinutesToTime(start, dur)}`;
+  }
+
   function openAddModalAtIndex(i) {
     selStart.value = timeFromIdx(i);
-    err.style.display = 'none';
+    selDur.value = '60';
     inputTitle.value = '';
+    inputLoc.value = '';
+    inputCost.value = '';
+    inputNotes.value = '';
+    counter.textContent = '0 / 300';
+    err.style.display = 'none';
+    updateEndPreview();
     modal.classList.remove('hidden');
   }
 
   function openAddModal() {
-    err.style.display = 'none';
+    selStart.value = selStart.options[0]?.value || '00:00';
+    selDur.value = '60';
     inputTitle.value = '';
+    inputLoc.value = '';
+    inputCost.value = '';
+    inputNotes.value = '';
+    counter.textContent = '0 / 300';
+    err.style.display = 'none';
+    updateEndPreview();
     modal.classList.remove('hidden');
   }
 
@@ -178,6 +211,12 @@
   btnOpen?.addEventListener('click', openAddModal);
   btnCancel?.addEventListener('click', closeAddModal);
   modal?.addEventListener('click', (e) => { if (e.target === modal) closeAddModal(); });
+  selStart.addEventListener('change', updateEndPreview);
+  selDur.addEventListener('change', updateEndPreview);
+  inputNotes.addEventListener('input', () => {
+    const len = inputNotes.value.length;
+    counter.textContent = `${len} / 300`;
+  });
 
   // overlap check: (s1 < e2) && (s2 < e1)
   function hasConflict(newStart, newDurMins) {
@@ -196,8 +235,17 @@
     const title = inputTitle.value.trim();
     const start = selStart.value;
     const dur = Number(selDur.value);
+    const location = inputLoc.value.trim();
+    const cost = inputCost.value === '' ? null : Number(inputCost.value);
+    const notes = inputNotes.value.trim();
 
     if (!title) return;
+    if (isNaN(dur) || dur <= 0) return;
+    if (cost != null && (isNaN(cost) || cost < 0)) {
+      err.textContent = 'Expected cost must be a positive number.';
+      err.style.display = 'block';
+      return;
+    }
 
     if (hasConflict(start, dur)) {
       err.textContent = 'This event conflicts with an existing one. Pick a different time or duration.';
@@ -205,12 +253,21 @@
       return;
     }
 
-    day.activities.push({ time: start, duration: dur, title });
+    day.activities.push({
+      time: start,
+      duration: dur,
+      title,
+      location,
+      cost,
+      notes
+    });
+
     persist();
     closeAddModal();
     renderEvents();
   });
 
   // ---- Initialize view ----
+  updateEndPreview();
   renderEvents();
 })();

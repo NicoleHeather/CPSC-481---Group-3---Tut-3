@@ -27,7 +27,7 @@
     <section id="calendar" class="calendar" aria-label="Daily schedule"></section>
   </main>
 
-  <!-- Add Event Modal -->
+  <!-- Add / Edit Event Modal -->
   <div id="event-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="event-title">
     <div class="modal__panel">
       <h3 id="event-title" style="margin:0 0 8px;">Add Event</h3>
@@ -38,18 +38,47 @@
         </label>
 
         <label class="field">
-          <span>Start time</span>
-          <select id="ev-start" required></select>
+          <span>Date</span>
+          <input id="ev-date" type="text" readonly>
+        </label>
+
+        <div class="field" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <label class="field" style="margin:0">
+            <span>Start time</span>
+            <select id="ev-start" required></select>
+          </label>
+          <label class="field" style="margin:0">
+            <span>Duration</span>
+            <select id="ev-dur" required>
+              <option value="30">30 min</option>
+              <option value="60" selected>1 hour</option>
+              <option value="90">1.5 hours</option>
+              <option value="120">2 hours</option>
+              <option value="150">2.5 hours</option>
+              <option value="180">3 hours</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="field">
+          <span>End time</span>
+          <input id="ev-end" type="text" readonly>
         </label>
 
         <label class="field">
-          <span>Duration</span>
-          <select id="ev-dur" required>
-            <option value="30">30 min</option>
-            <option value="60" selected>1 hour</option>
-            <option value="90">1.5 hours</option>
-            <option value="120">2 hours</option>
-          </select>
+          <span>Location</span>
+          <input id="ev-location" type="text" placeholder="e.g., 184 Road St.">
+        </label>
+
+        <label class="field">
+          <span>Expected Cost</span>
+          <input id="ev-cost" type="number" min="0" step="0.01" placeholder="e.g., 120.00">
+        </label>
+
+        <label class="field">
+          <span>Description</span>
+          <textarea id="ev-notes" placeholder="Add any details…" maxlength="300" rows="4"></textarea>
+          <div id="ev-count" style="font-size:12px; color:var(--color-muted); margin-top:4px;">0 / 300</div>
         </label>
 
         <div class="modal__actions">
