@@ -88,3 +88,53 @@
   font: inherit; background: #fff;
 }
 .modal__actions { display:flex; justify-content:flex-end; gap:10px; margin-top: 6px; }
+
+/* Improve spacing and clarity of legend items */
+.legend-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Color swatch and name grouped to the left */
+.legend-row .swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.legend-row .name {
+  flex: 1;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Cost and percentage clearly separated on the right */
+.legend-row .amount {
+  min-width: 75px;
+  text-align: right;
+  font-weight: 600;
+  color: #222;
+}
+
+.legend-row .pct {
+  min-width: 45px;
+  text-align: right;
+  color: #777;
+  margin-left: 6px;
+  font-size: 0.85rem;
+}
+
+/* Optional: slightly round the legend container */
+.legend {
+  margin-top: 10px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
