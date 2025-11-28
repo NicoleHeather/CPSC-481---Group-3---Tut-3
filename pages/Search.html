@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<style>
-		/* Search Page Additions */
+		/* Search Page Specific Styles */
 		.search-header {
 			display: flex;
 			align-items: center;
@@ -15,11 +15,11 @@
 			padding: var(--spacing-sm) var(--spacing-md);
 			background: var(--color-primary);
 			color: #fff;
+			gap: 0.5rem;
 		}
 
 		.search-bar {
 			flex: 1;
-			margin: 0 var(--spacing-sm);
 			display: flex;
 			align-items: center;
 			background: #fff;
@@ -34,8 +34,31 @@
 			outline: none;
 			background: transparent;
 		}
+		
+		.sort-select {
+			background: #fff; 
+			color: #333; 
+			border: 1px solid transparent;
+			padding: 0.4rem 0.5rem;
+			border-radius: var(--radius);
+			font-size: 0.9rem;
+			cursor: pointer;
+			max-width: 130px; 
+		}
 
-		/* Filter popup modal */
+		/* Added fallback color to event cards in case image fails */
+		.event-card {
+			background-color: #ddd; 
+			background-size: cover;
+			background-position: center;
+		}
+		
+		.sort-select:focus {
+			outline: none;
+			border-color: var(--color-accent);
+		}
+
+		/* Modal Styles */
 		.filter-modal {
 			position: fixed;
 			top: 0;
@@ -56,47 +79,64 @@
 			width: 90%;
 			max-width: 380px;
 			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+			max-height: 85vh;
+			overflow-y: auto;
 		}
 
 		.filter-content h2 {
 			margin-top: 0;
 			text-align: center;
+			color: var(--color-primary);
+		}
+
+		.filter-section-title {
+			display: block;
+			margin-bottom: 0.5rem;
+			font-weight: bold;
+			color: var(--color-text-primary);
+			border-bottom: 2px solid var(--color-background);
+			padding-bottom: 0.2rem;
 		}
 
 		.filter-options {
 			display: grid;
-			gap: var(--spacing-sm);
+			gap: var(--spacing-md);
 			margin: var(--spacing-md) 0;
 		}
 
-		.filter-option {
+		.filter-group {
 			display: flex;
-			align-items: center;
+			flex-direction: column;
 			gap: 0.5rem;
 		}
 
-		.filter-dates,
-		.filter-time,
-		.filter-category,
-		.filter-location,
-		.filter-type {
+		.filter-row {
 			display: flex;
-			flex-direction: column;
-			gap: var(--spacing-sm);
-			margin-bottom: var(--spacing-md);
+			gap: 1rem;
 		}
-
+		
 		select, input[type="date"] {
-			padding: 0.3rem;
+			padding: 0.4rem;
 			border-radius: 0.4rem;
 			border: 1px solid #ccc;
 			font-size: 1rem;
+			width: 100%;
+			background-color: #fff;
+		}
+
+		.checkbox-label {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			cursor: pointer;
 		}
 
 		.modal-actions {
 			display: flex;
 			justify-content: space-between;
-			margin-top: var(--spacing-md);
+			margin-top: var(--spacing-lg);
+			padding-top: var(--spacing-sm);
+			border-top: 1px solid var(--color-background);
 		}
 
 		main.container {
@@ -104,101 +144,82 @@
 			-webkit-overflow-scrolling: touch;
 			padding-bottom: 90px;
 		}
+		
+		.no-results {
+			text-align: center;
+			margin-top: 3rem;
+			color: var(--color-text-secondary);
+			font-style: italic;
+		}
 	</style>
 </head>
 
 <body>
-	<!-- header partial -->
 	<header class="search-header">
 		<button class="btn btn-secondary" id="filterBtn">Filter</button>
+		
+		<select id="sortSelect" class="sort-select">
+			<option value="name" selected>Sort: A-Z</option>
+			<option value="priceAsc">Price: Low to High</option>
+			<option value="priceDesc">Price: High to Low</option>
+			<option value="time">Time: Earliest</option>
+		</select>
+
 		<div class="search-bar">
-			<input type="text" placeholder="Search events..." id="searchInput">
+			<input type="text" placeholder="Search..." id="searchInput">
 		</div>
 		<a href="../pages/SavedEvents.html" class="btn btn-secondary">Saved</a>
 	</header>
 
 	<main class="container">
-		<h1>Explore and Search</h1>
+		<h1 class="page-header">Explore</h1>
 
-		<section class="cards-grid">
-			<article class="event-card" style="background-image:url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80')">
-				<div class="event-card__overlay">
-					<h4 class="event-card__title">Outdoor Movie Night</h4>
-					<p class="event-card__subtitle">Calgary Park • 8:00 PM</p>
-					<div class="price-badge">$10</div>
-				</div>
-			</article>
-
-			<article class="event-card" style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80')">
-				<div class="event-card__overlay">
-					<h4 class="event-card__title">Art Festival</h4>
-					<p class="event-card__subtitle">Downtown • 12:00 PM</p>
-					<div class="price-badge">Free</div>
-				</div>
-			</article>
-
-			<article class="event-card" style="background-image:url('https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=1200&q=80')">
-				<div class="event-card__overlay">
-					<h4 class="event-card__title">Jazz Night</h4>
-					<p class="event-card__subtitle">Mission • 9:00 PM</p>
-					<div class="price-badge">$25</div>
-				</div>
-			</article>
+		<section class="cards-grid" id="eventsGrid">
+			<p style="text-align:center; margin-top:2rem;">Loading events...</p>
 		</section>
 	</main>
 
-	<!-- Filter Modal -->
 	<div class="filter-modal" id="filterModal">
 		<div class="filter-content">
 			<h2>Filter Events</h2>
 			<div class="filter-options">
 
-				<!-- Date + Time -->
-				<b>Filter Date & Time</b>
-				<div class="filter-date-time">
-					<label>Choose Date:
-						<input type="date" id="filterDate">
-					</label>
-					<div class="filter-time">
-						<label>Start Time:
-							<select id="startTime">
-								<option value="">-- Select --</option>
-							</select>
+				<div class="filter-group">
+					<span class="filter-section-title">Date & Time</span>
+					<label>Date: <input type="date" id="filterDate"></label>
+					<div class="filter-row">
+						<label style="flex:1">Start:
+							<select id="startTime"><option value="">Any</option></select>
 						</label>
-						<label>End Time:
-							<select id="endTime">
-								<option value="">-- Select --</option>
-							</select>
+						<label style="flex:1">End:
+							<select id="endTime"><option value="">Any</option></select>
 						</label>
 					</div>
 				</div>
 
-				<!-- Category -->
-				<b>Filter Category</b>
-				<div class="filter-category">
-					<label class="filter-option"><input type="checkbox" value="hotel"> Hotel</label>
-					<label class="filter-option"><input type="checkbox" value="restaurant"> Restaurant</label>
-					<label class="filter-option"><input type="checkbox" value="attraction"> Attraction</label>
-					<label class="filter-option"><input type="checkbox" value="music"> Music</label>
+				<div class="filter-group">
+					<span class="filter-section-title">Category</span>
+					<label class="checkbox-label"><input type="checkbox" name="category" value="Hotel"> Hotel</label>
+					<label class="checkbox-label"><input type="checkbox" name="category" value="Restaurant"> Restaurant</label>
+					<label class="checkbox-label"><input type="checkbox" name="category" value="Attraction"> Attraction</label>
+					<label class="checkbox-label"><input type="checkbox" name="category" value="Music"> Music</label>
 				</div>
 
-				<!-- Location -->
-				<b>Filter Location</b>
-				<div class="filter-location">
-					<label class="filter-option"><input type="checkbox" value="Calgary"> Calgary</label>
-					<label class="filter-option"><input type="checkbox" value="Banff"> Banff</label>
-					<label class="filter-option"><input type="checkbox" value="Canmore"> Canmore</label>
+				<div class="filter-group">
+					<span class="filter-section-title">Location</span>
+					<label class="checkbox-label"><input type="checkbox" name="location" value="Calgary"> Calgary</label>
+					<label class="checkbox-label"><input type="checkbox" name="location" value="Banff"> Banff</label>
+					<label class="checkbox-label"><input type="checkbox" name="location" value="Canmore"> Canmore</label>
 				</div>
 			</div>
 
 			<div class="modal-actions">
 				<button class="btn btn-secondary" id="closeFilter">Close</button>
-				<button class="btn btn-primary" id="applyFilters">Apply</button>
+				<button class="btn btn-primary" id="applyFilters">Apply Filters</button>
 			</div>
 		</div>
 	</div>
 
-	<!-- footer partial -->
 	<nav class="bottom-nav">
 		<a href="../pages/Home.html" class="nav-item"><span class="label">Home</span></a>
 		<a href="../pages/Itinerary.html" class="nav-item"><span class="label">Itinerary</span></a>
@@ -208,8 +229,108 @@
 
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
+	
 	<script>
-		// Modal toggle logic
+		let searchEventsData = [];
+
+		const eventsGrid = document.getElementById('eventsGrid');
+		const searchInput = document.getElementById('searchInput');
+		const sortSelect = document.getElementById('sortSelect');
+
+		// Fetch Data
+		fetch('../assets/data/events.json')
+			.then(response => response.json())
+			.then(data => {
+				searchEventsData = data.explore;
+				renderEvents(getFilteredAndSortedEvents());
+			})
+			.catch(err => {
+				console.error('Error fetching events:', err);
+				eventsGrid.innerHTML = '<p class="no-results">Error loading data. Run with Live Server.</p>';
+			});
+
+		// Render Logic
+		function renderEvents(data) {
+			eventsGrid.innerHTML = '';
+			
+			if (data.length === 0) {
+				eventsGrid.innerHTML = '<p class="no-results">No events found matching your criteria.</p>';
+				return;
+			}
+
+			data.forEach(event => {
+				const card = document.createElement('article');
+				card.className = 'event-card';
+				card.style.backgroundImage = `url('${event.img}')`;
+				card.onclick = () => window.location.href = 'EventInfo.html';
+
+				const priceDisplay = event.price === 0 ? 'Free' : `$${event.price}`;
+				const dateDisplay = formatDate(event.date); // New Date Formatting
+
+				card.innerHTML = `
+					<div class="event-card__overlay">
+						<div class="event-card__meta">
+							<h4 class="event-card__title">${event.title}</h4>
+							<p class="event-card__subtitle">${event.location} • ${dateDisplay}, ${convertTo12Hour(event.time)}</p>
+						</div>
+						<div class="price-badge">${priceDisplay}</div>
+					</div>
+				`;
+				eventsGrid.appendChild(card);
+			});
+		}
+
+		// Helper: Format YYYY-MM-DD to "Jun 15"
+		function formatDate(dateStr) {
+			if(!dateStr) return '';
+			// Append time to avoid timezone offsets causing the day to shift
+			const date = new Date(dateStr + 'T00:00:00');
+			return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+		}
+
+		function convertTo12Hour(time) {
+			let [hours, mins] = time.split(':');
+			const ampm = hours >= 12 ? 'PM' : 'AM';
+			hours = hours % 12;
+			hours = hours ? hours : 12; 
+			return `${hours}:${mins} ${ampm}`;
+		}
+
+		// Filter & Sort Logic
+		function getFilteredAndSortedEvents() {
+			const searchText = searchInput.value.toLowerCase();
+			const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
+			const selectedLocations = Array.from(document.querySelectorAll('input[name="location"]:checked')).map(cb => cb.value);
+			const filterDate = document.getElementById('filterDate').value;
+			const startTime = document.getElementById('startTime').value;
+			const endTime = document.getElementById('endTime').value;
+			const sortMode = sortSelect.value;
+
+			let filtered = searchEventsData.filter(event => {
+				if (!event.title.toLowerCase().includes(searchText)) return false;
+				if (selectedCategories.length > 0 && !selectedCategories.includes(event.category)) return false;
+				if (selectedLocations.length > 0 && !selectedLocations.includes(event.location)) return false;
+				if (filterDate && event.date !== filterDate) return false;
+				if (startTime && event.time < startTime) return false;
+				if (endTime && event.time > endTime) return false;
+				return true;
+			});
+
+			filtered.sort((a, b) => {
+				if (sortMode === 'priceAsc') return a.price - b.price;
+				if (sortMode === 'priceDesc') return b.price - a.price;
+				if (sortMode === 'time') return a.time.localeCompare(b.time);
+				if (sortMode === 'name') return a.title.localeCompare(b.title);
+				return 0;
+			});
+
+			return filtered;
+		}
+
+		// Listeners
+		searchInput.addEventListener('input', () => renderEvents(getFilteredAndSortedEvents()));
+		sortSelect.addEventListener('change', () => renderEvents(getFilteredAndSortedEvents()));
+
 		const filterBtn = document.getElementById('filterBtn');
 		const filterModal = document.getElementById('filterModal');
 		const closeFilter = document.getElementById('closeFilter');
@@ -218,11 +339,10 @@
 		filterBtn.addEventListener('click', () => filterModal.style.display = 'flex');
 		closeFilter.addEventListener('click', () => filterModal.style.display = 'none');
 		applyFilters.addEventListener('click', () => {
+			renderEvents(getFilteredAndSortedEvents());
 			filterModal.style.display = 'none';
-			alert('Filters applied!');
 		});
 
-		// Populate 30-minute dropdowns
 		function populateTimeDropdown(selectId) {
 			const select = document.getElementById(selectId);
 			for (let hour = 0; hour < 24; hour++) {
