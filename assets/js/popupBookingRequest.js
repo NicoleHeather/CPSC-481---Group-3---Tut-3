@@ -1,23 +1,51 @@
 // script.js
 const bookingConfirmtButton = document.getElementById('submit-info-btn');
-const bookingConfrimForm = document.getElementById('booking-request-popup');
-const time = document.querySelector('#time');
+const bookingConfirmForm = document.getElementById('booking-request-popup');
 const bookingConflictForm = document.getElementById('booking-request-conflict');
 const background = document.getElementById('whole-screen');
 const cardBackground = document.getElementById('booking-event')
 const modal = document.querySelector('.modal');
+const missingInfoForm = document.getElementById('missing-required-info');
+const processingDisplay = document.getElementById('booking-request-processing');
 
-bookingConfirmtButton.addEventListener('click', function () {
+//Track Input
+const time = document.querySelector('#time');
+const date = document.querySelector('#date');
+const guestNumber = document.querySelector('#guest-number');
+const email = document.querySelector('#email-address');
+const nameInput = document.querySelector('#full-name');
+
+//Timeout
+const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+
+bookingConfirmtButton.addEventListener('click', async function () {
     
-    value = time.value;
+    submittedTime = time.value;
+    submittedDate = date.value;
+
+    //Users have to refill input on refresh - fix this
+    if (time.value == "" || date.value == "" || 
+        guestNumber.value == null || email.value == "" || nameInput.value == "") 
+    {
+        missingInfoForm.style.display = 'flex';
+        modal.style.display = "block";
+
+        return;
+    }
 
     //If the time input is the same as the conflicting event time, show conflict popup.
-    if (value == "6:00 PM" || value == "6 PM") {
+    if (submittedTime == "6:00 PM" || submittedTime == "6 PM") {
         bookingConflictForm.style.display = 'flex';
         modal.style.display = "block";
+        return;
     }
     else {
-        bookingConfrimForm.style.display = 'flex';
         modal.style.display = "block";
+        processingDisplay.style.display = "flex";
+        await sleep(5000); //Delay to simulate "processing of booking"
+        processingDisplay.style.display = "none";
+        bookingConfirmForm.style.display = 'flex';
+        return;
     }
 });
+

@@ -20,12 +20,18 @@
 				<div class="user-input">
 					<h2>Guided Hike</h2>
 					<div id="name-input">
-						<label for="name">Full Name: </label>
-					<input type="text" id="name" name="name" placeholder="Enter your full name">
+						<label for="name">Name:</label>
+						<div class="required-field-container">
+							<input type="text" id="name" name="name" placeholder="Enter your full name">
+						<div class="asterisk">*</div>
+						</div>
 					</div>
 					<div id="email-input">
 						<label for="email">Email: </label>
-						<input type="email" id="email" name="email" placeholder="example@gmail.com">
+						<div class="required-field-container">
+							<input type="email" id="email" name="email" placeholder="example@gmail.com">
+							<div class="asterisk">*</div>
+						</div>
 					</div>
 					<div id="phone-input">
 						<label for="phone">Phone: </label>
@@ -33,19 +39,29 @@
 					</div>
 					<div id="date-input">
 						<label for="date">Date: </label>
-						<input type="text" id="date" name="date" placeholder="dd-mm-yyyy">
+						<div class="required-field-container">
+							<input type="text" id="date" name="date" placeholder="dd-mm-yyyy">
+							<div class="asterisk">*</div>
+						</div>
 					</div>
 					<div id="time-input">
 						<label for="time">Time: </label>
-						<input type="text" id="time" name="time" placeholder="XX:XX AM/PM">
+						<div class="required-field-container">
+							<input type="text" id="time" name="time" placeholder="XX:XX AM/PM">
+							<div class="asterisk">*</div>
+						</div>
 					</div>
 					<div id="guest-number-input">
 						<label for="guest-number">Guest Number: </label>
-						<input type="number" id="guest-number" name="guest-number" placeholder="0-20">
+							<div class="required-field-container">
+								<input type="number" id="guest-number" name="guest-number" placeholder="0-20">
+								<div class="asterisk">*</div>
+							</div>
+						</div>
 					</div>
 				</div>
 					<div class="submit-info" style="text-align:center">
-						<button  class="btn" id="submit-info-btn">Send Booking Request</button>
+						<button class="btn" id="submit-info-btn">Send Booking Request</button>
 					</div>
 				</div>
 				<div class="modal">
@@ -69,6 +85,18 @@
 							<input class="btn btn-secondary" id="booking-request-conflict-ok" type="submit" value="Back to Booking">
 							<input class="btn btn-secondary" id="booking-request-conflict-override" type="submit" value="Override Conflicting Event">
 							<input class="btn btn-secondary" id="booking-request-conflict-view-event" type="submit" value="View Conflicting Event">
+						</div>
+					</form>
+					<div id="booking-request-processing">
+						<img style="width:60%; height:60%;" src="../assets/img/refresh.png" alt="Trips R Us logo">
+						<p style="padding-top:10%">
+							Please wait while we process your request.
+						</p>
+					</div>
+					<form id="missing-required-info">
+						<div id="missing-container">
+							<div style="padding-left:15%">Missing Info Field. Please check the form input.</div>
+							<input class="btn" id="missing-required-info-ok" type="submit" value="Back to Booking">
 						</div>
 					</form>
 				</div>
