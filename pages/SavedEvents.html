@@ -16,15 +16,22 @@
 			background: var(--color-primary);
 			color: #fff;
 			gap: 0.5rem;
+			/* Allow wrapping so Search can go to top */
+			flex-wrap: wrap; 
 		}
 
 		.search-bar {
-			flex: 1;
 			display: flex;
 			align-items: center;
 			background: #fff;
 			border-radius: 1.5rem;
-			padding: 0.3rem 0.8rem;
+			padding: 0.4rem 0.8rem;
+			
+			/* FORCE TOP ROW */
+			order: -1; 
+			width: 100%;       
+			flex-basis: 100%;  
+			margin-bottom: 0.2rem; 
 		}
 
 		.search-bar input {
@@ -35,15 +42,29 @@
 			background: transparent;
 		}
 		
+		/* --- ROW 2 CONTROLS --- */
+		
+		/* 1. Buttons: Don't grow, don't shrink, fit to text */
+		.search-header .btn {
+			flex: 0 0 auto; 
+			padding: 0.4rem 0.8rem;
+			white-space: nowrap;
+		}
+
+		/* 2. Sort: Fill the space BETWEEN the buttons */
 		.sort-select {
 			background: #fff;
 			color: #333;
 			border: 1px solid transparent;
-			padding: 0.4rem 0.5rem;
+			padding: 0.4rem 0.2rem;
 			border-radius: var(--radius);
 			font-size: 0.9rem;
 			cursor: pointer;
-			max-width: 130px;
+			text-align: center;
+			
+			/* This makes it fill remaining width but stay on the same line */
+			flex: 1; 
+			min-width: 0; /* Prevents it from forcing a wrap if text is long */
 		}
 
 		/* Added fallback color */
