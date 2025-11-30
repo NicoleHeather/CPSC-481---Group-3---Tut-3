@@ -12,8 +12,8 @@ const processingDisplay = document.getElementById('booking-request-processing');
 const time = document.querySelector('#time');
 const date = document.querySelector('#date');
 const guestNumber = document.querySelector('#guest-number');
-const email = document.querySelector('#email-address');
-const nameInput = document.querySelector('#full-name');
+const email = document.querySelector('#email');
+const nameInput = document.querySelector('#name');
 
 //Timeout
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
@@ -25,7 +25,7 @@ bookingConfirmtButton.addEventListener('click', async function () {
 
     //Users have to refill input on refresh - fix this
     if (time.value == "" || date.value == "" || 
-        guestNumber.value == null || email.value == "" || nameInput.value == "") 
+        guestNumber.value == "" || email.value == "" || nameInput.value == "") 
     {
         missingInfoForm.style.display = 'flex';
         modal.style.display = "block";
