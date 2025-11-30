@@ -253,24 +253,40 @@
 
 	<script>
 		let savedEventsData = [];
+		const STORAGE_KEY = 'user_saved_events';
 
 		const savedSection = document.getElementById('savedEventsSection');
 		const searchInput = document.getElementById('searchInput');
 		const sortSelect = document.getElementById('sortSelect');
 
-		// Fetch Data
-		fetch('../assets/data/events.json')
-			.then(response => response.json())
-			.then(data => {
-				savedEventsData = data.saved;
-				renderSavedEvents(getFilteredAndSortedSaved());
-			})
-			.catch(err => {
-				console.error('Error fetching events:', err);
-				savedSection.innerHTML = '<p class="no-saved">Error loading data. Run with Live Server.</p>';
-			});
+		// 1. Initialize Data (LocalStorage or Fetch)
+		function initSavedEvents() {
+			const storedData = localStorage.getItem(STORAGE_KEY);
 
-		// Render Logic
+			if (storedData) {
+				// Use stored data if it exists (Persisted changes)
+				console.log('Loaded saved events from storage');
+				savedEventsData = JSON.parse(storedData);
+				renderSavedEvents(getFilteredAndSortedSaved());
+			} else {
+				// First time load: Fetch from JSON and set up storage
+				console.log('Fetching default saved events');
+				fetch('../assets/data/events.json')
+					.then(response => response.json())
+					.then(data => {
+						savedEventsData = data.saved;
+						// Save initial state to storage so subsequent changes persist
+						localStorage.setItem(STORAGE_KEY, JSON.stringify(savedEventsData));
+						renderSavedEvents(getFilteredAndSortedSaved());
+					})
+					.catch(err => {
+						console.error('Error fetching events:', err);
+						savedSection.innerHTML = '<p class="no-saved">Error loading data. Run with Live Server.</p>';
+					});
+			}
+		}
+
+		// 2. Render Logic
 		function renderSavedEvents(data) {
 			savedSection.innerHTML = '';
 			
@@ -283,10 +299,12 @@
 				const card = document.createElement('article');
 				card.className = 'event-card';
 				card.style.backgroundImage = `url('${event.img}')`;
-				card.onclick = () => window.location.href = 'EventInfo.html';
+				
+				// Click anywhere to go to Info
+				card.onclick = () => window.location.href = `EventInfo.html?id=${event.id}&source=saved`;
 
 				const priceDisplay = event.price === 0 ? 'Free' : `$${event.price}`;
-				const dateDisplay = formatDate(event.date); // Date Format
+				const dateDisplay = formatDate(event.date);
 
 				card.innerHTML = `
 					<div class="event-card__overlay saved-card-overlay">
@@ -316,14 +334,21 @@
 			return `${hours}:${mins} ${ampm}`;
 		}
 
-		// Remove Logic
+		// 3. Remove Logic (Now Updates LocalStorage)
 		window.removeEvent = function(e, id) {
-			e.stopPropagation();
+			e.stopPropagation(); // Prevent card click
+			
+			// Remove from memory
 			savedEventsData = savedEventsData.filter(evt => evt.id !== id);
+			
+			// Update Persistence
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(savedEventsData));
+			
+			// Re-render
 			renderSavedEvents(getFilteredAndSortedSaved());
 		};
 
-		// Filter & Sort Logic
+		// 4. Filter & Sort Logic
 		function getFilteredAndSortedSaved() {
 			const searchText = searchInput.value.toLowerCase();
 			const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
@@ -347,7 +372,7 @@
 				if (sortMode === 'priceAsc') return a.price - b.price;
 				if (sortMode === 'priceDesc') return b.price - a.price;
 				if (sortMode === 'time') return a.time.localeCompare(b.time);
-				if (sortMode === 'name') return a.title.localeCompare(b.title);
+				if (sortMode === 'name') return a.title.localeCompare(b.title); // Default A-Z
 				return 0;
 			});
 
@@ -386,6 +411,9 @@
 		}
 		populateTimeDropdown("startTime");
 		populateTimeDropdown("endTime");
+		
+		// Start
+		initSavedEvents();
 	</script>
 </body>
 </html>

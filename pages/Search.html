@@ -262,10 +262,12 @@
 				const card = document.createElement('article');
 				card.className = 'event-card';
 				card.style.backgroundImage = `url('${event.img}')`;
-				card.onclick = () => window.location.href = 'EventInfo.html';
+				
+				// CHANGE: Added ID and Source parameter to the URL
+				card.onclick = () => window.location.href = `EventInfo.html?id=${event.id}&source=explore`;
 
 				const priceDisplay = event.price === 0 ? 'Free' : `$${event.price}`;
-				const dateDisplay = formatDate(event.date); // New Date Formatting
+				const dateDisplay = formatDate(event.date);
 
 				card.innerHTML = `
 					<div class="event-card__overlay">
@@ -280,10 +282,8 @@
 			});
 		}
 
-		// Helper: Format YYYY-MM-DD to "Jun 15"
 		function formatDate(dateStr) {
 			if(!dateStr) return '';
-			// Append time to avoid timezone offsets causing the day to shift
 			const date = new Date(dateStr + 'T00:00:00');
 			return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 		}
