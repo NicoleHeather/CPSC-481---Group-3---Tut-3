@@ -58,7 +58,7 @@
 					<div class="modal__form">
 						<div id="editPopupForm">
 							<h3 id="event-title" style="margin:0 0 8px;">Edit Event</h3>
-							<form id="event-form" class="modal__form">
+							<form action="" id="event-form" class="modal__form">
 								<label class="field">
 									<span>Title</span>
 									<input id="ev-title" type="text">
@@ -72,7 +72,10 @@
 								<div class="field" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
 									<label class="field" style="margin:0">
 										<span>Start time</span>
-										<select id="ev-start" required></select>
+										<select id="ev-start" required>
+											<option value="6 PM"> 6 PM</option>
+											<option value="7 PM">7 PM</option>
+										</select>
 									</label>
 									<label class="field" style="margin:0">
 										<span>Duration</span>
@@ -89,7 +92,7 @@
 
 								<label class="field">
 									<span>End time</span>
-									<input id="ev-end" type="text" aria-readonly="true">
+									<input id="ev-end" type="text">
 								</label>
 
 								<label class="field">
@@ -113,8 +116,8 @@
 								</label>
 
 								<div class="modal__actions" style="margin-left:80px">
-									<button type="sumbit" id="ev-cancel" class="btn btn-secondary">Cancel</button>
-									<button type="submit" class="btn">Save</button>
+									<button type="button" id="ev-cancel" class="btn btn-secondary">Cancel</button>
+									<button type="submit" class="btn" id="save-btn">Save</button>
 								</div>
 								<div id="ev-error" style="color:#c8102e; font-size:13px; margin-top:4px; display:none;">
 								</div>
