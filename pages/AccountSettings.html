@@ -6,38 +6,46 @@
 	<title>Account Settings - Prototype</title>
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
-	<!-- Account settings form styles moved to ../assets/css/main.css -->
 </head>
 <body>
 
 	<main class="container">
 		<h1>Account Settings</h1>
 
-		<!-- Profile Info -->
 		<div class="settings-section">
 			<div class="profile-info">
-				<div class="profile-avatar">JD</div>
+				<div class="profile-avatar" id="displayAvatar">JD</div>
 				<div class="profile-details">
-					<h3>John Doe</h3>
-					<p>john.doe@example.com</p>
+					<h3 id="displayName">John Doe</h3>
+					<p id="displayEmail">john.doe@example.com</p>
 				</div>
 			</div>
 		</div>
 
-		<!-- Personal Info -->
 		<div class="settings-section">
 			<h2>Personal Information</h2>
-			<div class="form-group"><label>Username</label><input type="text" value="johndoe123"></div>
-			<div class="form-group"><label>Email Address</label><input type="email" value="john.doe@example.com"></div>
-			<div class="form-group"><label>First Name</label><input type="text" value="John"></div>
-			<div class="form-group"><label>Last Name</label><input type="text" value="Doe"></div>
+			<div class="form-group">
+				<label>Username</label>
+				<input type="text" id="inputUsername" placeholder="Username">
+			</div>
+			<div class="form-group">
+				<label>Email Address</label>
+				<input type="email" id="inputEmail" placeholder="Email">
+			</div>
+			<div class="form-group">
+				<label>First Name</label>
+				<input type="text" id="inputFirstName" placeholder="First Name">
+			</div>
+			<div class="form-group">
+				<label>Last Name</label>
+				<input type="text" id="inputLastName" placeholder="Last Name">
+			</div>
 			<div class="form-actions">
-				<button class="btn-save">Save Changes</button>
-				<button class="btn-cancel">Cancel</button>
+				<button class="btn-save" id="saveProfileBtn">Save Changes</button>
+				<button class="btn-cancel" onclick="loadUserData()">Cancel</button>
 			</div>
 		</div>
 
-		<!-- Security -->
 		<div class="settings-section">
 			<h2>Security</h2>
 			<div class="form-group"><label>Current Password</label><input type="password"></div>
@@ -49,7 +57,6 @@
 			</div>
 		</div>
 
-		<!-- Preferences -->
 		<div class="settings-section">
 			<h2>Preferences</h2>
 			<div class="form-group">
@@ -76,7 +83,6 @@
 			</div>
 		</div>
 
-		<!-- Account Actions -->
 		<div class="settings-section danger-zone">
 			<div class="settings-item">
 				<div>
@@ -104,13 +110,10 @@
 		</div>
 	</main>
 
-	<!-- Footer Nav (unchanged) -->
-	<!-- footer partial -->
 	<nav class="bottom-nav">
 		<a href="../pages/Home.html" class="nav-item"><span class="label">Home</span></a>
 		<a href="../pages/Itinerary.html" class="nav-item"><span class="label">Itinerary</span></a>
 		<a href="../pages/Search.html" class="nav-item"><span class="label"><strong>Search</strong></span></a>
-		<a href="../pages/Budget.html" class="nav-item"><span class="label">Budget</span></a>
 		<a href="../pages/Account.html" class="nav-item"><span class="label">Account</span></a>
 	</nav>
 
@@ -118,6 +121,80 @@
 	<script src="../assets/js/main.js"></script>
 
 	<script>
+		// --- Logic for User Data Management ---
+
+		// DOM Elements
+		const els = {
+			dispName: document.getElementById('displayName'),
+			dispEmail: document.getElementById('displayEmail'),
+			dispAvatar: document.getElementById('displayAvatar'),
+			inUser: document.getElementById('inputUsername'),
+			inEmail: document.getElementById('inputEmail'),
+			inFirst: document.getElementById('inputFirstName'),
+			inLast: document.getElementById('inputLastName'),
+			saveBtn: document.getElementById('saveProfileBtn')
+		};
+
+		// 1. Load Data (Check LocalStorage first, then JSON)
+		function loadUserData() {
+			const storedData = localStorage.getItem('userProfileData');
+
+			if (storedData) {
+				// Use local storage data if available (User has edited before)
+				console.log('Loading from Local Storage');
+				populateUI(JSON.parse(storedData));
+			} else {
+				// Use default JSON file
+				console.log('Loading from JSON file');
+				fetch('../assets/data/user.json')
+					.then(res => res.json())
+					.then(data => {
+						populateUI(data);
+					})
+					.catch(err => console.error('Error loading user json:', err));
+			}
+		}
+
+		// 2. Populate HTML
+		function populateUI(data) {
+			// Update Top Display
+			els.dispName.textContent = `${data.firstName} ${data.lastName}`;
+			els.dispEmail.textContent = data.email;
+			
+			// Generate Initials
+			const initials = (data.firstName.charAt(0) + data.lastName.charAt(0)).toUpperCase();
+			els.dispAvatar.textContent = initials;
+
+			// Update Form Inputs
+			els.inUser.value = data.username;
+			els.inEmail.value = data.email;
+			els.inFirst.value = data.firstName;
+			els.inLast.value = data.lastName;
+		}
+
+		// 3. Save Data
+		els.saveBtn.addEventListener('click', () => {
+			const newData = {
+				username: els.inUser.value,
+				email: els.inEmail.value,
+				firstName: els.inFirst.value,
+				lastName: els.inLast.value,
+				avatarInitials: (els.inFirst.value.charAt(0) + els.inLast.value.charAt(0)).toUpperCase()
+			};
+
+			// Save to Browser Memory (Local Storage)
+			localStorage.setItem('userProfileData', JSON.stringify(newData));
+			
+			// Update UI immediately
+			populateUI(newData);
+
+			alert('Profile settings saved!');
+		});
+
+		// Initialize
+		document.addEventListener('DOMContentLoaded', loadUserData);
+
+		// Helper for toggle switches (UI only)
 		function toggleSwitch(el) {
 			el.classList.toggle('active');
 		}

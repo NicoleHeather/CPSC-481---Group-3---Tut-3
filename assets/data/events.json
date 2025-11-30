@@ -1,0 +1,126 @@
+{
+  "explore": [
+    {
+      "id": 1,
+      "title": "Jazz Night",
+      "location": "Calgary",
+      "category": "Music",
+      "date": "2025-06-15",
+      "time": "21:00",
+      "price": 25,
+      "img": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 2,
+      "title": "Banff Guided Hike",
+      "location": "Banff",
+      "category": "Attraction",
+      "date": "2025-06-16",
+      "time": "08:00",
+      "price": 50,
+      "img": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 3,
+      "title": "Sky Bistro Dinner",
+      "location": "Banff",
+      "category": "Restaurant",
+      "date": "2025-06-15",
+      "time": "19:00",
+      "price": 120,
+      "img": "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 4,
+      "title": "Downtown Art Walk",
+      "location": "Calgary",
+      "category": "Attraction",
+      "date": "2025-06-20",
+      "time": "13:00",
+      "price": 0,
+      "img": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 5,
+      "title": "Chateau Weekend",
+      "location": "Canmore",
+      "category": "Hotel",
+      "date": "2025-07-01",
+      "time": "15:00",
+      "price": 350,
+      "img": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 6,
+      "title": "Outdoor Cinema",
+      "location": "Calgary",
+      "category": "Attraction",
+      "date": "2025-06-18",
+      "time": "20:00",
+      "price": 10,
+      "img": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 7,
+      "title": "Rock Concert",
+      "location": "Calgary",
+      "category": "Music",
+      "date": "2025-06-22",
+      "time": "19:30",
+      "price": 85,
+      "img": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 8,
+      "title": "Lakeside Brunch",
+      "location": "Canmore",
+      "category": "Restaurant",
+      "date": "2025-06-16",
+      "time": "11:00",
+      "price": 30,
+      "img": "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800&q=80"
+    }
+  ],
+  "saved": [
+    {
+      "id": 101,
+      "title": "VIP Jazz Lounge",
+      "location": "Calgary",
+      "category": "Music",
+      "date": "2025-06-15",
+      "time": "21:00",
+      "price": 150,
+      "img": "https://images.unsplash.com/photo-1514525253440-b393452e8d26?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 102,
+      "title": "Romantic Dinner",
+      "location": "Banff",
+      "category": "Restaurant",
+      "date": "2025-06-16",
+      "time": "19:00",
+      "price": 200,
+      "img": "https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 103,
+      "title": "Family Museum Pass",
+      "location": "Calgary",
+      "category": "Attraction",
+      "date": "2025-06-20",
+      "time": "10:00",
+      "price": 45,
+      "img": "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 104,
+      "title": "Mountain Resort",
+      "location": "Canmore",
+      "category": "Hotel",
+      "date": "2025-07-05",
+      "time": "14:00",
+      "price": 400,
+      "img": "https://images.unsplash.com/photo-1571896349842-6e5a513e610a?auto=format&fit=crop&w=800&q=80"
+    }
+  ]
+}
