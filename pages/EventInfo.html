@@ -22,7 +22,7 @@
 
 		<div class="event">
 			<div id="event-info">
-				<h1 id="event-title">Chilis Reservation</h1>
+				<h1 id="event-title-stored">Chilis Reservation</h1>
 				<div class="event-photo">
 					<img style="width:100%;height:100%;" src="../assets/img/chilis-logo-restaurant-7.png" alt="Chili's">
 				</div>
@@ -66,7 +66,7 @@
 
 								<label class="field">
 									<span>Date</span>
-									<input id="ev-date" type="text" readonly>
+									<input id="ev-date" type="text">
 								</label>
 
 								<div class="field" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
@@ -89,7 +89,7 @@
 
 								<label class="field">
 									<span>End time</span>
-									<input id="ev-end" type="text" readonly>
+									<input id="ev-end" type="text" aria-readonly="true">
 								</label>
 
 								<label class="field">
@@ -112,7 +112,7 @@
 									</div>
 								</label>
 
-								<div class="modal__actions" style="margin-left:90px">
+								<div class="modal__actions" style="margin-left:80px">
 									<button type="sumbit" id="ev-cancel" class="btn btn-secondary">Cancel</button>
 									<button type="submit" class="btn">Save</button>
 								</div>

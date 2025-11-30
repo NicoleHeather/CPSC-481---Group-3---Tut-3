@@ -27,6 +27,10 @@ const locationInput = document.getElementById('ev-location');
 const costInput = document.getElementById('ev-cost');
 const descriptionInput = document.getElementById('ev-notes');
 
+let customEvent = true;
+
+//Cancel button on edit input does not work, as well as remove event not working.
+
 removeButton.addEventListener('click', function () {
     removePopupForm.style.display = 'block';
     modal2.style.display = 'block';
@@ -41,17 +45,17 @@ editButton.addEventListener('click', function () {
     endInput.value = currentEnd.textContent;
 
     let help = document.createTextNode(currentStart.textContent)
-    startInput.innerHTML = '';
-    startInput.appendChild(help);
+    //startInput.innerHTML = '';
+    //startInput.appendChild(help);
 
-    //Something is wrong with the spans where we are unable to select s start and duration
+    //Something is wrong with the spans where we are unable to select a start and duration
     //As well as being unable to set span values on edit pop-up
     
     let tmp1 = Number(startInput.textContent[0] + startInput.textContent[1]);
     let tmp2 = Number(endInput.value[0] + endInput.value[1]);
 
-    console.log(String(tmp2 - tmp1));
-    durationInput.innerText = String(tmp2 - tmp1);
+    //console.log(String(tmp2 - tmp1));
+    //durationInput.innerText = String(tmp2 - tmp1);
 
     locationInput.value = currentLocation.textContent;
     costInput.value = currentCost.textContent;
@@ -59,5 +63,13 @@ editButton.addEventListener('click', function () {
 
     editPopupForm.style.display = 'block';
     modal.style.display = 'block';
+
+    if (customEvent){
+        console.log(dateInput);
+        console.log(document.getElementById('event-form'))
+        endInput.ariaReadOnly = true;
+        console.log(endInput)
+        //console.log(dateInput.ariaReadOnly = 'readOnly')
+    }
     
 });
