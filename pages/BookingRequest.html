@@ -18,7 +18,7 @@
 			<div id="booking-event">
 				<h1 style >Booking Request</h1>
 				<div class="user-input">
-					<h2>Guided Hike</h2>
+					<h2 id="event-name-booking">Guided Hike</h2>
 					<div id="name-input">
 						<label for="name">Name:</label>
 						<div class="required-field-container">
@@ -40,15 +40,13 @@
 					<div id="date-input">
 						<label for="date">Date: </label>
 						<div class="required-field-container">
-							<input type="text" id="date" name="date" placeholder="dd-mm-yyyy">
-							<div class="asterisk">*</div>
+							<input type="text" id="date" name="date" disabled>
 						</div>
 					</div>
 					<div id="time-input">
 						<label for="time">Time: </label>
 						<div class="required-field-container">
-							<input type="text" id="time" name="time" placeholder="XX:XX AM/PM">
-							<div class="asterisk">*</div>
+							<input type="text" id="time" name="time" disabled>
 						</div>
 					</div>
 					<div id="guest-number-input">

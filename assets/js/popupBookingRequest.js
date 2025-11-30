@@ -15,8 +15,27 @@ const guestNumber = document.querySelector('#guest-number');
 const email = document.querySelector('#email');
 const nameInput = document.querySelector('#name');
 
+const evTitle = document.getElementById('event-name-booking')
+
 //Timeout
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+
+
+window.onload = function () {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    //console.log(urlParams);
+    const paramTime = urlParams.get('time');
+    const paramDate = urlParams.get('date')
+    const paramTitle = urlParams.get('title')
+    console.log('D:', paramDate);
+    console.log('T:', paramTime);
+
+    time.value = paramTime;
+    date.value = paramDate;
+    evTitle.innerText = paramTitle;
+}
+
 
 bookingConfirmtButton.addEventListener('click', async function () {
     

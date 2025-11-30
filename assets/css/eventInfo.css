@@ -9,6 +9,17 @@
     margin-top: 10%;
     width: 100px;
     height: 50px;
+    font-size: small;
+    font-weight: bold;
+}
+
+#event-share-btn {
+    text-align: center;
+    align-content: center;
+}
+
+.event-options {
+    text-align: center;
 }
 
 #event-date, #event-time, #event-location, #event-cost {
@@ -96,10 +107,6 @@
 
 #cancel-remove {
     margin-right: 10%;
-}
-
-.event-options {
-    text-align: center;
 }
 
 .modal, .modal-2 {
