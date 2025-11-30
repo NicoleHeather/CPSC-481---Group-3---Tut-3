@@ -5,7 +5,7 @@
   background-color: #f9fafb;
 }
 
-.name-input {
+#name-input {
   text-align: center;
   margin-top: 15px;
   padding: 5px;
@@ -15,7 +15,7 @@
   border: 1px solid lightgrey;
 }
 
-.phone-input {
+#phone-input {
   text-align: center;
   margin-top: 15px;
   padding: 5px;
@@ -81,4 +81,13 @@
   font-weight: bold;
   margin-left: 1px;
   font-size: larger;
+}
+
+#button-search {
+  background: var(--color-primary);
+  padding: 5px;
+  margin: 5px;
+  border-radius: 10px;
+  color: white;
+  text-align: center;
 }
