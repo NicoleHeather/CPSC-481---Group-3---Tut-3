@@ -21,8 +21,13 @@ window.onload = function () {
         .then(response => response.json())
         .then(response => {
             exploreInfo = response.explore;
+            savedInfo = response.saved;
+
             console.log(exploreInfo);
             console.log(exploreInfo[0])
+
+            console.log(savedInfo);
+            console.log(savedInfo[0])
 
             for (let i = 0; i < 20; i ++)
             {
@@ -36,9 +41,23 @@ window.onload = function () {
 
                 if (tmp.id == eventId){
                     currentEvent = tmp;
+                    break;
                 }
             }
+
+            for (let j = 0; j < 20; j ++){
+                        
+                tmp2 = savedInfo[j];
+
+                if (tmp2.id == eventId){
+                    currentEvent = tmp2;
+                    break;
+                }
+            }
+
             console.log(currentEvent);
+            
+
             pageTitle.innerText = currentEvent.title;
             pageDescription.innerText = currentEvent.description;
             pageImage.src = currentEvent.img;
