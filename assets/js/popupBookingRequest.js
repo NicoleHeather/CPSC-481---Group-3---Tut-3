@@ -36,7 +36,6 @@ window.onload = function () {
     evTitle.innerText = paramTitle;
 }
 
-
 bookingConfirmtButton.addEventListener('click', async function () {
     
     submittedTime = time.value;

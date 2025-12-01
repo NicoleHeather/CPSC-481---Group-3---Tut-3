@@ -1,6 +1,6 @@
 // script.js
 const bookingRequestButton = document.getElementById('booking-request-btn');
-const saveStatus = document.querySelector('save-btn');
+const saveButton = document.getElementById('save-btn');
 let exploreInfo = [];
 let currentEvent;
 
@@ -52,3 +52,7 @@ bookingRequestButton.addEventListener('click', function () {
     bookingRequestButton.href = `BookingRequest.html?date=${currentEvent.date}&time=${currentEvent.time}&title=${currentEvent.title}&source=booking`;
 
 });
+
+saveButton.addEventListener('click', function () {
+   
+})
