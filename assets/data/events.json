@@ -34,7 +34,7 @@
       "price": 120,
       "img": "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80",
       "custom": false,
-      "description": "None"
+      "description": "An elevated dining experience where gourmet flavors meet breathtaking views, creating an unforgettable evening above the city."
     },
     {
       "id": 4,
@@ -46,7 +46,7 @@
       "price": 0,
       "img": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
       "custom": false,
-      "description": "None"
+      "description": "A vibrant journey through city streets where galleries, murals, and local artists bring creativity to life."
     },
     {
       "id": 5,
@@ -58,7 +58,7 @@
       "price": 350,
       "img": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80",
       "custom": false,
-      "description": "None"
+      "description": "A luxurious escape filled with fine wine, elegant surroundings, and timeless relaxation in a grand estate."
     },
     {
       "id": 6,
@@ -70,7 +70,7 @@
       "price": 10,
       "img": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80",
       "custom": false,
-      "description": "None"
+      "description": "An open-air movie night under the stars, blending film, fresh air, and community together."
     },
     {
       "id": 7,
@@ -82,7 +82,7 @@
       "price": 85,
       "img": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80",
       "custom": false,
-      "description": "None"
+      "description": "An electrifying night of powerful riffs, thundering drums, and raw energy that shakes the crowd."
     },
     {
       "id": 8,
@@ -94,7 +94,7 @@
       "price": 30,
       "img": "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800&q=80",
       "custom": false,
-      "description": "None"
+      "description": "A serene mid-morning gathering with fresh flavors, gentle breezes, and the calming view of the water."
     }
   ],
   "saved": [
@@ -108,7 +108,7 @@
       "price": 150,
       "img": "https://images.unsplash.com/photo-1514525253440-b393452e8d26?auto=format&fit=crop&w=800&q=80",
       "custom": false,
-      "description": "None"
+      "description": "An exclusive haven of smooth rhythms, refined cocktails, and intimate ambiance for true jazz lovers."
     },
     {
       "id": 102,
@@ -120,7 +120,7 @@
       "price": 200,
       "img": "https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?auto=format&fit=crop&w=800&q=80",
       "custom": false,
-      "description": "None"
+      "description": "An intimate evening of fine cuisine, candlelight, and heartfelt connection shared in a warm, elegant setting."
     },
     {
       "id": 103,
@@ -132,7 +132,7 @@
       "price": 45,
       "img": "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?auto=format&fit=crop&w=800&q=80",
       "custom": false,
-      "description": "None"
+      "description": "A shared ticket to discovery, offering families unlimited access to exhibits, history, and hands-on learning together."
     },
     {
       "id": 104,
@@ -144,7 +144,7 @@
       "price": 400,
       "img": "https://images.unsplash.com/photo-1571896349842-6e5a513e610a?auto=format&fit=crop&w=800&q=80",
       "custom": false,
-      "description": "None"
+      "description": "A tranquil retreat nestled in the peaks, offering fresh air, scenic views, and endless outdoor adventure."
     }
   ]
 }
