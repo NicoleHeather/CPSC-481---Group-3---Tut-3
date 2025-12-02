@@ -13,7 +13,7 @@
     <!-- Top quote area (moved out of the stack so it sits near the page top) -->
     <div class="quote-card quote-card--backdrop" contenteditable="true" aria-label="Inspirational quote">
       Plan Less, Explore More<br>
-      <span class="quote-accent">.. Calgary Awaits</span>
+      <span class="quote-accent">...Calgary Awaits</span>
     </div>
 
     <!-- Stack containing login card so we can offset it independently -->
@@ -31,9 +31,7 @@
           <button class="btn btn-large">Create new account</button>
         </div>
 
-        <div class="card-footer">
-          <p><a href="#" class="muted-link">I already have an account</a></p>
-        </div>
+        <!-- footer intentionally removed: login is shown by default and no back toggle is provided -->
       </div> <!-- end .login-card -->
 
     </div> <!-- end .login-stack -->
@@ -49,11 +47,13 @@
         <div class="form-group">
           <input type="password" id="password" name="password" placeholder="Password" required autocomplete="current-password" />
         </div>
-
-        <button type="submit" class="btn btn-large">Login</button>
+        <div class="form-actions" style="display:flex; gap:8px; align-items:center;">
+          <button type="submit" class="btn btn-large">Login</button>
+        </div>
 
         <div class="form-row form-help">
           <p><a href="#" id="forgot-password-trigger" class="muted-link">Forgot password?</a></p>
+          <p><a href="#" id="signup-link" class="muted-link">Sign up</a></p>
         </div>
       </form>
   </template>

@@ -1,15 +1,10 @@
-// Small script to toggle the login form inside the login card.
-// Shows the login form when user clicks "I already have an account" and handles a simple submit.
 (function(){
   'use strict';
 
   const card = document.querySelector('.login-card');
   const stack = document.querySelector('.login-stack');
-  const showLink = document.querySelector('.muted-link');
   const cardBody = card ? card.querySelector('.card-body') : null;
   const loginTemplate = document.getElementById('login-template');
-  // preserve the original card body so we can restore it
-  const originalBodyHTML = cardBody ? cardBody.innerHTML : '';
 
   function attachFormHandler(form) {
     if (!form) return;
@@ -35,7 +30,6 @@
     attachFormHandler(form);
     const first = form && form.querySelector('input');
     if (first) first.focus();
-    if (showLink) showLink.textContent = 'Back';
     if (stack) stack.classList.add('has-form');
     // wire the forgot-password trigger inside the injected form
     const forgotBtn = cardBody.querySelector('#forgot-password-trigger');
@@ -45,23 +39,20 @@
         openResetModal();
       });
     }
+    // wire the signup link to be inert for now (no navigation)
+    const signupLink = cardBody.querySelector('#signup-link');
+    if (signupLink) {
+      // mark as a non-actionable control for now
+      signupLink.setAttribute('role', 'button');
+      signupLink.setAttribute('aria-disabled', 'true');
+      signupLink.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        // no-op: sign-up flow is pinned for later implementation
+      });
+    }
   }
 
-  function hideLogin() {
-    if (!cardBody) return;
-    cardBody.innerHTML = originalBodyHTML;
-    if (showLink) showLink.textContent = 'I already have an account';
-    if (stack) stack.classList.remove('has-form');
-  }
-
-  if (showLink) {
-    showLink.addEventListener('click', (ev) => {
-      ev.preventDefault();
-      // toggle by checking whether cardBody currently contains the form
-      const hasForm = !!cardBody.querySelector('#login-form');
-      if (hasForm) hideLogin(); else showLogin();
-    });
-  }
+  // No footer/back toggle on this page — login shows by default.
 
   /* ---------------------- Password reset modal logic --------------------- */
   const resetModal = document.getElementById('reset-modal');
@@ -134,5 +125,9 @@
       closeResetModal();
     });
   }
+
+  // --- Auto-show login by default on this page ---
+  // If you want the 'Create new account' state to be default, remove this call.
+  try { showLogin(); } catch (e) { /* fail silently if DOM not ready */ }
 
 })();
