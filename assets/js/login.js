@@ -39,13 +39,15 @@
         openResetModal();
       });
     }
-    // wire the signup link (under the form) to navigate to a registration page
+    // wire the signup link to be inert for now (no navigation)
     const signupLink = cardBody.querySelector('#signup-link');
     if (signupLink) {
+      // mark as a non-actionable control for now
+      signupLink.setAttribute('role', 'button');
+      signupLink.setAttribute('aria-disabled', 'true');
       signupLink.addEventListener('click', (ev) => {
         ev.preventDefault();
-        // navigate to a register page in the same folder as Login.html
-        window.location.href = 'Register.html';
+        // no-op: sign-up flow is pinned for later implementation
       });
     }
   }
