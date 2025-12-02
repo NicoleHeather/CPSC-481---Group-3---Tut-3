@@ -2,6 +2,7 @@
 const editButton = document.getElementById('event-edit-btn');
 const editPopupForm = document.getElementById('editPopupForm');
 const removeButton = document.getElementById('event-remove-btn');
+const cancelEditButton = document.getElementById('ev-cancel');
 const removePopupForm = document.getElementById('removePopupForm');
 const background = document.getElementById('whole-page');
 const shareButton = document.getElementById('event-share-btn');
@@ -20,6 +21,7 @@ const currentEnd = document.querySelector('#current-end');
 const currentLocation = document.querySelector('#current-location');
 const currentCost = document.querySelector('#current-cost')
 const currentDescription = document.querySelector('#current-description');
+const currentImage = document.querySelector('#current-img');
 
 //Input from form
 const titleInput = document.getElementById('ev-title');
@@ -32,6 +34,52 @@ const costInput = document.getElementById('ev-cost');
 const descriptionInput = document.getElementById('ev-notes');
 
 let customEvent = true;
+let tmpEventId = 5;
+let currentEvent;
+let intineraryInfo = [];
+
+window.onload = function () {
+
+    //Uncomment on itinerary-day changes.
+    //const queryString = window.location.search;
+    //const urlParams = new URLSearchParams(queryString);
+    //console.log(urlParams);
+
+    //const eventId = urlParams.get('id');
+    //console.log('Event ID:', eventId);
+
+    //Replace with whatever json data from the itinerary screen.
+    fetch('../assets/data/events.json')
+        .then(response => response.json())
+        .then(response => {
+            intineraryInfo = response.explore;
+
+            //Replace later
+            console.log(intineraryInfo);
+            console.log(intineraryInfo[0])
+
+            for (let i = 0; i < intineraryInfo.length; i ++)
+            {
+                let tmp = intineraryInfo[i];
+
+                if (tmp.id == tmpEventId){
+                    currentEvent = tmp;
+                    break;
+                }
+            }
+
+            console.log(currentEvent);
+            
+            currentTitle.innerHTML = currentEvent.title;
+            currentDate.innerHTML = currentEvent.date;
+            currentStart.innerHTML = currentEvent.time;
+            //currentEnd.innerHTML = currentEvent.duration;
+            currentLocation.innerHTML = currentEvent.location;
+            currentCost.innerHTML = currentEvent.price;
+            currentDescription.innerHTML = currentEvent.description;
+            currentImage.src = currentEvent.img;
+        })
+};
 
 //Cancel button on edit input does not work, as well as remove event not working.
 
@@ -106,4 +154,8 @@ editForm.addEventListener("submit", (e) => {
     console.log(currentTitle.textContent)
 
     //editForm.submit();
+})
+
+cancelEditButton.addEventListener("click", function () {
+    editForm.submit();
 })

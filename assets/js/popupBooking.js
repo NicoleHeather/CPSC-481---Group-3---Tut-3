@@ -29,13 +29,9 @@ window.onload = function () {
             console.log(savedInfo);
             console.log(savedInfo[0])
 
-            for (let i = 0; i < 20; i ++)
+            for (let i = 0; i <= exploreInfo.length; i ++)
             {
                 let tmp = exploreInfo[i];
-
-                if (tmp == null) {
-                    break;
-                }
 
                 console.log(tmp.id);
 
@@ -45,7 +41,11 @@ window.onload = function () {
                 }
             }
 
-            for (let j = 0; j < 20; j ++){
+            for (let j = 0; j < savedInfo.length; j ++){
+
+                if (currentEvent != undefined || currentEvent != null){
+                    break;
+                }
                         
                 tmp2 = savedInfo[j];
 

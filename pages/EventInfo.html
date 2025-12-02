@@ -24,7 +24,7 @@
 			<div id="event-info">
 				<h1 id="event-title-stored">Chilis Reservation</h1>
 				<div class="event-photo">
-					<img style="width:100%;height:100%;" src="../assets/img/chilis-logo-restaurant-7.png" alt="Chili's">
+					<img id="current-img" style="width:100%;height:100%;" src="../assets/img/chilis-logo-restaurant-7.png" alt="Chili's">
 				</div>
 				<div id="event-date" style="display:flex">
 					<label style="font-weight:bold;">Date: </label>
@@ -72,9 +72,30 @@
 								<div class="field" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
 									<label class="field" style="margin:0">
 										<span>Start time</span>
-										<select id="ev-start" required>
+										<select id="ev-start" size="1" required>
+											<option value="12 AM"> 12 AM</option>
+											<option value="1 AM"> 1 AM</option>
+											<option value="2 AM"> 2 AM</option>
+											<option value="3 AM"> 3 AM</option>
+											<option value="4 AM"> 4 AM</option>
+											<option value="5 AM"> 5 AM</option>
+											<option value="6 AM"> 6 AM</option>
+											<option value="7 AM"> 7 AM</option>
+											<option value="8 AM"> 8 AM</option>
+											<option value="9 AM"> 9 AM</option>
+											<option value="10 AM"> 10 AM</option>
+											<option value="11 AM"> 11 AM</option>
+											<option value="12 PM"> 12 PM</option>
+											<option value="2 PM"> 1 PM</option>
+											<option value="3 PM"> 3 PM</option>
+											<option value="4 PM"> 4 PM</option>
+											<option value="5 PM"> 5 PM</option>
 											<option value="6 PM"> 6 PM</option>
-											<option value="7 PM">7 PM</option>
+											<option value="7 PM"> 7 PM</option>
+											<option value="8 PM"> 8 PM</option>
+											<option value="9 PM"> 9 PM</option>
+											<option value="10 PM"> 10 PM</option>
+										    <option value="11 PM"> 11 PM</option>
 										</select>
 									</label>
 									<label class="field" style="margin:0">
@@ -137,7 +158,7 @@
 							<br>
 							<div id="remove-btns">
 								<input class="btn btn-primary" id="cancel-remove" type="submit" value="Delete">
-								<input class="btn btn-secondary" id="yes-remove" type="submit" value="Cancel">
+								<input class="btn btn-secondary" id="yes-remove" type="button" value="Cancel">
 							</div>
 						</form>
 					</div>
