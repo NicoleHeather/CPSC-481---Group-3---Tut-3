@@ -2,27 +2,86 @@
 const editButton = document.getElementById('event-edit-btn');
 const editPopupForm = document.getElementById('editPopupForm');
 const removeButton = document.getElementById('event-remove-btn');
+const cancelEditButton = document.getElementById('ev-cancel');
 const removePopupForm = document.getElementById('removePopupForm');
 const background = document.getElementById('whole-page');
 const shareButton = document.getElementById('event-share-btn');
 const modal = document.querySelector('.modal');
 const modal2 = document.querySelector('.modal-2');
 
-// Stored event info
-const currentTitle = document.querySelector('#event-title');
+const editForm = document.getElementById('event-form');
+const saveButton = document.getElementById('save-btn')
+console.log(editForm);
+
+//Stored event info
+const currentTitle = document.querySelector('#event-title-stored');
 const currentDate = document.querySelector('#current-date');
-const currentTime = document.querySelector('#current-time');
+const currentStart = document.querySelector('#current-start');
+const currentEnd = document.querySelector('#current-end');
 const currentLocation = document.querySelector('#current-location');
 const currentCost = document.querySelector('#current-cost')
 const currentDescription = document.querySelector('#current-description');
+const currentImage = document.querySelector('#current-img');
 
 //Input from form
-const titleInput = document.getElementById('title');
-const dateInput = document.getElementById('date');
-const timeInput = document.getElementById('time');
-const locationInput = document.getElementById('location');
-const costInput = document.getElementById('cost');
-const descriptionInput = document.getElementById('description');
+const titleInput = document.getElementById('ev-title');
+const dateInput = document.getElementById('ev-date');
+const startInput = document.getElementById('ev-start');
+const durationInput = document.getElementById('ev-dur');
+const endInput = document.getElementById('ev-end');
+const locationInput = document.getElementById('ev-location');
+const costInput = document.getElementById('ev-cost');
+const descriptionInput = document.getElementById('ev-notes');
+
+let customEvent = true;
+let tmpEventId = 5;
+let currentEvent;
+let intineraryInfo = [];
+
+window.onload = function () {
+
+    //Uncomment on itinerary-day changes.
+    //const queryString = window.location.search;
+    //const urlParams = new URLSearchParams(queryString);
+    //console.log(urlParams);
+
+    //const eventId = urlParams.get('id');
+    //console.log('Event ID:', eventId);
+
+    //Replace with whatever json data from the itinerary screen.
+    fetch('../assets/data/events.json')
+        .then(response => response.json())
+        .then(response => {
+            intineraryInfo = response.explore;
+
+            //Replace later
+            console.log(intineraryInfo);
+            console.log(intineraryInfo[0])
+
+            for (let i = 0; i < intineraryInfo.length; i ++)
+            {
+                let tmp = intineraryInfo[i];
+
+                if (tmp.id == tmpEventId){
+                    currentEvent = tmp;
+                    break;
+                }
+            }
+
+            console.log(currentEvent);
+            
+            currentTitle.innerHTML = currentEvent.title;
+            currentDate.innerHTML = currentEvent.date;
+            currentStart.innerHTML = currentEvent.time;
+            //currentEnd.innerHTML = currentEvent.duration;
+            currentLocation.innerHTML = currentEvent.location;
+            currentCost.innerHTML = currentEvent.price;
+            currentDescription.innerHTML = currentEvent.description;
+            currentImage.src = currentEvent.img;
+        })
+};
+
+//Cancel button on edit input does not work, as well as remove event not working.
 
 removeButton.addEventListener('click', function () {
     removePopupForm.style.display = 'block';
@@ -34,13 +93,69 @@ editButton.addEventListener('click', function () {
 
     titleInput.value = currentTitle.textContent;
     dateInput.value = currentDate.textContent;
-    timeInput.value = currentTime.textContent;
-    locationInput.value = currentLocation.textContent;
+    startInput.value = String(currentStart.textContent);
+    endInput.value = currentEnd.textContent;
+
+   // let help = document.createTextNode(currentStart.textContent)
+    //startInput.innerHTML = '';
+    //startInput.appendChild(help);
+    //console.log(startInput.selectedIndex);
+    durationInput.selectedIndex = "3";
+
+    //Something is wrong with <select> where we are unable to select a start and duration
+    //As well as being unable to set span values on edit pop-up
     
+   // let tmp1 = Number(startInput.textContent[0] + startInput.textContent[1]);
+    //let tmp2 = Number(endInput.value[0] + endInput.value[1]);
+
+    //console.log(String(tmp2 - tmp1));
+    //durationInput.value = String(tmp2 - tmp1);
+
+    locationInput.value = currentLocation.textContent;
     costInput.value = currentCost.textContent;
     descriptionInput.value = currentDescription.textContent;
 
     editPopupForm.style.display = 'block';
     modal.style.display = 'block';
-    
+
+    if (!customEvent){
+
+        dateInput.readOnly = true;
+        dateInput.style.color = 'grey';
+
+        startInput.readOnly = true;
+        startInput.style.color = 'grey';
+
+        //durationInput.readOnly = true;
+        durationInput.style.color = 'grey';
+        //disable not supported for select input types.
+
+        endInput.readOnly = true;
+        endInput.style.color = 'grey';
+
+        locationInput.readOnly = true;
+        locationInput.style.color = 'grey';
+    }
 });
+
+editForm.addEventListener("submit", (e) => {
+
+    e.preventDefault();
+    console.log("Here");
+    
+    currentTitle.textContent = titleInput.value;
+    //currentStart.textContent = currentStart.value;
+    currentEnd.textContent = endInput.value;
+    currentLocation.textContent = locationInput.value;
+    currentCost.textContent = costInput.value;
+    currentDescription.textContent = descriptionInput.value;
+
+    console.log(titleInput.value)
+    console.log(currentTitle.textContent)
+
+    //editForm.submit();
+})
+
+cancelEditButton.addEventListener("click", function () {
+    editForm.submit();
+})

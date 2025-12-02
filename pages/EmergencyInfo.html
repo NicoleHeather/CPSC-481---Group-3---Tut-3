@@ -17,12 +17,12 @@
 		<h1>Emergency Info</h1>
 		<div id="contact-input">
 			<div class="contact-name" style="display:flex;">
-				<p>Name:</p><input class="name-input" type="text", placeholder="John Smith..."/><br>
+				<p>Name:</p><input id="name-input" type="text", placeholder="John Smith..."/><br>
 			</div>
 			<div class="contact-phone" style="display:flex;">
-				<p>Phone Num:</p><input class="phone-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
+				<p>Phone Num:</p><input id="phone-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
 			</div>
-			<button class="btn btn-secondary">Save Info</button>
+			<button id="save-info-btn" class="btn btn-secondary">Save Info</button>
 
 		<!-- Emergency Services Input -->
 		 <div id="search-input-container">
@@ -40,22 +40,22 @@
 
 		<!-- Emergency Services Search Results -->
 		<div class="emergency-search">
-		<button class="btn continue-button" id="button-search">Refresh</button>
+		<div id="button-search">Search Results</div>
 			<div class="search-result">
 				Alberta Children's Hospital
-				<button class="select-btn"> > </button>
+				<button class="select-btn" onClick="window.location.href='https://www.albertahealthservices.ca/findhealth/facility.aspx?id=1010904';"> > </button>
 			</div>
 			<div class="search-result">
 				South Health Campus
-				<button class="select-btn"> > </button>
+				<button class="select-btn" onClick="window.location.href='https://www.albertahealthservices.ca/findhealth/facility.aspx?id=1003295';"> > </button>
 			</div>
 			<div class="search-result">
 				Foothills Medical Center
-				<button class="select-btn"> > </button>
+				<button class="select-btn" onClick="window.location.href='https://www.albertahealthservices.ca/fmc/fmc.aspx';"> > </button>
 			</div>
 			<div class="search-result">
 				Rockyview General Hospital
-				<button class="select-btn"> > </button>
+				<button class="select-btn" onClick="window.location.href='https://www.albertahealthservices.ca/rgh/rgh.aspx';"> > </button>
 			</div>
 		</div>
 	</main>
@@ -64,5 +64,6 @@
 
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
+	<script src="../assets/js/emergencyInfo.js"></script>
 </body>
 </html>

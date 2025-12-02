@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,11 +8,13 @@
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<link rel="stylesheet" href="../assets/css/eventInfo.css">
+	<!--For modal and input styling -->
 </head>
+
 <body id="whole-page">
 	<!-- header partial will be injected here -->
 
-	<!-- Known issues: inputs and buttons are still visible on popups. Fix later-->
+	 <!-- Need to update input for cost and start times to num instead of string-->
 
 	<main class="container">
 
@@ -19,17 +22,21 @@
 
 		<div class="event">
 			<div id="event-info">
-				<h1 id="event-title" >Chilis Reservation</h1>
+				<h1 id="event-title-stored">Chilis Reservation</h1>
 				<div class="event-photo">
-					<img style="width:100%;height:100%;" src="../assets/img/chilis-logo-restaurant-7.png" alt="Chili's">
+					<img id="current-img" style="width:100%;height:100%;" src="../assets/img/chilis-logo-restaurant-7.png" alt="Chili's">
 				</div>
 				<div id="event-date" style="display:flex">
 					<label style="font-weight:bold;">Date: </label>
 					<div style="margin-left:2%" id="current-date">January 17th, 2025</div>
 				</div>
-				<div id="event-time" style="display:flex;">
-					<label style="font-weight:bold;">Time: </label>
-					<div style="margin-left:2%" id="current-time">6 PM - 8 PM</div>
+				<div id="event-start" style="display:flex;">
+					<label style="font-weight:bold;">Start: </label>
+					<div style="margin-left:2%" id="current-start">6 PM</div>
+				</div>
+				<div id="event-end" style="display:flex;">
+					<label style="font-weight:bold;">End:</label>
+					<div style="margin-left:2%;" id="current-end">8 PM</div>
 				</div>
 				<div id="event-location" style="display:flex">
 					<label style="font-weight:bold;">Location: </label>
@@ -41,73 +48,122 @@
 				</div>
 				<div id="event-description">
 					<label style="font-weight:bold;">Description: </label>
-					<div id="current-description">Restaurant reservation at Chili's for 4 people. Note to self: remember to bring John's birthday gift.</div>
+					<div id="current-description">Restaurant reservation at Chili's for 4 people. Note to self: remember
+						to bring John's birthday gift.</div>
 				</div>
 			</div>
 			<div class="event-options">
 				<button class="btn btn-secondary" id="event-edit-btn">Edit</button>
 				<div class="modal">
-					<div id="editPopupForm">
-						<form>
-							<div>
-								<label for="title" style="font-weight:bold">Title:</label>
-								<input type="text" id="title" title="title">
-							</div>
-							<br>
-							<div>
-								<label for="date" style="font-weight:bold">Date:</label>
-								<input type="text" id="date" date="date" placeholder="(mm/dd/yyyy)">
-							</div>
-							<br>
-							<div>
-								<label for="time" style="font-weight:bold">Time:</label>
-								<input type="text" id="time" time="time">
-							</div>
-							<br>
-							<div>
-								<label for="location" style="font-weight:bold">Location:</label>
-								<input type="text" id="location" location="location" placeholder="123 Apple St.">
-							</div>
-							<br>
-							<div>
-								<label for="cost" style="font-weight:bold">Expected Cost:</label>
-								<input type="text" id="cost" cost="cost">
-							</div>
-							<br>
-							<div>
-								<label for="description" style="font-weight:bold">Description:</label>
-								<br>
-								<textarea id="description" name="description" rows="4" cols="50"></textarea>
-								<br>
-								Max 300 Characters
-							</div>
-							<br>
-							<div id="edit-buttons">
-								<input class="btn btn-secondary" id="save-edit" type="submit" value="Save">
-								<!-- will need to change this to actually cancel -->
-								<input class="btn btn-secondary" id="cancel-edit" type="submit" value="Cancel">
-							</div>
-						</form>
+					<div class="modal__form">
+						<div id="editPopupForm">
+							<h3 id="event-title" style="margin:0 0 8px;">Edit Event</h3>
+							<form action="" id="event-form" class="modal__form">
+								<label class="field">
+									<span>Title</span>
+									<input id="ev-title" type="text">
+								</label>
+
+								<label class="field">
+									<span>Date</span>
+									<input id="ev-date" type="text">
+								</label>
+
+								<div class="field" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+									<label class="field" style="margin:0">
+										<span>Start time</span>
+										<select id="ev-start" size="1" required>
+											<option value="12 AM"> 12 AM</option>
+											<option value="1 AM"> 1 AM</option>
+											<option value="2 AM"> 2 AM</option>
+											<option value="3 AM"> 3 AM</option>
+											<option value="4 AM"> 4 AM</option>
+											<option value="5 AM"> 5 AM</option>
+											<option value="6 AM"> 6 AM</option>
+											<option value="7 AM"> 7 AM</option>
+											<option value="8 AM"> 8 AM</option>
+											<option value="9 AM"> 9 AM</option>
+											<option value="10 AM"> 10 AM</option>
+											<option value="11 AM"> 11 AM</option>
+											<option value="12 PM"> 12 PM</option>
+											<option value="2 PM"> 1 PM</option>
+											<option value="3 PM"> 3 PM</option>
+											<option value="4 PM"> 4 PM</option>
+											<option value="5 PM"> 5 PM</option>
+											<option value="6 PM"> 6 PM</option>
+											<option value="7 PM"> 7 PM</option>
+											<option value="8 PM"> 8 PM</option>
+											<option value="9 PM"> 9 PM</option>
+											<option value="10 PM"> 10 PM</option>
+										    <option value="11 PM"> 11 PM</option>
+										</select>
+									</label>
+									<label class="field" style="margin:0">
+										<span>Duration</span>
+										<select id="ev-dur" required>
+											<option value="30">30 min</option>
+											<option value="60" selected>1 hour</option>
+											<option value="90">1.5 hours</option>
+											<option value="120">2 hours</option>
+											<option value="150">2.5 hours</option>
+											<option value="180">3 hours</option>
+										</select>
+									</label>
+								</div>
+
+								<label class="field">
+									<span>End time</span>
+									<input id="ev-end" type="text">
+								</label>
+
+								<label class="field">
+									<span>Location</span>
+									<input id="ev-location" type="text">
+								</label>
+
+								<label class="field">
+									<span>Expected Cost</span>
+									<input id="ev-cost" type="text" min="0" step="0.01">
+								</label>
+
+								<label class="field">
+									<span>Description</span>
+									<textarea id="ev-notes" placeholder="Add any details…" maxlength="300"
+										rows="4"></textarea>
+									<div id="ev-count"
+										style="font-size:12px; color:var(--color-muted); margin-top:4px;">0 /
+										300
+									</div>
+								</label>
+
+								<div class="modal__actions" style="margin-left:80px">
+									<button type="button" id="ev-cancel" class="btn btn-secondary">Cancel</button>
+									<button type="submit" class="btn" id="save-btn">Save</button>
+								</div>
+								<div id="ev-error" style="color:#c8102e; font-size:13px; margin-top:4px; display:none;">
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
-			    <button id="event-remove-btn" class="btn btn-secondary">Remove</button>
+				<button id="event-remove-btn" class="btn btn-secondary">Remove</button>
 				<div class="modal-2">
-    				<div id="removePopupForm">
-        				<form>
+					<div id="removePopupForm">
+						<form>
 							<img style="width:25%;height:5%;" src="../assets/img/R.png" alt="Chili's">
-            				<br>
+							<br>
 							<p>
 								Are you sure you want to remove this event?
 							</p>
 							<br>
 							<div id="remove-btns">
-            					<input class="btn btn-primary" id="cancel-remove" type="submit" value="No">
-								<input class="btn btn-primary" id="yes-remove" type="submit" value="Yes">
+								<input class="btn btn-primary" id="cancel-remove" type="submit" value="Delete">
+								<input class="btn btn-secondary" id="yes-remove" type="button" value="Cancel">
 							</div>
-        				</form>
-    				</div>
+						</form>
+					</div>
 				</div>
-				<button id="event-share-btn" class="btn btn-secondary">Share</button>
+				<a id="event-share-btn" href="../pages/Share.html" class="btn btn-secondary">Share</a>
 			</div>
 		</div>
 
@@ -116,9 +172,5 @@
 	<script src="../assets/js/main.js"></script>
 	<script src="../assets/js/popupEventInfo.js"></script>
 </body>
+
 </html>
-
-
-
-
-
