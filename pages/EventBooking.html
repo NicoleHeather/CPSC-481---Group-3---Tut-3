@@ -57,6 +57,100 @@
     <script src="../assets/js/include.js"></script>
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/popupBooking.js"></script>
+    <script>
+    // Get event ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const eventId = parseInt(urlParams.get('id'));
+    const source = urlParams.get('source') || 'explore'; // 'explore' or 'saved'
+
+    const STORAGE_KEY = 'user_saved_events';
+
+    // Fetch event details and initialize page
+    fetch('../assets/data/events.json')
+        .then(response => response.json())
+        .then(data => {
+            // Look for event in both explore and saved arrays
+            let event = null;
+            if (source === 'saved') {
+                event = data.saved.find(e => e.id === eventId);
+            } else {
+                event = data.explore.find(e => e.id === eventId);
+            }
+            
+            if (!event) {
+                console.error('Event not found');
+                return;
+            }
+            
+            // Update page content
+            document.getElementById('page-title').textContent = event.title;
+            document.getElementById('page-image').src = event.img;
+            document.getElementById('booking-request-btn').href = `../pages/BookingRequest.html?id=${event.id}&title=${encodeURIComponent(event.title)}`;
+            
+            // Update save button based on current state
+            updateSaveButton(event);
+        })
+        .catch(err => {
+            console.error('Error loading event:', err);
+        });
+
+    // Function to update save button text and state
+    function updateSaveButton(event) {
+        const saveBtn = document.getElementById('save-btn');
+        const savedEvents = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const isSaved = savedEvents.some(e => e.id === event.id);
+        
+        if (isSaved) {
+            saveBtn.textContent = '✓ Saved to History';
+            saveBtn.style.backgroundColor = 'var(--color-primary)';
+            saveBtn.onclick = () => unsaveEvent(event);
+        } else {
+            saveBtn.textContent = 'Save to History';
+            saveBtn.style.backgroundColor = 'var(--color-accent)';
+            saveBtn.onclick = () => saveEvent(event);
+        }
+    }
+
+    // Save event function
+    function saveEvent(event) {
+        let savedEvents = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        
+        // Check if already saved
+        if (!savedEvents.some(e => e.id === event.id)) {
+            savedEvents.push(event);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedEvents));
+            
+            // Show confirmation
+            alert(`${event.title} has been saved!`);
+            
+            // Update button
+            updateSaveButton(event);
+        }
+    }
+
+    // Unsave event function
+    function unsaveEvent(event) {
+        let savedEvents = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const initialLength = savedEvents.length;
+        
+        savedEvents = savedEvents.filter(e => e.id !== event.id);
+        
+        if (savedEvents.length !== initialLength) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedEvents));
+            
+            // Show confirmation
+            alert(`${event.title} has been removed from saved!`);
+            
+            // Update button
+            updateSaveButton(event);
+            
+            // If we came from saved page, go back
+            if (source === 'saved') {
+                setTimeout(() => window.location.href = '../pages/SavedEvents.html', 500);
+            }
+        }
+    }
+    </script>
 </body>
 
 </html>
