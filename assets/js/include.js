@@ -42,6 +42,19 @@
       } else {
         insertAtBodyStart(html);
       }
+      // If the page requested no back button, hide the header-left contents after inject
+      try {
+        if (document.body.classList.contains('no-back')) {
+          const headerLeft = document.querySelector('.site-header .header-left');
+          if (headerLeft) {
+            // keep the element in place to preserve header layout, but hide its contents
+            headerLeft.innerHTML = '';
+            headerLeft.style.visibility = 'hidden';
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
     }
     // If running from file:// and header partial couldn't be loaded, insert a minimal fallback header
     if (!html && window.location.protocol === 'file:') {

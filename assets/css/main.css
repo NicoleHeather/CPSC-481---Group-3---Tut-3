@@ -62,6 +62,24 @@ html, body { overflow-x: hidden; }
 /* Header small layout */
 .header-inner { display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .header-left, .header-right { width:40px; display:flex; align-items:center; }
+
+/* When a page opts out of the back button, center the brand in the header */
+body.no-back .header-inner { justify-content: center !important; }
+body.no-back .brand { margin: 0; }
+/* Position the header container relative so we can absolutely position the brand */
+body.no-back .site-header .container { position: relative; }
+
+/* Exactly center the brand horizontally and vertically so it matches other pages. */
+body.no-back .site-header .brand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Force a consistent header height and container height to match other pages. */
+body.no-back .site-header { min-height: 64px; }
+body.no-back .site-header .container { height: 64px; padding-top: 0; padding-bottom: 0; }
 .icon-btn { background:transparent; border:0; padding:6px; border-radius:8px; cursor:pointer; }
 .icon-btn svg { width:18px; height:18px; color: #ffffff; }
 
