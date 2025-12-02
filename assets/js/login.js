@@ -1,5 +1,3 @@
-// Small script to toggle the login form inside the login card.
-// Shows the login form when user clicks "I already have an account" and handles a simple submit.
 (function(){
   'use strict';
 

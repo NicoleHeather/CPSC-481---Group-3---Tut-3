@@ -87,9 +87,9 @@
   /* Use transform to move the stack visually without affecting document flow
      or the pseudo-element background size/position. Transforms do not resize
      or reflow the background-image on the container's ::before pseudo. */
-  --login-stack-offset: clamp(10vh, 13vh, 18vh);
-  /* pull the stack up slightly so the card sits higher on the viewport */
-  transform: translateY(calc(38vh));
+  --login-stack-offset: clamp(12vh, 16vh, 20vh);
+  /* nudge the stack down so the card sits lower in the viewport */
+  transform: translateY(calc(44vh));
   transition: transform 260ms ease;
   will-change: transform;
   gap: clamp(0.12rem, 0.9vh, 0.45rem);
@@ -98,9 +98,8 @@
 
 /* When the login form is visible, pull the card upward so users don't need to scroll */
 .login-stack.has-form {
-  /* also move the stack up a bit when the form is visible so it remains fully visible
-     without needing to scroll on smaller viewports */
-  transform: translateY(calc(20vh));
+    /* keep the card lower when the form is visible, but not off-screen on small viewports */
+    transform: translateY(calc(28vh));
 }
 .quote-card:focus {
   box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.12);
@@ -321,9 +320,9 @@
   /* Use transform to move the stack visually without affecting document flow
      or the pseudo-element background size/position. Transforms do not resize
      or reflow the background-image on the container's ::before pseudo. */
-  --login-stack-offset: clamp(10vh, 13vh, 18vh);
-  /* pull the stack up slightly so the card sits higher on the viewport */
-  transform: translateY(calc(38vh));
+  --login-stack-offset: clamp(12vh, 16vh, 20vh);
+  /* nudge the stack down so the card sits lower in the viewport */
+  transform: translateY(calc(44vh));
   transition: transform 260ms ease;
   will-change: transform;
   gap: clamp(0.12rem, 0.9vh, 0.45rem);
@@ -334,7 +333,7 @@
 .login-stack.has-form {
   /* also move the stack up a bit when the form is visible so it remains fully visible
      without needing to scroll on smaller viewports */
-  transform: translateY(calc(20vh));
+  transform: translateY(calc(28vh));
 }
 .quote-card:focus {
   box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.12);
