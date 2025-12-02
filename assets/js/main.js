@@ -49,3 +49,46 @@ document.addEventListener('DOMContentLoaded', function () {
       });
   }
 });
+
+// Header back button behavior: go back when possible, otherwise fall back to a sensible page
+(function () {
+  function goBackOrHome() {
+    // compute a root-aware home path (keep it relative to the site root)
+    const root = window.location.pathname.split('/pages/')[0] || '';
+    const home = root + '/pages/Home.html';
+
+    // Prefer history.back() when there is a previous entry
+    try {
+      if (window.history && window.history.length > 1) {
+        window.history.back();
+        return;
+      }
+    } catch (e) {
+      // ignore and fall through to referrer/home
+    }
+
+    // If we have a same-origin referrer, go there
+    const ref = document.referrer;
+    if (ref) {
+      try {
+        const u = new URL(ref);
+        if (u.origin === location.origin) {
+          location.href = ref;
+          return;
+        }
+      } catch (e) {
+        // invalid referrer
+      }
+    }
+
+    // final fallback: home page
+    location.href = home;
+  }
+
+  document.addEventListener('click', function (ev) {
+    const btn = ev.target.closest && ev.target.closest('.header-left-btn');
+    if (!btn) return;
+    ev.preventDefault();
+    goBackOrHome();
+  });
+})();
