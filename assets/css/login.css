@@ -472,7 +472,24 @@
   color: var(--color-text);
   opacity: 0.86;
   font-weight: 600;
-  text-decoration: none;
+  text-decoration: underline; /* underline by default to indicate clickability */
   margin-bottom: 4px;
 }
+
+/* Make the signup link stand out with the site's accent (orange) color */
+#signup-link {
+  color: var(--color-accent);
+  opacity: 1;
+  /* keep the underline from .muted-link so both helper links are clearly links */
+}
+
+#signup-link:hover,
+#signup-link:focus {
+  text-decoration: underline;
+}
+
+/* Center the primary login button and tighten spacing for the helper links */
+.login-card .form-actions { justify-content: center; }
+.login-card .form-row.form-help { display: flex; flex-direction: column; gap: 6px; justify-content: center; margin-top: 6px; }
+.login-card .form-row.form-help p { margin: 0; }
 
