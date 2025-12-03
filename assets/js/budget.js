@@ -1,272 +1,261 @@
-// assets/js/budget.js
-// Trip List -> Budget Detail (donut) + Add Expense modal
+// ======================================================================
+// budget.js (FINAL — trips.json + static categories + no persistence)
+// ======================================================================
 
 (function () {
-  // ---------- Data ----------
-  const TRIPS = [
-    {
-      id: 1,
-      title: 'Itinerary - 1',
-      period: 'Sept 13 – Sept 20, 2025',
-      created: 'Aug 2, 2025',
-      edited: 'Sept 6, 2025',
-      status: 'Ongoing',
-      totalBudget: 2000,
-      categories: [
-        { name: 'Housing',       amount: 800 },
-        { name: 'Food',          amount: 300 },
-        { name: 'Transport',     amount: 150 },
-        { name: 'Entertainment', amount: 120 },
-        { name: 'Misc',          amount: 80  },
-      ],
-    },
-    {
-      id: 2,
-      title: 'Itinerary - 2',
-      period: 'Jan 7 – Jan 9, 2025',
-      created: 'Dec 15, 2024',
-      edited: 'Dec 15, 2024',
-      status: 'Completed',
-      totalBudget: 1200,
-      categories: [
-        { name: 'Housing',  amount: 450 },
-        { name: 'Food',     amount: 220 },
-        { name: 'Transport',amount: 90  },
-        { name: 'Tours',    amount: 140 },
-        { name: 'Misc',     amount: 60  },
-      ],
-    },
-    {
-      id: 3,
-      title: 'Itinerary - 3',
-      period: 'Mar 14 – Mar 20, 2025',
-      created: 'Jan 31, 2025',
-      edited: 'Feb 20, 2025',
-      status: 'Planned',
-      totalBudget: 1800,
-      categories: [
-        { name: 'Housing',   amount: 700 },
-        { name: 'Food',      amount: 260 },
-        { name: 'Transport', amount: 140 },
-        { name: 'Activities',amount: 220 },
-        { name: 'Misc',      amount: 40  },
-      ],
-    },
+  // --------------------------------------------------------------
+  // CONSTANT STATIC CATEGORIES (no adding, no editing)
+  // --------------------------------------------------------------
+  const STATIC_CATEGORIES = [
+    "Housing",
+    "Food",
+    "Transport",
+    "Entertainment",
+    "Misc"
   ];
 
-  const COLORS = ['#ff7f27', '#1abc9c', '#3498db', '#9b59b6', '#e74c3c', '#f1c40f', '#2ecc71'];
+  const COLORS = ["#ff7f27", "#1abc9c", "#3498db", "#9b59b6", "#e74c3c"];
 
-  // ---------- DOM ----------
-  const listView   = document.getElementById('trip-list-view');
-  const listEl     = document.getElementById('trip-list');
-  const detailView = document.getElementById('budget-detail-view');
-  const backBtn    = document.getElementById('back-to-trips');
+  // --------------------------------------------------------------
+  // Load trips.json (SINGLE SOURCE OF TRUTH)
+  // --------------------------------------------------------------
+  async function loadTrips() {
+    const base = window.location.pathname.includes("/pages/") ? ".." : ".";
+    const url = `${base}/assets/data/trips.json`;
+    return (await fetch(url).then((res) => res.json())).trips || [];
+  }
 
-  const slicesGroup = document.getElementById('donut-slices');
-  const legendEl    = document.getElementById('donut-legend');
-  const mainText    = document.getElementById('donut-main');
-  const subText     = document.getElementById('donut-sub');
-  const headText    = document.getElementById('donut-remaining-label');
+  // --------------------------------------------------------------
+  // DOM Elements
+  // --------------------------------------------------------------
+  const listView = document.getElementById("trip-list-view");
+  const listEl   = document.getElementById("trip-list");
 
-  const addBtn      = document.getElementById('add-expense-btn');
-  const modal       = document.getElementById('expense-modal');
-  const form        = document.getElementById('expense-form');
-  const nameInput   = document.getElementById('exp-name');
-  const amtInput    = document.getElementById('exp-amount');
-  const catSelect   = document.getElementById('exp-category');
-  const newCatWrap  = document.getElementById('new-cat-wrap');
-  const newCatInput = document.getElementById('exp-newcat');
-  const cancelBtn   = document.getElementById('expense-cancel');
+  const detailView = document.getElementById("budget-detail-view");
+  const backBtn    = document.getElementById("back-to-trips");
 
-  if (!listView || !listEl || !detailView || !slicesGroup || !legendEl || !mainText || !subText) return;
+  const slicesGroup = document.getElementById("donut-slices");
+  const legendEl    = document.getElementById("donut-legend");
+  const mainText    = document.getElementById("donut-main");
+  const subText     = document.getElementById("donut-sub");
+  const remainingLabel = document.getElementById("donut-remaining-label");
 
-  // Keep track of which trip is open in detail view
+  const addBtn   = document.getElementById("add-expense-btn");
+  const modal    = document.getElementById("expense-modal");
+  const form     = document.getElementById("expense-form");
+  const nameInput = document.getElementById("exp-name");
+  const amtInput  = document.getElementById("exp-amount");
+  const catSelect = document.getElementById("exp-category");
+  const cancelBtn = document.getElementById("expense-cancel");
+
+  if (!listView || !listEl) return;
+
+  // ----------------------------
+  // State
+  // ----------------------------
   let currentTrip = null;
 
-  // ---------- Trip list ----------
+  // Expenses stored *in memory only* (not persisted)
+  const EXPENSES = {}; // { tripId: [ { category, amount } ] }
+
+  // ----------------------------
+  // Rendering Trip Cards (List)
+  // ----------------------------
   function renderTripCard(trip) {
-    const el = document.createElement('article');
-    el.className = 'trip-card';
+    const el = document.createElement("article");
+    el.className = "trip-card";
+
+    const start = new Date(trip.startDate).toLocaleDateString(undefined, {
+      month: "short", day: "numeric", year: "numeric"
+    });
+    const end = new Date(trip.endDate).toLocaleDateString(undefined, {
+      month: "short", day: "numeric", year: "numeric"
+    });
+
     el.innerHTML = `
       <div class="trip-card__header">
         <h3 class="trip-card__title">${trip.title}</h3>
       </div>
+
       <div class="trip-card__body">
-        <p class="trip-card__row"><strong>${trip.period}</strong></p>
-        <p class="trip-card__row">Created: ${trip.created}</p>
-        <p class="trip-card__row">Last Edited: ${trip.edited}</p>
-        <p class="trip-card__row">Trip Status: ${trip.status}</p>
+        <p class="trip-card__row"><strong>${start} – ${end}</strong></p>
       </div>
+
       <div class="trip-card__rail"></div>
+
       <button class="trip-card__cta btn btn-primary" type="button">View budget</button>
     `;
-    el.querySelector('.trip-card__cta').addEventListener('click', () => showBudget(trip));
+
+    el.querySelector(".trip-card__cta").addEventListener("click", () => {
+      showBudget(trip);
+    });
+
     return el;
   }
 
-  function renderTripList() {
-    listEl.innerHTML = '';
-    TRIPS.forEach(t => listEl.appendChild(renderTripCard(t)));
+  async function renderTripList() {
+    const trips = await loadTrips();
+    listEl.innerHTML = "";
+    trips.forEach(t => listEl.appendChild(renderTripCard(t)));
   }
 
-  // ---------- View switching ----------
+  // ----------------------------
+  // Switching Views
+  // ----------------------------
   function showTrips() {
-    detailView.classList.add('hidden');
-    listView.classList.remove('hidden');
+    detailView.classList.add("hidden");
+    listView.classList.remove("hidden");
     currentTrip = null;
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    window.scrollTo(0, 0);
   }
+
   function showBudget(trip) {
     currentTrip = trip;
-    listView.classList.add('hidden');
-    detailView.classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    renderDonut(trip);
-  }
-  backBtn.addEventListener('click', showTrips);
 
-  // ---------- Donut (per selected trip) ----------
-  function renderDonut(trip) {
-    slicesGroup.innerHTML = '';
-    legendEl.innerHTML = '';
-
-    const TOTAL_BUDGET = trip.totalBudget;
-    const CATEGORIES   = trip.categories;
-
-    const spent = CATEGORIES.reduce((s, c) => s + c.amount, 0);
-    const overspent = spent > TOTAL_BUDGET;
-    const remaining = Math.max(TOTAL_BUDGET - spent, 0);
-
-    // Percentages that sum to 100 (largest remainder method)
-    const rawPerc = CATEGORIES.map(c => (c.amount / TOTAL_BUDGET) * 100);
-    const floors  = rawPerc.map(p => Math.floor(p));
-    const rema    = rawPerc.map((p, i) => ({ i, frac: p - floors[i] }));
-    let leftover  = 100 - floors.reduce((s, v) => s + v, 0);
-    rema.sort((a, b) => b.frac - a.frac);
-    const rounded = floors.slice();
-    for (let k = 0; k < leftover; k++) {
-      if (k < rema.length) rounded[rema[k].i] += 1;
+    if (!EXPENSES[trip.id]) {
+      EXPENSES[trip.id] = [];
     }
-    const remainingPct = Math.max(0, 100 - rounded.reduce((s, v) => s + v, 0));
 
-    // Geometry
+    listView.classList.add("hidden");
+    detailView.classList.remove("hidden");
+
+    renderDonut(trip);
+    window.scrollTo(0, 0);
+  }
+
+  backBtn.addEventListener("click", showTrips);
+
+  // ----------------------------
+  // Add Expense Modal (non-persistent)
+  // ----------------------------
+  addBtn.addEventListener("click", () => {
+    if (!currentTrip) return;
+
+    modal.classList.remove("hidden");
+
+    nameInput.value = "";
+    amtInput.value = "";
+    catSelect.innerHTML = "";
+
+    STATIC_CATEGORIES.forEach(cat => {
+      const opt = document.createElement("option");
+      opt.value = cat;
+      opt.textContent = cat;
+      catSelect.appendChild(opt);
+    });
+
+    catSelect.value = STATIC_CATEGORIES[0];
+    nameInput.focus();
+  });
+
+  cancelBtn.addEventListener("click", () => modal.classList.add("hidden"));
+  modal.addEventListener("click", e => {
+    if (e.target === modal) modal.classList.add("hidden");
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (!currentTrip) return;
+
+    const name = nameInput.value.trim();
+    const amt  = parseFloat(amtInput.value);
+    const cat  = catSelect.value;
+
+    if (!name || isNaN(amt)) return;
+
+    EXPENSES[currentTrip.id].push({ name, category: cat, amount: amt });
+
+    modal.classList.add("hidden");
+    renderDonut(currentTrip);
+  });
+
+  // ----------------------------
+  // Donut Chart Renderer
+  // ----------------------------
+  function renderDonut(trip) {
+    slicesGroup.innerHTML = "";
+    legendEl.innerHTML = "";
+
+    const totalBudget = 2000; // Fixed prototype budget
+    const expenses = EXPENSES[trip.id] || [];
+
+    // Compute category totals
+    const totals = STATIC_CATEGORIES.map(cat => {
+      const amount = expenses
+        .filter(e => e.category === cat)
+        .reduce((sum, e) => sum + e.amount, 0);
+      return { name: cat, amount };
+    });
+
+    const spent = totals.reduce((s, t) => s + t.amount, 0);
+    const remaining = Math.max(0, totalBudget - spent);
+
+    // DRAW donut segments
     const cx = 100, cy = 100, r = 80;
-    const circumference   = 2 * Math.PI * r;
-    const ringSpentFrac   = Math.min(spent / TOTAL_BUDGET, 1);
-    function arcFrac(amount) { return (spent > TOTAL_BUDGET) ? (amount / spent) * ringSpentFrac : amount / TOTAL_BUDGET; }
+    const circumference = 2 * Math.PI * r;
 
-    // Draw categories
     let offset = 0;
-    CATEGORIES.forEach((cat, idx) => {
-      const frac = arcFrac(cat.amount);
-      const dash = Math.max(0, Math.min(frac * circumference, circumference - offset));
-      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', r);
-      circle.setAttribute('class', 'donut-slice'); circle.setAttribute('fill', 'none'); circle.setAttribute('stroke-width', '22');
-      circle.setAttribute('stroke-dasharray', `${dash} ${circumference}`); circle.setAttribute('stroke-dashoffset', `${-offset}`);
-      circle.style.stroke = COLORS[idx % COLORS.length];
-      slicesGroup.appendChild(circle);
+
+    totals.forEach((t, i) => {
+      const percent = t.amount / totalBudget;
+      const dash = percent * circumference;
+
+      const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("cx", cx);
+      c.setAttribute("cy", cy);
+      c.setAttribute("r", r);
+      c.classList.add("donut-slice");
+      c.style.stroke = COLORS[i % COLORS.length];
+      c.style.strokeDasharray = `${dash} ${circumference}`;
+      c.style.strokeDashoffset = -offset;
+
+      slicesGroup.appendChild(c);
       offset += dash;
 
-      const row = document.createElement('div');
-      row.className = 'legend-row';
+      // Legend
+      const row = document.createElement("div");
+      row.className = "legend-row";
       row.innerHTML = `
-        <span class="swatch" style="background:${COLORS[idx % COLORS.length]};"></span>
-        <span class="name">${cat.name}</span>
-        <span class="amount">$${cat.amount.toLocaleString()}</span>
-        <span class="pct">${rounded[idx]}%</span>
+        <span class="swatch" style="background:${COLORS[i % COLORS.length]}"></span>
+        <span class="name">${t.name}</span>
+        <span class="amount">$${t.amount.toFixed(2)}</span>
+        <span class="pct">${Math.round(percent * 100)}%</span>
       `;
       legendEl.appendChild(row);
     });
 
     // Remaining
-    if (remaining > 0 && spent <= TOTAL_BUDGET) {
-      const frac = remaining / TOTAL_BUDGET;
-      const dash = Math.max(0, Math.min(frac * circumference, circumference - offset));
-      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', r);
-      circle.setAttribute('class', 'donut-slice is-remaining'); circle.setAttribute('fill', 'none'); circle.setAttribute('stroke-width', '22');
-      circle.setAttribute('stroke-dasharray', `${dash} ${circumference}`); circle.setAttribute('stroke-dashoffset', `${-offset}`);
-      circle.style.stroke = 'rgba(0,0,0,0.18)';
-      slicesGroup.appendChild(circle);
+    const remPercent = remaining / totalBudget;
+    const remDash = remPercent * circumference;
+    const rc = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    rc.setAttribute("cx", cx);
+    rc.setAttribute("cy", cy);
+    rc.setAttribute("r", r);
+    rc.classList.add("donut-slice");
+    rc.style.stroke = "rgba(0,0,0,0.12)";
+    rc.style.strokeDasharray = `${remDash} ${circumference}`;
+    rc.style.strokeDashoffset = -offset;
+    slicesGroup.appendChild(rc);
 
-      const row = document.createElement('div');
-      row.className = 'legend-row';
-      row.innerHTML = `
-        <span class="swatch" style="background:rgba(0,0,0,0.18);"></span>
-        <span class="name">Remaining</span>
-        <span class="amount">$${remaining.toLocaleString()}</span>
-        <span class="pct">${remainingPct}%</span>
-      `;
-      legendEl.appendChild(row);
-    }
+    const remainingRow = document.createElement("div");
+    remainingRow.className = "legend-row";
+    remainingRow.innerHTML = `
+      <span class="swatch" style="background:rgba(0,0,0,0.12)"></span>
+      <span class="name">Remaining</span>
+      <span class="amount">$${remaining.toFixed(2)}</span>
+      <span class="pct">${Math.round(remPercent * 100)}%</span>
+    `;
+    legendEl.appendChild(remainingRow);
 
     // Center labels
-    const remainingLabel = (spent > TOTAL_BUDGET) ? 0 : remaining;
-    if (headText) headText.textContent = 'Remaining:';
-    mainText.textContent = `$${remainingLabel.toLocaleString()}`;
-    subText.textContent  = `$${TOTAL_BUDGET.toLocaleString()} total`;
-
-    // Prepare modal category list
-    refreshCategorySelect(trip);
+    remainingLabel.textContent = "Remaining:";
+    mainText.textContent = `$${remaining.toFixed(2)}`;
+    subText.textContent  = `$${totalBudget.toFixed(2)} total`;
   }
 
-  // ---------- Modal: Add Expense ----------
-  function openModal() {
-    if (!currentTrip) return;
-    modal.classList.remove('hidden');
-    nameInput.value = '';
-    amtInput.value = '';
-    newCatInput.value = '';
-    newCatWrap.classList.add('hidden');
-    refreshCategorySelect(currentTrip);
-    catSelect.focus();
-  }
-  function closeModal() { modal.classList.add('hidden'); }
-
-  function refreshCategorySelect(trip) {
-    catSelect.innerHTML = '';
-    trip.categories.forEach(c => {
-      const opt = document.createElement('option'); opt.value = c.name; opt.textContent = c.name;
-      catSelect.appendChild(opt);
-    });
-    const newOpt = document.createElement('option'); newOpt.value = '__NEW__'; newOpt.textContent = 'New category…';
-    catSelect.appendChild(newOpt);
-  }
-
-  catSelect?.addEventListener('change', () => {
-    if (catSelect.value === '__NEW__') newCatWrap.classList.remove('hidden');
-    else newCatWrap.classList.add('hidden');
-  });
-
-  addBtn?.addEventListener('click', openModal);
-  cancelBtn?.addEventListener('click', closeModal);
-  modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!currentTrip) return;
-
-    const name = (nameInput.value || '').trim();
-    const amt  = parseFloat(amtInput.value);
-    if (!name || isNaN(amt) || amt < 0) return;
-
-    let categoryName = catSelect.value;
-    if (categoryName === '__NEW__') {
-      categoryName = (newCatInput.value || '').trim();
-      if (!categoryName) return;
-    }
-
-    // Update trip data
-    const existing = currentTrip.categories.find(c => c.name.toLowerCase() === categoryName.toLowerCase());
-    if (existing) existing.amount += amt;
-    else currentTrip.categories.push({ name: categoryName, amount: amt });
-
-    closeModal();
-    renderDonut(currentTrip);
-  });
-
-  // ---------- init ----------
+  // ----------------------------
+  // INIT
+  // ----------------------------
   renderTripList();
   showTrips();
 })();
