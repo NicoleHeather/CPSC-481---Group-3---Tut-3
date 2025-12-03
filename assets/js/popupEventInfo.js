@@ -9,9 +9,9 @@ const shareButton = document.getElementById('event-share-btn');
 const modal = document.querySelector('.modal');
 const modal2 = document.querySelector('.modal-2');
 
+const startTimeOptions = document.getElementById('start-time-options');
 const editForm = document.getElementById('event-form');
 const saveButton = document.getElementById('save-btn')
-console.log(editForm);
 
 //Stored event info
 const currentTitle = document.querySelector('#event-title-stored');
@@ -33,20 +33,27 @@ const locationInput = document.getElementById('ev-location');
 const costInput = document.getElementById('ev-cost');
 const descriptionInput = document.getElementById('ev-notes');
 
+let currentDuration;
 let customEvent = true;
-let tmpEventId = 5;
+//let tmpEventId = 1;
 let currentEvent;
 let intineraryInfo = [];
+let arrTimeOptions = ["0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", 
+                      "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00",
+                      "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", 
+                      "21:00", "22:00", "23:00"]
+
+let arrDurationOptions = ["30", "1", "1.5", "2", "2.5", "3",
+                            "3.5", "4", "4.5", ];
 
 window.onload = function () {
 
     //Uncomment on itinerary-day changes.
-    //const queryString = window.location.search;
-    //const urlParams = new URLSearchParams(queryString);
-    //console.log(urlParams);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
 
-    //const eventId = urlParams.get('id');
-    //console.log('Event ID:', eventId);
+    const eventId = urlParams.get('id');
+    console.log('Event ID:', eventId);
 
     //Replace with whatever json data from the itinerary screen.
     fetch('../assets/data/events.json')
@@ -62,27 +69,64 @@ window.onload = function () {
             {
                 let tmp = intineraryInfo[i];
 
-                if (tmp.id == tmpEventId){
+                if (tmp.id == eventId){
                     currentEvent = tmp;
                     break;
                 }
             }
 
-            console.log(currentEvent);
-            
+            customEvent = currentEvent.custom;
+            console.log(customEvent);
+
             currentTitle.innerHTML = currentEvent.title;
             currentDate.innerHTML = currentEvent.date;
             currentStart.innerHTML = currentEvent.time;
-            //currentEnd.innerHTML = currentEvent.duration;
+
+            currentDuration = currentEvent.duration;
+
             currentLocation.innerHTML = currentEvent.location;
             currentCost.innerHTML = currentEvent.price;
             currentDescription.innerHTML = currentEvent.description;
             currentImage.src = currentEvent.img;
+
+            console.log(currentStart.innerHTML)
+
+            let tmpStart;
+
+            for (let i = 0; i < arrTimeOptions.length; i ++) {
+
+                if (arrTimeOptions[i] == currentStart.textContent){
+                    startInput.selectedIndex = i;
+                    let tmp = arrTimeOptions[i].split(":");
+                    console.log(tmp[1]);
+                    tmpStart = tmp[0];
+                    console.log(tmpStart);
+                    console.log(tmp);
+                }
+            }
+
+            for (let j = 0; j < arrDurationOptions.length; j++){
+
+                if (arrDurationOptions[j] == currentEvent.duration){
+                    durationInput.selectedIndex = j;
+                    let tmpEnd = Number(tmpStart) + Number(arrDurationOptions[j]);
+                    tmpEnd = String(tmpEnd) + ":00";
+                    endInput.value = tmpEnd;
+                    currentEnd.innerHTML = tmpEnd;
+                    //console.log(tmpEnd);
+                }
+            }
+
+            if (currentEnd.textContent.length > 5) {
+                let tmp3 = currentEnd.textContent.split(".");
+                let tmp4 = tmp3[0];
+                console.log(tmp4);
+                currentEnd.textContent = tmp4 + ":30";
+            }
         })
 };
 
-//Cancel button on edit input does not work, as well as remove event not working.
-
+//Remove event not working.
 removeButton.addEventListener('click', function () {
     removePopupForm.style.display = 'block';
     modal2.style.display = 'block';
@@ -93,27 +137,10 @@ editButton.addEventListener('click', function () {
 
     titleInput.value = currentTitle.textContent;
     dateInput.value = currentDate.textContent;
-    startInput.value = String(currentStart.textContent);
-    endInput.value = currentEnd.textContent;
-
-   // let help = document.createTextNode(currentStart.textContent)
-    //startInput.innerHTML = '';
-    //startInput.appendChild(help);
-    //console.log(startInput.selectedIndex);
-    durationInput.selectedIndex = "3";
-
-    //Something is wrong with <select> where we are unable to select a start and duration
-    //As well as being unable to set span values on edit pop-up
-    
-   // let tmp1 = Number(startInput.textContent[0] + startInput.textContent[1]);
-    //let tmp2 = Number(endInput.value[0] + endInput.value[1]);
-
-    //console.log(String(tmp2 - tmp1));
-    //durationInput.value = String(tmp2 - tmp1);
-
     locationInput.value = currentLocation.textContent;
     costInput.value = currentCost.textContent;
     descriptionInput.value = currentDescription.textContent;
+    endInput.value = currentEnd.textContent;
 
     editPopupForm.style.display = 'block';
     modal.style.display = 'block';
@@ -138,24 +165,36 @@ editButton.addEventListener('click', function () {
     }
 });
 
-editForm.addEventListener("submit", (e) => {
+//Save button
+saveButton.addEventListener("click", function () {
 
-    e.preventDefault();
     console.log("Here");
-    
     currentTitle.textContent = titleInput.value;
-    //currentStart.textContent = currentStart.value;
-    currentEnd.textContent = endInput.value;
+    currentStart.textContent = arrTimeOptions[startInput.selectedIndex];
+
+    let tmp = arrTimeOptions[startInput.selectedIndex].split(":");
+    let tmp2 = arrDurationOptions[durationInput.selectedIndex];
+    tmp = tmp[0];
+
+    currentEnd.textContent = String(Number(tmp) + Number(tmp2)) + ":00"
+
+    //Changing the end time directly does not work at the moment.
+    if(currentEnd.textContent.length > 5) {
+        let tmp3 = currentEnd.textContent.split(".");
+        let tmp4 = tmp3[0];
+        console.log(tmp4);
+        currentEnd.textContent = tmp4 + ":30";
+    }
+
     currentLocation.textContent = locationInput.value;
     currentCost.textContent = costInput.value;
     currentDescription.textContent = descriptionInput.value;
 
-    console.log(titleInput.value)
-    console.log(currentTitle.textContent)
-
-    //editForm.submit();
+    editPopupForm.style.display = 'none';
+    modal.style.display = 'none';   
 })
 
 cancelEditButton.addEventListener("click", function () {
-    editForm.submit();
+    editPopupForm.style.display = 'none';
+    modal.style.display = 'none';  
 })
