@@ -2,8 +2,8 @@
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: minmax(140px, 1fr);
-  gap: 12px;
-  padding: 14px;
+  gap: 8px;
+  padding: 10px;
   background: #fff;
   border-top: 1px solid rgba(0,0,0,0.04);
   overflow-x: auto;
@@ -15,11 +15,12 @@
   scroll-snap-align: start;
   flex-shrink: 0;
   min-width: 140px;
-  background: rgba(255,127,39,0.06); /* light orange tint using accent */
+  /* stronger tint to increase saturation and visual weight */
+  background: rgba(255,127,39,0.12); /* increased tint */
   border-radius: 8px;
-  padding: 8px 10px;
-  border: 1px solid rgba(255,127,39,0.14);
-  box-shadow: 0 6px 18px rgba(200,16,46,0.03);
+  padding: 6px 8px;
+  border: 1px solid rgba(255,127,39,0.22);
+  box-shadow: 0 6px 18px rgba(200,16,46,0.06);
   cursor: pointer;
   transition: transform .14s ease, box-shadow .14s ease;
   position: relative;
@@ -54,9 +55,191 @@
 }
 .trip-card__header[aria-expanded="false"]::after { content: '▸'; }
 
-.day-list { margin: 6px 0 0; padding-left: 14px; }
-.day-list li { font-size: 13px; line-height: 1.35; margin: 6px 0; }
-.day-time { font-weight: 700; margin-right: 8px; color: #c0531a; }
-.day-title { color: var(--color-link, #0b66a3); text-decoration: none; border-bottom: 2px solid transparent; padding-bottom: 2px; transition: border-color .12s ease; font-weight:700; }
+.day-list { margin: 0 0 0; padding-left: 8px; }
+.day-list li { font-size: 12px; line-height: 1.15; margin: 2px 0; }
+.day-time { font-weight: 600; margin-right: 6px; color: #c0531a; }
+.day-title { color: var(--color-link, #0b66a3); text-decoration: none; border-bottom: 2px solid transparent; padding-bottom: 1px; transition: border-color .12s ease; font-weight:600; }
 .day-title:hover, .day-title:focus { border-color: currentColor; }
 .day-more { color: var(--color-muted); font-style: italic; }
+
+/* New week-columns layout: first header column + Mon..Sun columns */
+.week-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr)); /* two columns with sensible min width */
+  grid-template-rows: repeat(4, 1fr); /* four rows */
+  gap: 8px;
+  align-items: stretch;
+  padding: 4px 0 0 0; /* small top padding so cards sit a little below the header */
+  /* fit the viewport so the page itself doesn't scroll — panels will scroll internally */
+  height: calc(100vh - 184px); /* header + controls + bottom nav approx. */
+}
+/* legacy helper removed: do not force display on the grid container */
+/* .trip-week-columns rule intentionally removed so `.week-columns` can stay a grid */
+.week-column {
+  /* increase saturation of the panel background and border for stronger cards */
+  background: rgba(255,127,39,0.10); /* stronger tint */
+  border: 1px solid rgba(255,127,39,0.22);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: auto; /* allow internal scroll inside panels; page stays stationary */
+}
+.week-column--header {
+  /* Match regular week-column visuals so the header appears as a card
+     consistent with the other panels (light orange background, border, shadow).
+  */
+  background: rgba(255,127,39,0.10);
+  border: 1px solid rgba(255,127,39,0.22);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+.week-column__inner { display:flex; flex-direction:column; gap:6px; }
+.trip-title { margin: 0; font-size: 1.4rem; font-weight: 800; color: #15202b; }
+.trip-dates { color: var(--color-muted); font-size: .95rem; line-height: 1.2; white-space: normal; }
+
+/* Header-specific increases: make the first column's title and date stand out */
+.week-column--header .trip-title { font-size: 1.9rem; letter-spacing: -0.5px; }
+.week-column--header .trip-dates { font-weight: 700; font-size: 1rem; color: var(--color-text); }
+.day-header { margin-bottom: 4px; }
+.day-header { margin-bottom: 4px; }
+/* Use flex to keep the day name and its date on the same horizontal line
+   for non-header columns. This is more robust across devices than absolute
+   positioning. */
+.week-column:not(.week-column--header) .day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 2px 6px 2px 0; /* tighter vertical padding and less horizontal space */
+}
+.week-column:not(.week-column--header) .day-header .day-name {
+  margin: 0;
+  line-height: 1;
+  color: var(--color-text);
+}
+/* Move the date for day columns (not the header card) to the top-right and bold it */
+.week-column:not(.week-column--header) .day-header .day-date {
+  /* positioned by flex: appear at the right, same line as the day name */
+  position: static;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Make the weekday name and its date match in font size, family and weight
+   but with slightly reduced boldness for visual balance. */
+.week-column:not(.week-column--header) .day-header .day-name,
+.week-column:not(.week-column--header) .day-header .day-date {
+  font-size: .85rem; /* slightly smaller so longer dates fit */
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--color-text);
+  line-height: 1; /* compress vertical space */
+}
+
+/* Keep weekday + date on one line for day columns (2-7). If space is
+   constrained, truncate the weekday with an ellipsis so the date remains
+   visible at the right. Header column (1) is unaffected. */
+.week-column:not(.week-column--header) .day-header {
+  white-space: nowrap;
+}
+.week-column:not(.week-column--header) .day-header .day-name {
+  flex: 1 1 auto;
+  min-width: 0; /* allow flex children to shrink for text-overflow to work */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+.week-column:not(.week-column--header) .day-header .day-date {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  margin-left: 8px;
+}
+/* header column keeps its `.trip-dates` styling; no special .day-date overrides here */
+.event-item {
+  /* Minimal single-line event: extra-tight spacing so more lines fit */
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 2px 0;
+  box-shadow: none;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  color: var(--color-muted);
+  font-size: .88rem;
+}
+.event-item.header-event { /* keep this available but minimal */
+  background: transparent;
+  border-left: 4px solid rgba(255,127,39,0.92);
+  padding-left: 6px;
+}
+.event-time { font-weight: 400; color: var(--color-muted); width:48px; flex:0 0 48px; }
+.event-title { font-weight: 400; color: var(--color-text); }
+.day-empty { color: var(--color-muted); font-style: italic; }
+
+/* Controls (Prev / Next) styling: pill links matching brand accent */
+#week-controls { gap:12px; align-items:center; margin:12px 0 8px; }
+#week-controls a.link { text-decoration: none; color: #fff; font-weight:700; padding:6px 12px; border-radius:10px; background: linear-gradient(90deg, rgba(255,127,39,0.98), rgba(200,16,46,0.98)); box-shadow: 0 6px 18px rgba(200,30,45,0.12); display:inline-block; }
+#week-controls a.link:hover { transform: translateY(-2px); }
+#week-controls a.link:focus { outline: 3px solid rgba(255,127,39,0.14); outline-offset: 3px; }
+
+/* Page header row: center the title, position prev/next to left/right */
+.page-header-row { display:flex; align-items:center; justify-content:center; position:relative; margin: 8px 0 6px; padding: 0 48px; }
+.page-header-row h2, .page-header-row h3 { margin: 0; }
+/* Use the base .btn (Regular) visuals for header controls; keep this class
+  only for layout and positioning so the appearance matches SamplePage's
+  "Regular" button. The `.btn` class provides the background/hover.
+*/
+.header-control { text-decoration: none; font-weight:700; padding:6px 12px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; /* make controls equal width */ flex: 0 0 96px; width: 96px; }
+.header-control.left { position: absolute; left: 8px; }
+.header-control.right { position: absolute; right: 8px; }
+.header-control:focus { outline: 3px solid rgba(255,127,39,0.14); outline-offset: 3px; }
+
+@media (max-width: 420px) {
+  .header-control { flex: 0 0 72px; width: 72px; padding:6px 8px; font-size: .92rem; }
+  .page-header-row { padding: 0 36px; }
+}
+
+/* Minor layout tuning */
+.week-columns { padding: 14px 10px; }
+.week-column { min-height: 100px; }
+
+/* Ensure adequate bottom padding for fixed bottom nav */
+main.container { padding-bottom: 120px; }
+
+/* When itinerary page requests a fixed viewport, prevent page scroll and
+   allow internal panel scrolling. Applied only on the week page via
+   `body.itinerary-fixed`. */
+body.itinerary-fixed {
+  overflow: hidden; /* prevent page-level vertical scroll */
+}
+
+/* Ensure week grid fits available space when fixed mode is active. This
+   keeps header and footer visible while panels can scroll internally. */
+body.itinerary-fixed .week-columns {
+  height: calc(100vh - 184px);
+}
+
+@media (max-width: 920px) {
+  /* On narrow viewports, keep 2x4 layout but increase vertical space slightly */
+  .week-columns { height: calc(100vh - 220px); }
+}
+
+/* For most phones keep two columns so panels appear side-by-side.
+   Only collapse to one column on very narrow devices (less than 380px). */
+@media (max-width: 540px) {
+  .week-columns { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, 1fr); height: calc(100vh - 220px); }
+}
+
+@media (max-width: 380px) {
+  /* Extra-small devices: stack into single column */
+  .week-columns { grid-template-columns: 1fr; grid-template-rows: repeat(8, auto); height: auto; }
+}

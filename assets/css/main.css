@@ -331,6 +331,12 @@ main.container { padding-bottom: 92px; }
 .event-card__subtitle { margin: 6px 0 0 0; font-size: .92rem; opacity: .92; font-weight: 400; }
 .event-card__title, .event-card__subtitle { color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.6); }
 .event-card__title, .event-card__subtitle { text-decoration: none; }
+
+/* Minimal event preview shown on itinerary cards: small, subtle list */
+.itinerary-mini-list { list-style: none; margin: 8px 0 0 0; padding: 0; color: rgba(255,255,255,0.75); font-size: .88rem; font-style: normal; }
+.itinerary-mini-list li { margin: 4px 0 0 0; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.itinerary-mini-list .mini-time { font-weight: 400; margin-right: 6px; color: rgba(255,255,255,0.75); }
+.itinerary-mini-list .mini-title { color: rgba(255,255,255,0.75); font-weight: 400; font-style: normal; }
 .price-badge { position:absolute; top: .6rem; right: .6rem; background: rgba(255,255,255,.92); color: #000; padding: .25rem .5rem; border-radius: .4rem; font-weight:700; }
 
 /* Global link styles (only affect regular links, not UI buttons/pills) */
