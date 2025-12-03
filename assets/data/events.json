@@ -103,6 +103,32 @@
       "img": "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800&q=80",
       "custom": false,
       "description": "A serene mid-morning gathering with fresh flavors, gentle breezes, and the calming view of the water."
+    },
+    {
+      "id": 9,
+      "title": "Calgary Muesum",
+      "location": "Calgary",
+      "category": "Attraction",
+      "date": "2025-06-16",
+      "time": "11:00",
+      "duration" : "2",
+      "price": 50,
+      "img": "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800&q=80",
+      "custom": false,
+      "description": "Museum."
+    },
+    {
+      "id": 10,
+      "title": "Roller Skate Park",
+      "location": "Calgary",
+      "category": "Attraction",
+      "date": "2025-06-16",
+      "time": "9:00",
+      "duration" : "1",
+      "price": 15,
+      "img": "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800&q=80",
+      "custom": false,
+      "description": "Museum."
     }
   ],
   "saved": [

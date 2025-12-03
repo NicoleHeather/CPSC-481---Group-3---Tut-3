@@ -66,11 +66,12 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 20px;
+    padding: 10px;
     z-index: 1;
     width: 85%;
     height: 60%;
     border-radius: 20px;
+    padding-right: 55px;
 }
 
 #missing-required-info {
@@ -149,6 +150,7 @@ input {
 
 #success-message, #error-message {
     text-align: center;
+    align-items: center;
 }
 
 #success-container, #error-container {
@@ -158,6 +160,7 @@ input {
     justify-content: center;
     gap: 20px;
     border-radius: 20px;
+    padding-left: 30px;
 }
 
 #choose-itinerary {

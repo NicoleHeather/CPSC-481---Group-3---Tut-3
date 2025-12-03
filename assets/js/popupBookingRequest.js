@@ -7,7 +7,13 @@ const cardBackground = document.getElementById('booking-event')
 const modal = document.querySelector('.modal');
 const missingInfoForm = document.getElementById('missing-required-info');
 const processingDisplay = document.getElementById('booking-request-processing');
+
+//pop-up buttons
 const addEventButton = document.getElementById('booking-request-confirm');
+const missingInfoOkayButton = document.getElementById("missing-required-info-ok");
+const bookingConflictOkay = document.getElementById("booking-request-conflict-ok");
+const bookingRequestOverride = document.getElementById("booking-request-conflict-override");
+const bookingRequestView = document.getElementById("booking-request-conflict-view-event");
 
 //Track Input
 const time = document.querySelector('#time');
@@ -17,6 +23,7 @@ const email = document.querySelector('#email');
 const nameInput = document.querySelector('#name');
 
 const evTitle = document.getElementById('event-name-booking')
+let eventId;
 
 //Timeout
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
@@ -27,8 +34,12 @@ window.onload = function () {
     const urlParams = new URLSearchParams(queryString);
     //console.log(urlParams);
     const paramTime = urlParams.get('time');
-    const paramDate = urlParams.get('date')
-    const paramTitle = urlParams.get('title')
+    const paramDate = urlParams.get('date');
+    const paramTitle = urlParams.get('title');
+    eventId = urlParams.get('id');
+    console.log(eventId);
+
+    
     console.log('D:', paramDate);
     console.log('T:', paramTime);
 
@@ -53,7 +64,7 @@ bookingConfirmtButton.addEventListener('click', async function () {
     }
 
     //If the time input is the same as the conflicting event time, show conflict popup.
-    if (submittedTime == "6:00 PM" || submittedTime == "6 PM") {
+    if (submittedTime == "6:00") {
         bookingConflictForm.style.display = 'flex';
         modal.style.display = "block";
         return;
@@ -69,5 +80,57 @@ bookingConfirmtButton.addEventListener('click', async function () {
 });
 
 addEventButton.addEventListener ('click', function () {
-    
+    bookingConfirmForm.style.display = 'none';
+    modal.style.display = "none";
+
+    fetch('../assets/data/events.json')
+        .then(response => response.json())
+        .then(data => {
+            console.log('JSON data loaded');
+            currentEvent = data.explore.find(e => e.id === eventId);
+            console.log(currentEvent);
+        })
+
 });
+
+missingInfoOkayButton.addEventListener ('click', function () {
+    missingInfoForm.style.display = 'none';
+    modal.style.display = "none";    
+});
+
+bookingConflictOkay.addEventListener ('click', function () {
+    missingInfoForm.style.display = 'none';
+    modal.style.display = "none";
+});
+
+bookingRequestOverride.addEventListener ('click', function () {
+    missingInfoForm.style.display = 'none';
+    modal.style.display = "none";
+});
+
+bookingRequestView.addEventListener ('click', function () {
+    bookingRequestView.href = `EventInfo.html?id=${eventId}&source=booking`;
+});
+
+
+function updatePage() {
+    if (!window.currentEvent) {
+        console.error('No current event to update page');
+        return;
+    }
+        
+    console.log('Updating page for:', window.currentEvent.title);
+        
+    document.getElementById('page-title').textContent = window.currentEvent.title;
+    document.getElementById('page-image').src = window.currentEvent.img;
+    document.getElementById('booking-request-btn').href = 
+        `../pages/BookingRequest.html?id=${window.currentEvent.id}&title=${encodeURIComponent(window.currentEvent.title)}`;
+        
+    // Update description if it exists
+    const descriptionEl = document.getElementById('page-description');
+    if (descriptionEl && window.currentEvent.description) {
+        descriptionEl.innerHTML = `<p>${window.currentEvent.description}</p>`;
+    }
+        
+    updateSaveButton();
+}
