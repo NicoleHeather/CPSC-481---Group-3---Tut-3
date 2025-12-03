@@ -94,7 +94,9 @@
       list.className = "day-list";
 
       day.activities.slice(0, 3).forEach(act => {
-        const ev = EVENTS.find(e => e.id === act.id);
+        const ev = EVENTS.find(e => e.id === act.id && e.id !== 9);
+        console.log("IN HERE");
+        console.log(ev);
         const title = ev ? ev.title : "(Event)";
         const li = document.createElement("li");
 
@@ -103,11 +105,18 @@
           <a href="./EventInfo.html?id=${act.id}" class="day-title">${title}</a>
         `;
 
-        if (removeActive && act.id == eventIdToRemove)
+        if (removeActive && act.id == eventIdToRemove || act.id == 9)
         {
-          console.log("REMOVE");
-          li.style.display = 'none'; 
-          li.className = "";   
+          /*if (addActive && act.id == 9){
+            console.log("ADDED");
+          }
+          else {
+            */
+            // || act.id == 9 || act.id == 10
+            li.style.display = "none";
+            console.log("REMOVE");
+            li.textContent = "No items";
+          //}
         }
 
         list.appendChild(li);

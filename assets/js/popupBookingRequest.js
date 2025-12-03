@@ -80,16 +80,23 @@ bookingConfirmtButton.addEventListener('click', async function () {
 });
 
 addEventButton.addEventListener ('click', function () {
+
+    const itinerary = document.getElementById('choose-itinerary');
+    console.log(itinerary.value);
+
     bookingConfirmForm.style.display = 'none';
     modal.style.display = "none";
 
-    fetch('../assets/data/events.json')
+    addEventButton.href = `ItineraryDay.html?date=${date.value}&trip=${itinerary}&id=${eventId}&add=${1}&`
+
+    /*fetch('../assets/data/events.json')
         .then(response => response.json())
         .then(data => {
             console.log('JSON data loaded');
             currentEvent = data.explore.find(e => e.id === eventId);
             console.log(currentEvent);
         })
+    */
 
 });
 
@@ -111,26 +118,3 @@ bookingRequestOverride.addEventListener ('click', function () {
 bookingRequestView.addEventListener ('click', function () {
     bookingRequestView.href = `EventInfo.html?id=${eventId}&source=booking`;
 });
-
-
-function updatePage() {
-    if (!window.currentEvent) {
-        console.error('No current event to update page');
-        return;
-    }
-        
-    console.log('Updating page for:', window.currentEvent.title);
-        
-    document.getElementById('page-title').textContent = window.currentEvent.title;
-    document.getElementById('page-image').src = window.currentEvent.img;
-    document.getElementById('booking-request-btn').href = 
-        `../pages/BookingRequest.html?id=${window.currentEvent.id}&title=${encodeURIComponent(window.currentEvent.title)}`;
-        
-    // Update description if it exists
-    const descriptionEl = document.getElementById('page-description');
-    if (descriptionEl && window.currentEvent.description) {
-        descriptionEl.innerHTML = `<p>${window.currentEvent.description}</p>`;
-    }
-        
-    updateSaveButton();
-}

@@ -109,7 +109,35 @@
       "title": "Calgary Muesum",
       "location": "Calgary",
       "category": "Attraction",
-      "date": "2025-06-16",
+      "date": "2025-05-4",
+      "time": "11:00",
+      "duration" : "2",
+      "price": 50,
+      "img": "https://th.bing.com/th/id/R.fbb4aba92ab53fc084ba394e5475cb4c?rik=zLzo81gVh6cZ4A&pid=ImgRaw&r=0",
+      "custom": false,
+      "description": "Discover Calgary’s rich history and vibrant culture at this engaging museum, where interactive exhibits, local stories, and hands-on activities bring the city’s heritage to life. Perfect for families, visitors, and anyone curious about Alberta’s past and present."
+    },
+    {
+      "id": 10,
+      "title": "Roller Skate Park",
+      "location": "Calgary",
+      "category": "Attraction",
+      "date": "2025-05-5",
+      "time": "9:00",
+      "duration" : "1",
+      "price": 15,
+      "img": "https://th.bing.com/th/id/R.b8f978ac70f101e0e6f7617d9296e171?rik=3%2fK3%2fBrsryL1Yw&pid=ImgRaw&r=0",
+      "custom": false,
+      "description": "Experience the thrill of wheels and music at this vibrant Calgary roller skate park, featuring smooth tracks, fun ramps, and a welcoming atmosphere for skaters of all ages and skill levels. A perfect spot to roll, groove, and enjoy the city's energetic outdoor scene."
+    }
+  ],
+  "booked" : [
+    {
+      "id": 9,
+      "title": "Calgary Muesum",
+      "location": "Calgary",
+      "category": "Attraction",
+      "date": "2025-06-20",
       "time": "11:00",
       "duration" : "2",
       "price": 50,
@@ -122,11 +150,11 @@
       "title": "Roller Skate Park",
       "location": "Calgary",
       "category": "Attraction",
-      "date": "2025-06-16",
-      "time": "9:00",
+      "date": "2025-07-16",
+      "time": "13:00",
       "duration" : "1",
       "price": 15,
-      "img": "https://i.pinimg.com/originals/47/f0/99/47f099130fbbb60daaa6fa3e6b5306b1.jpg",
+      "img": "https://th.bing.com/th/id/R.b8f978ac70f101e0e6f7617d9296e171?rik=3%2fK3%2fBrsryL1Yw&pid=ImgRaw&r=0",
       "custom": false,
       "description": "Museum."
     }

@@ -2,8 +2,9 @@
 // itinerary-day.js (FINAL — Sequential Fill)
 // ======================================================================
 
-let eventIdToRemove;
+let eventId;
 let removeActive;
+let addActive;
 
 (function () {
   const $ = (sel, node = document) => node.querySelector(sel);
@@ -55,6 +56,8 @@ let removeActive;
   const params = new URLSearchParams(location.search);
   const tripId = params.get("trip");
   const dateISO = params.get("date");
+
+  console.log(tripId);
 
   if (!tripId || !dateISO) return;
 
@@ -118,17 +121,24 @@ let removeActive;
       block.style.top = px(startIdx) + "px";
       block.style.height = (px(endIdx) - px(startIdx) - 4) + "px";
 
-      if (removeActive && ev.id == eventIdToRemove)
+      if ((removeActive && ev.id == eventId) || ev.id == 9)
       {
         console.log("REMOVE");
-        block.style.display = 'none'; 
-        block.className = "";   
+        block.style.display = "none";
+        className = null;
       }
 
       block.innerHTML = `
         <span class="event-title">${ev.title}</span>
         <span class="event-time">${ev.time} – ${addM(ev.time, dur)}</span>
       `;
+
+      if ((removeActive && ev.id == eventId) || ev.id == 9)
+      {
+        console.log("REMOVE");
+        block.style.display = "none";
+        block.innerHTML = null;
+        block.style.color = "none";
 
       block.addEventListener("click", () => {
         location.href = `./EventInfo.html?id=${ev.id}&trip=${tripId}&date=${dateISO}`;
@@ -145,14 +155,17 @@ window.onload = function () {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
 
-  eventIdToRemove = urlParams.get('id');
+  eventId= urlParams.get('id');
   removeActive = urlParams.get('remove');
-  console.log('Event ID:', eventIdToRemove);
+  addActive = urlParams.get('add');
+  console.log('Event ID:', eventId);
   console.log('remove', removeActive);
+  console.log('new event', addActive);
 }
 
 const backToWeekButton = document.getElementById('back-to-week')
 
 backToWeekButton.addEventListener('click', function () {
-  backToWeekButton.href = `./ItineraryWeek.html?id=${eventIdToRemove}&remove=${1}`;
+
+  backToWeekButton.href = `./ItineraryWeek.html?id=${eventId}&remove=${1}`;
 });
