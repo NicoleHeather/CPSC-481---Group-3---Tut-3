@@ -20,6 +20,10 @@ html, body { overflow-x: hidden; }
   padding: var(--container-padding);
 }
 
+/* Page-scoped helper: remove gap under sticky header for pages that opt-in */
+body.no-header-gap .container { padding-top: 6px; }
+body.no-header-gap .container > h1, body.no-header-gap .container > h2 { margin-top: 0; }
+
 .site-header {
   background: var(--color-primary);
   border-bottom: 1px solid rgba(0,0,0,0.08);
@@ -160,12 +164,173 @@ main.container { padding-bottom: 92px; }
 .page-header { font-size: 1.1rem; margin: .25rem 0 .75rem; padding-bottom: .25rem; border-bottom: 2px solid #000; }
 .page-header--accent { border-color: var(--color-accent); }
 
-.cards-grid { display:block; gap: 1rem; }
-.event-card { width: 100%; min-height: 220px; background-size:cover; background-position:center; border-radius: .5rem; overflow:hidden; position:relative; box-shadow: 0 10px 30px rgba(0,0,0,.18); margin-bottom: 1rem; transition: transform .18s ease, box-shadow .18s ease; }
-.event-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,.22); }
-.event-card__overlay { position: absolute; inset: 0; display:flex; align-items:flex-end; padding: .75rem; background: linear-gradient(to top, rgba(0,0,0,.45), rgba(0,0,0,0)); color: #fff; }
-.event-card__title { margin: 0; font-weight:700; font-size:1rem; }
-.event-card__subtitle { margin: 0; font-size: .85rem; opacity: .9; }
+.cards-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  align-items: start;
+}
+.event-card {
+  display: block;
+  width: 100%;
+  min-height: 220px;
+  background-size: cover;
+  background-position: center;
+  background-color: #efefef; /* fallback if image missing */
+  border-radius: .5rem;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  margin-bottom: 1rem;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+/* make cards clearly interactive */
+.event-card { cursor: pointer; will-change: transform; }
+
+/* Itinerary card wrapper so we can place non-anchor UI (budget icon) safely */
+.itinerary-card { position: relative; display:flex; flex-direction:column; }
+
+/* Modern inline budget button placed at the top-right of the card */
+/* Bottom action tab (Manage Budget) attached to card */
+.itinerary-card .event-card { border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-bottom: 0; }
+.itinerary-card__tab {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  padding: 10px 16px;
+  background: linear-gradient(90deg, rgba(255,127,39,0.98), rgba(200,16,46,0.98));
+  color: white;
+  font-weight: 700;
+  border-bottom-left-radius: .5rem;
+  border-bottom-right-radius: .5rem;
+  box-shadow: none;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  margin-top: 0; /* sit flush to card */
+  position: relative;
+  transition: transform .18s ease, box-shadow .18s ease, background .12s ease;
+}
+.itinerary-card__tab:focus { outline: 3px solid rgba(255,127,39,0.14); outline-offset: 3px; }
+
+/* Remove individual hover translation on the tab so the wrapper's
+  hover/translate controls movement. Keep focus outline for a11y. */
+.itinerary-card__tab:hover { transform: none; box-shadow: none; }
+
+@media (max-width:420px) {
+  .itinerary-card__tab { padding: 9px 12px; font-size: .95rem; }
+}
+
+/* Add a persistent chevron to the Manage Budget tab similar to the overlay */
+.itinerary-card__tab::after { display: none !important; }
+
+.itinerary-card__tab:focus {
+  /* keep focus visual but do not translate the tab separately */
+  transform: none;
+  box-shadow: none;
+}
+
+.itinerary-card__tab:hover::after, .itinerary-card__tab:focus::after,
+.itinerary-card:focus-within .itinerary-card__tab::after { display: none !important; }
+
+@media (max-width:420px) {
+  .itinerary-card__tab::after { font-size: 16px; padding: 6px 8px; right: 10px; }
+}
+/* Move the whole itinerary wrapper on hover/focus so attached elements
+   (Manage Budget tab) move together and no gap appears. The inner
+   `.event-card` performs only a subtle scale to provide depth. */
+.itinerary-card {
+  transition: transform .18s ease, box-shadow .18s ease;
+  will-change: transform;
+}
+.itinerary-card:hover,
+.itinerary-card:focus-within {
+  transform: translateY(-8px);
+}
+
+/* Inner card scales slightly for depth while the wrapper translates. */
+.itinerary-card:hover .event-card,
+.itinerary-card:focus-within .event-card {
+  transform: scale(1.015);
+  box-shadow: 0 26px 52px rgba(0,0,0,.26);
+}
+
+/* Direct hover on the inner card (mouse) should match the wrapper behavior
+   but must avoid applying an extra translate (no double-translate). */
+.event-card:hover { transform: scale(1.015); box-shadow: 0 26px 52px rgba(0,0,0,.26); }
+.event-card:active { transform: scale(1.01); }
+
+/* keyboard focus style for accessibility: focus-visible highlights the card
+   but the wrapper handles the translate so users see the tab move too. */
+.event-card:focus-visible {
+  outline: 3px solid rgba(255,127,39,0.14);
+  outline-offset: 6px;
+  transform: scale(1.015);
+  box-shadow: 0 26px 52px rgba(0,0,0,.26);
+}
+
+/* small subtle overlay lift for extra affordance */
+.itinerary-card:hover .event-card__overlay,
+.itinerary-card:focus-within .event-card__overlay {
+  transform: translateY(-2px);
+}
+.event-card__overlay { transition: transform .18s ease; }
+
+/* Fallback for environments without :hover (device emulation / touch)
+   Show a hover-like lift so users in DevTools device toolbar can preview
+   and touch users get a clear affordance. This only applies when the
+   UA reports no hover capability. */
+@media (hover: none), (pointer: coarse) {
+  /* Move the whole itinerary wrapper so the bottom "Manage Budget" tab
+     moves with the card and no visual gap appears in touch/device emulation. */
+  .itinerary-card {
+    transform: translateY(-6px);
+    transition: transform .18s ease, box-shadow .18s ease;
+    /* keep stacking context for outline */
+    will-change: transform;
+  }
+  .itinerary-card .event-card {
+    box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+    transition: box-shadow .18s ease;
+  }
+  .itinerary-card:focus-within {
+    outline: 3px solid rgba(255,127,39,0.14);
+    outline-offset: 6px;
+  }
+  .itinerary-card .event-card__overlay {
+    transform: translateY(-2px);
+  }
+}
+
+/* Persistent affordance for clickability (visible on all devices) */
+.event-card__overlay::after { display: none !important; }
+
+.itinerary-card:hover .event-card__overlay::after,
+.itinerary-card:focus-within .event-card__overlay::after { display: none !important; }
+
+/* On very small screens, slightly reduce size to avoid crowding */
+@media (max-width:420px) {
+  .event-card__overlay::after { font-size: 18px; padding: 6px 8px; right: 10px; bottom: 10px; }
+}
+.event-card__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* push text to bottom */
+  align-items: flex-start;    /* left-align content */
+  padding: .75rem;
+  background: linear-gradient(to top, rgba(0,0,0,.45), rgba(0,0,0,0));
+  color: #fff;
+  text-align: left;
+  z-index: 2; /* ensure overlay sits above background image */
+}
+.event-card__title { margin: 0; font-weight: 700; font-size: 1rem; line-height: 1.1; }
+.event-card__subtitle { margin: 6px 0 0 0; font-size: .92rem; opacity: .92; font-weight: 400; }
+.event-card__title, .event-card__subtitle { color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.6); }
+.event-card__title, .event-card__subtitle { text-decoration: none; }
 .price-badge { position:absolute; top: .6rem; right: .6rem; background: rgba(255,255,255,.92); color: #000; padding: .25rem .5rem; border-radius: .4rem; font-weight:700; }
 
 /* Global link styles (only affect regular links, not UI buttons/pills) */

@@ -80,35 +80,43 @@
     wrap.className = "week-row";
 
     days.slice(0, 7).forEach(day => {
-      const cell = document.createElement("a");
-      cell.className = "day-cell";
-      cell.href = `./ItineraryDay.html?trip=${trip.id}&date=${day.date}`;
+      // Use a div with role=link so event anchors inside remain valid (no nested anchors)
+      const cell = document.createElement('div');
+      cell.className = 'day-cell';
+      cell.setAttribute('role', 'link');
+      cell.setAttribute('tabindex', '0');
+      const href = `./ItineraryDay.html?trip=${encodeURIComponent(trip.id)}&date=${encodeURIComponent(day.date)}`;
+      cell.dataset.href = href;
+
+      // Click and keyboard handlers to navigate
+      cell.addEventListener('click', () => { if (cell.dataset.href) location.href = cell.dataset.href; });
+      cell.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (cell.dataset.href) location.href = cell.dataset.href; } });
 
       cell.innerHTML = `
         <span class="day-name">${toDay(day.date)}</span>
         <span class="day-date">${toShort(day.date)}</span>
         <div class="day-meta"><div>${trip.title}</div></div>
+        <span class="chev" aria-hidden="true">›</span>
       `;
 
-      const list = document.createElement("ul");
-      list.className = "day-list";
+      const list = document.createElement('ul');
+      list.className = 'day-list';
 
       day.activities.slice(0, 3).forEach(act => {
         const ev = EVENTS.find(e => e.id === act.id);
-        const title = ev ? ev.title : "(Event)";
-        const li = document.createElement("li");
-
+        const title = ev ? ev.title : '(Event)';
+        const li = document.createElement('li');
         li.innerHTML = `
           <span class="day-time">${act.time}</span>
-          <a href="./EventInfo.html?id=${act.id}" class="day-title">${title}</a>
+          <a href="./EventInfo.html?id=${encodeURIComponent(act.id)}" class="day-title">${title}</a>
         `;
         list.appendChild(li);
       });
 
       if (day.activities.length === 0) {
-        const li = document.createElement("li");
-        li.className = "day-more";
-        li.textContent = "No items";
+        const li = document.createElement('li');
+        li.className = 'day-more';
+        li.textContent = 'No items';
         list.appendChild(li);
       }
 
