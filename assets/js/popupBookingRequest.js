@@ -7,6 +7,7 @@ const cardBackground = document.getElementById('booking-event')
 const modal = document.querySelector('.modal');
 const missingInfoForm = document.getElementById('missing-required-info');
 const processingDisplay = document.getElementById('booking-request-processing');
+const addEventButton = document.getElementById('booking-request-confirm');
 
 //Track Input
 const time = document.querySelector('#time');
@@ -67,3 +68,6 @@ bookingConfirmtButton.addEventListener('click', async function () {
     }
 });
 
+addEventButton.addEventListener ('click', function () {
+    
+});

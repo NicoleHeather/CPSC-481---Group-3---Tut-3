@@ -58,7 +58,7 @@
 					<div class="modal__form">
 						<div id="editPopupForm">
 							<h3 id="event-title" style="margin:0 0 8px;">Edit Event</h3>
-							<form action="" id="event-form" class="modal__form">
+							<div action="" id="event-form" class="modal__form">
 								<label class="field">
 									<span>Title</span>
 									<input id="ev-title" type="text">
@@ -73,40 +73,49 @@
 									<label class="field" style="margin:0">
 										<span>Start time</span>
 										<select id="ev-start" size="1" required>
-											<option value="12 AM"> 12 AM</option>
-											<option value="1 AM"> 1 AM</option>
-											<option value="2 AM"> 2 AM</option>
-											<option value="3 AM"> 3 AM</option>
-											<option value="4 AM"> 4 AM</option>
-											<option value="5 AM"> 5 AM</option>
-											<option value="6 AM"> 6 AM</option>
-											<option value="7 AM"> 7 AM</option>
-											<option value="8 AM"> 8 AM</option>
-											<option value="9 AM"> 9 AM</option>
-											<option value="10 AM"> 10 AM</option>
-											<option value="11 AM"> 11 AM</option>
-											<option value="12 PM"> 12 PM</option>
-											<option value="2 PM"> 1 PM</option>
-											<option value="3 PM"> 3 PM</option>
-											<option value="4 PM"> 4 PM</option>
-											<option value="5 PM"> 5 PM</option>
-											<option value="6 PM"> 6 PM</option>
-											<option value="7 PM"> 7 PM</option>
-											<option value="8 PM"> 8 PM</option>
-											<option value="9 PM"> 9 PM</option>
-											<option value="10 PM"> 10 PM</option>
-										    <option value="11 PM"> 11 PM</option>
+											<optgroup label="Start Time" id="start-time-options">
+												<option value="12 AM"> 0:00 </option>
+												<option value="1 AM"> 1:00 </option>
+												<option value="2 AM"> 2:00 </option>
+												<option value="3 AM"> 3:00 </option>
+												<option value="4 AM"> 4:00 </option>
+												<option value="5 AM"> 5:00 </option>
+												<option value="6 AM"> 6:00 </option>
+												<option value="7 AM"> 7:00 </option>
+												<option value="8 AM"> 8:00 </option>
+												<option value="9 AM"> 9:00 </option>
+												<option value="10 AM"> 10:00 </option>
+												<option value="11 AM"> 11:00 </option>
+												<option value="12 PM"> 12:00 </option>
+												<option value="1 PM"> 13:00 </option>
+												<option value="2 PM"> 14:00 </option>
+												<option value="3 PM"> 15:00 </option>
+												<option value="4 PM"> 16:00 </option>
+												<option value="5 PM"> 17:00 </option>
+												<option value="6 PM"> 18:00 </option>
+												<option value="7 PM"> 19:00 </option>
+												<option value="8 PM"> 20:00 </option>
+												<option value="9 PM"> 21:00</option>
+												<option value="10 PM"> 22:00 </option>
+										    	<option value="11 PM"> 23:00 </option>
+											</optgroup>
 										</select>
 									</label>
 									<label class="field" style="margin:0">
 										<span>Duration</span>
-										<select id="ev-dur" required>
-											<option value="30">30 min</option>
-											<option value="60" selected>1 hour</option>
-											<option value="90">1.5 hours</option>
-											<option value="120">2 hours</option>
-											<option value="150">2.5 hours</option>
-											<option value="180">3 hours</option>
+										<select label="Duration" id="ev-dur" required>
+											<option value="0.5">30 min</option>
+											<option value="1" selected>1 hour</option>
+											<option value="1.5">1.5 hours</option>
+											<option value="2">2 hours</option>
+											<option value="2.5">2.5 hours</option>
+											<option value="3">3 hours</option>
+											<option value="3.5">3.5 hours</option>
+											<option value="4">4 hours</option>
+											<option value="4.5">4.5 hours</option>
+											<option value="5">5 hours</option>
+											<option value="5.5">5.5 hours</option>
+											<option value="6">6 hours</option>
 										</select>
 									</label>
 								</div>
@@ -142,7 +151,7 @@
 								</div>
 								<div id="ev-error" style="color:#c8102e; font-size:13px; margin-top:4px; display:none;">
 								</div>
-							</form>
+							</div>
 						</div>
 					</div>
 				</div>
