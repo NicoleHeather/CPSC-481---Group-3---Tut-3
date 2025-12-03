@@ -69,9 +69,4 @@ window.onload = function () {
 bookingRequestButton.addEventListener('click', function () {
     console.log("Send data");
     bookingRequestButton.href = `BookingRequest.html?date=${currentEvent.date}&time=${currentEvent.time}&title=${currentEvent.title}&id=${currentEvent.id}&source=booking`;
-
 });
-
-saveButton.addEventListener('click', function () {
-   
-})

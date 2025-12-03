@@ -13,6 +13,9 @@ const startTimeOptions = document.getElementById('start-time-options');
 const editForm = document.getElementById('event-form');
 const saveButton = document.getElementById('save-btn')
 
+const cancelRemove = document.getElementById('cancel-remove');
+const confirmRemove = document.getElementById('yes-remove');
+
 //Stored event info
 const currentTitle = document.querySelector('#event-title-stored');
 const currentDate = document.querySelector('#current-date');
@@ -35,6 +38,8 @@ const descriptionInput = document.getElementById('ev-notes');
 
 let currentDuration;
 let customEvent = true;
+let tripId;
+let dateISO;
 //let tmpEventId = 1;
 let currentEvent;
 let intineraryInfo = [];
@@ -48,11 +53,16 @@ let arrDurationOptions = ["30", "1", "1.5", "2", "2.5", "3",
 
 window.onload = function () {
 
+    console.log(cancelRemove);
+
     //Uncomment on itinerary-day changes.
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
 
     const eventId = urlParams.get('id');
+    tripId = urlParams.get('trip');
+    dateISO = urlParams.get('date');
+
     console.log('Event ID:', eventId);
 
     //Replace with whatever json data from the itinerary screen.
@@ -197,4 +207,18 @@ saveButton.addEventListener("click", function () {
 cancelEditButton.addEventListener("click", function () {
     editPopupForm.style.display = 'none';
     modal.style.display = 'none';  
-})
+});
+
+cancelRemove.addEventListener('click', function () {
+    console.log("IN HERE");
+    removePopupForm.style.display = 'none';
+    modal2.style.display = 'none';
+});
+
+confirmRemove.addEventListener('click', function () {
+    console.log(window.history);
+
+    //Removed events still appear on the itinerary-week view
+    confirmRemove.href = `ItineraryDay.html?id=${currentEvent.id}&remove=${1}&trip=${tripId}&date=${dateISO}`;    
+});
+

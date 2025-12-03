@@ -107,6 +107,12 @@
 
 #cancel-remove {
     margin-right: 10%;
+    margin-bottom: 50px;
+}
+
+#yes-remove {
+    text-align: center;
+    margin-top: 15px;
 }
 
 .modal, .modal-2 {

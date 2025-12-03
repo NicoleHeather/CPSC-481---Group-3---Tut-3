@@ -102,6 +102,14 @@
           <span class="day-time">${act.time}</span>
           <a href="./EventInfo.html?id=${act.id}" class="day-title">${title}</a>
         `;
+
+        if (removeActive && act.id == eventIdToRemove)
+        {
+          console.log("REMOVE");
+          li.style.display = 'none'; 
+          li.className = "";   
+        }
+
         list.appendChild(li);
       });
 
@@ -169,3 +177,18 @@
   })();
 
 })();
+
+let eventIdToRemove;
+let removeActive;
+
+window.onload = function () {
+  console.log("LOADED");
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
+  eventIdToRemove = urlParams.get('id');
+  removeActive = urlParams.get('remove');
+  console.log('Event ID:', eventIdToRemove);
+  console.log('remove', removeActive);
+}
+

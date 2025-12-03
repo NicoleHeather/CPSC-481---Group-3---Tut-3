@@ -1,6 +1,10 @@
 // ======================================================================
 // itinerary-day.js (FINAL — Sequential Fill)
 // ======================================================================
+
+let eventIdToRemove;
+let removeActive;
+
 (function () {
   const $ = (sel, node = document) => node.querySelector(sel);
 
@@ -89,6 +93,7 @@
   }
 
   (async () => {
+
     const trips = await loadTrips();
     const events = await loadEvents();
 
@@ -108,9 +113,17 @@
       const endIdx = startIdx + Math.ceil(dur / 30);
 
       const block = document.createElement("div");
+
       block.className = "event-block";
       block.style.top = px(startIdx) + "px";
       block.style.height = (px(endIdx) - px(startIdx) - 4) + "px";
+
+      if (removeActive && ev.id == eventIdToRemove)
+      {
+        console.log("REMOVE");
+        block.style.display = 'none'; 
+        block.className = "";   
+      }
 
       block.innerHTML = `
         <span class="event-title">${ev.title}</span>
@@ -118,7 +131,7 @@
       `;
 
       block.addEventListener("click", () => {
-        location.href = `./EventInfo.html?id=${ev.id}`;
+        location.href = `./EventInfo.html?id=${ev.id}&trip=${tripId}&date=${dateISO}`;
       });
 
       overlay.appendChild(block);
@@ -126,3 +139,20 @@
   })();
 
 })();
+
+window.onload = function () {
+  console.log("LOADED");
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
+  eventIdToRemove = urlParams.get('id');
+  removeActive = urlParams.get('remove');
+  console.log('Event ID:', eventIdToRemove);
+  console.log('remove', removeActive);
+}
+
+const backToWeekButton = document.getElementById('back-to-week')
+
+backToWeekButton.addEventListener('click', function () {
+  backToWeekButton.href = `./ItineraryWeek.html?id=${eventIdToRemove}&remove=${1}&remove=${1}`;
+});

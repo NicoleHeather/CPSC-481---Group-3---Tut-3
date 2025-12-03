@@ -32,7 +32,7 @@
       "location": "Banff",
       "category": "Restaurant",
       "date": "2025-06-15",
-      "time": "19:00",
+      "time": "14:00",
       "duration" : "1",
       "price": 120,
       "img": "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=80",
@@ -113,7 +113,7 @@
       "time": "11:00",
       "duration" : "2",
       "price": 50,
-      "img": "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800&q=80",
+      "img": "https://th.bing.com/th/id/R.fbb4aba92ab53fc084ba394e5475cb4c?rik=zLzo81gVh6cZ4A&pid=ImgRaw&r=0",
       "custom": false,
       "description": "Museum."
     },
@@ -126,7 +126,7 @@
       "time": "9:00",
       "duration" : "1",
       "price": 15,
-      "img": "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800&q=80",
+      "img": "https://i.pinimg.com/originals/47/f0/99/47f099130fbbb60daaa6fa3e6b5306b1.jpg",
       "custom": false,
       "description": "Museum."
     }
