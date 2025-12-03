@@ -138,3 +138,23 @@
   background: #fff;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
+
+/* BUDGET POPUP */
+.budget-modal {
+  width: 100%;
+  max-width: 480px;
+}
+
+.budget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal.hidden { display: none; }
+.modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: grid; place-items: center;
+  z-index: 1000;
+}
