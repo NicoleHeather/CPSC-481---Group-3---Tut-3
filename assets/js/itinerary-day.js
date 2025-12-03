@@ -154,5 +154,5 @@ window.onload = function () {
 const backToWeekButton = document.getElementById('back-to-week')
 
 backToWeekButton.addEventListener('click', function () {
-  backToWeekButton.href = `./ItineraryWeek.html?id=${eventIdToRemove}&remove=${1}&remove=${1}`;
+  backToWeekButton.href = `./ItineraryWeek.html?id=${eventIdToRemove}&remove=${1}`;
 });
