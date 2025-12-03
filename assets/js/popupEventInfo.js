@@ -35,7 +35,7 @@ const descriptionInput = document.getElementById('ev-notes');
 
 let currentDuration;
 let customEvent = true;
-let tmpEventId = 1;
+//let tmpEventId = 1;
 let currentEvent;
 let intineraryInfo = [];
 let arrTimeOptions = ["0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", 
@@ -49,12 +49,11 @@ let arrDurationOptions = ["30", "1", "1.5", "2", "2.5", "3",
 window.onload = function () {
 
     //Uncomment on itinerary-day changes.
-    //const queryString = window.location.search;
-    //const urlParams = new URLSearchParams(queryString);
-    //console.log(urlParams);
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
 
-    //const eventId = urlParams.get('id');
-    //console.log('Event ID:', eventId);
+    const eventId = urlParams.get('id');
+    console.log('Event ID:', eventId);
 
     //Replace with whatever json data from the itinerary screen.
     fetch('../assets/data/events.json')
@@ -70,7 +69,7 @@ window.onload = function () {
             {
                 let tmp = intineraryInfo[i];
 
-                if (tmp.id == tmpEventId){
+                if (tmp.id == eventId){
                     currentEvent = tmp;
                     break;
                 }
@@ -87,6 +86,8 @@ window.onload = function () {
             currentDescription.innerHTML = currentEvent.description;
             currentImage.src = currentEvent.img;
 
+            console.log(currentStart.innerHTML)
+
             let tmpStart;
 
             for (let i = 0; i < arrTimeOptions.length; i ++) {
@@ -94,8 +95,10 @@ window.onload = function () {
                 if (arrTimeOptions[i] == currentStart.textContent){
                     startInput.selectedIndex = i;
                     let tmp = arrTimeOptions[i].split(":");
+                    console.log(tmp[1]);
                     tmpStart = tmp[0];
                     console.log(tmpStart);
+                    console.log(tmp);
                 }
             }
 
@@ -107,8 +110,15 @@ window.onload = function () {
                     tmpEnd = String(tmpEnd) + ":00";
                     endInput.value = tmpEnd;
                     currentEnd.innerHTML = tmpEnd;
-                    console.log(tmpEnd);
+                    //console.log(tmpEnd);
                 }
+            }
+
+            if (currentEnd.textContent.length > 5) {
+                let tmp3 = currentEnd.textContent.split(".");
+                let tmp4 = tmp3[0];
+                console.log(tmp4);
+                currentEnd.textContent = tmp4 + ":30";
             }
         })
 };
