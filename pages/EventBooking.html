@@ -73,20 +73,13 @@
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/popupBooking.js"></script>
     <script>
-    // Get event ID from URL
+  
     const urlParams = new URLSearchParams(window.location.search);
     const eventId = parseInt(urlParams.get('id'));
     const source = urlParams.get('source') || 'explore';
 
     const STORAGE_KEY = 'user_saved_events';
-
-    // Debug info
-    console.log('=== DEBUG INFO ===');
-    console.log('Event ID:', eventId, 'Type:', typeof eventId);
-    console.log('Source parameter:', source);
-    console.log('Looking for event with ID:', eventId);
     
-    // Check localStorage first
     const savedEventsFromStorage = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     console.log('Events in localStorage:', savedEventsFromStorage);
     console.log('Is event in localStorage?', savedEventsFromStorage.some(e => e.id === eventId));
@@ -99,11 +92,11 @@
         setupPopupListeners();
     });
 
-    // Load event details - CHECK LOCALSTORAGE FIRST!
+    
     function loadEventDetails() {
         console.log('=== LOADING EVENT DETAILS ===');
         
-        // 1. ALWAYS check localStorage FIRST - this is where user-saved events live
+        
         const savedEvents = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const eventFromStorage = savedEvents.find(e => e.id === eventId);
         
@@ -111,28 +104,24 @@
             console.log('✅ Found in localStorage:', eventFromStorage.title);
             window.currentEvent = eventFromStorage;
             updatePage();
-            return; // Stop here, we found it!
+            return; 
         }
         
         console.log('Not found in localStorage, checking JSON file...');
         
-        // 2. If not in localStorage, fetch from JSON file
+        
         fetch('../assets/data/events.json')
             .then(response => response.json())
             .then(data => {
                 console.log('JSON data loaded');
                 
-                // IMPORTANT: Ignore the 'source' parameter when searching!
-                // Look in BOTH arrays because user might have saved an explore event
                 let event = null;
                 
-                // First check explore array (IDs 1-8)
                 event = data.explore.find(e => e.id === eventId);
                 if (event) {
                     console.log('✅ Found in explore array:', event.title);
                 }
                 
-                // If not in explore, check saved array (IDs 101-104)
                 if (!event) {
                     event = data.saved.find(e => e.id === eventId);
                     if (event) {
@@ -145,7 +134,6 @@
                     console.log('Explore array IDs:', data.explore.map(e => e.id));
                     console.log('Saved array IDs:', data.saved.map(e => e.id));
                     
-                    // Try one more time to find it in localStorage (race condition fix)
                     const lastChance = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]').find(e => e.id === eventId);
                     if (lastChance) {
                         console.log('Found in localStorage on second check:', lastChance.title);
