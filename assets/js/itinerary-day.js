@@ -139,6 +139,7 @@ let addActive;
         block.style.display = "none";
         block.innerHTML = null;
         block.style.color = "none";
+      }
 
       block.addEventListener("click", () => {
         location.href = `./EventInfo.html?id=${ev.id}&trip=${tripId}&date=${dateISO}`;
