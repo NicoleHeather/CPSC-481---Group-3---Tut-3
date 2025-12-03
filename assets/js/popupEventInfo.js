@@ -75,6 +75,9 @@ window.onload = function () {
                 }
             }
 
+            customEvent = currentEvent.custom;
+            console.log(customEvent);
+
             currentTitle.innerHTML = currentEvent.title;
             currentDate.innerHTML = currentEvent.date;
             currentStart.innerHTML = currentEvent.time;

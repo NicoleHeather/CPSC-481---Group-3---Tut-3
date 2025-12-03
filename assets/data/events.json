@@ -49,7 +49,7 @@
       "duration" : "2",
       "price": 0,
       "img": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
-      "custom": false,
+      "custom": true,
       "description": "A vibrant journey through city streets where galleries, murals, and local artists bring creativity to life."
     },
     {
@@ -88,7 +88,7 @@
       "duration" : "4",
       "price": 85,
       "img": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80",
-      "custom": false,
+      "custom": true,
       "description": "An electrifying night of powerful riffs, thundering drums, and raw energy that shakes the crowd."
     },
     {
