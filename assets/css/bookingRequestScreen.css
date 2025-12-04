@@ -149,6 +149,11 @@ input {
     text-align: center;
 }
 
+#booking-request-confirm {
+    height: 40px;
+    padding-bottom: 5px;
+}
+
 #success-message, #error-message {
     text-align: center;
     align-items: center;
