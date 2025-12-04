@@ -267,8 +267,9 @@
 
     // start the week view on the trip's start date (so the first panel
     // corresponds to the trip start) rather than always starting on Monday.
-    const tripStart = new Date(trip.startDate + 'T00:00:00');
-    const tripEnd = new Date(trip.endDate + 'T00:00:00');
+    // Use mutable `let` so an Edit Dates control can update these values.
+    let tripStart = new Date(trip.startDate + 'T00:00:00');
+    let tripEnd = new Date(trip.endDate + 'T00:00:00');
     let weekStart = new Date(trip.startDate + 'T00:00:00');
 
     // Compute the latest allowed weekStart so the final 7-day window
@@ -293,6 +294,7 @@
           <div>
             <h3 class="trip-title">${trip.title}</h3>
             <div class="trip-dates">${toShort(trip.startDate)} —<br>${toShort(trip.endDate)}</div>
+            <div style="margin-top:8px;"><button class="edit-dates-btn btn-accent-outline" type="button" aria-label="Edit trip dates">Edit Dates</button></div>
           </div>
           <div style="text-align:right;">
             <!-- Header-cell demo reset removed; top-header control is used instead -->
@@ -301,6 +303,37 @@
       `;
       headerCol.appendChild(headerInner);
       listEl.appendChild(headerCol);
+
+      // Attach handler for the header Edit Dates button (if present)
+      try {
+        const editBtn = headerInner.querySelector('.edit-dates-btn');
+        if (editBtn) {
+          editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Prompt user for new start/end dates (YYYY-MM-DD). This is a
+            // lightweight inline editor; validation is minimal.
+            const curStart = trip.startDate;
+            const curEnd = trip.endDate;
+            const newStart = prompt('Enter new start date (YYYY-MM-DD):', curStart);
+            if (!newStart) return;
+            const newEnd = prompt('Enter new end date (YYYY-MM-DD):', curEnd);
+            if (!newEnd) return;
+            const s = new Date(newStart + 'T00:00:00');
+            const eDate = new Date(newEnd + 'T00:00:00');
+            if (isNaN(s.getTime()) || isNaN(eDate.getTime()) || s > eDate) { alert('Invalid dates entered. Please use YYYY-MM-DD and ensure start <= end.'); return; }
+            // Update trip data in-memory and recompute window bounds
+            try {
+              trip.startDate = newStart;
+              trip.endDate = newEnd;
+              tripStart = new Date(trip.startDate + 'T00:00:00');
+              tripEnd = new Date(trip.endDate + 'T00:00:00');
+              weekStart = new Date(trip.startDate + 'T00:00:00');
+              // Re-render with updated dates
+              render();
+            } catch(err) { console.warn('[week] edit dates failed', err); }
+          });
+        }
+      } catch(e) { /* ignore */ }
 
       // Populate Demo Reset into the top site header (only on itinerary pages).
       // The header partial is injected asynchronously by `include.js`, so try a
@@ -369,7 +402,7 @@
         const col = document.createElement('div'); col.className = 'week-column';
         const inner = document.createElement('div'); inner.className = 'week-column__inner';
         // Place day name and date as a link so clicking the day opens Day view
-        inner.innerHTML = `<div class="day-header"><div class="day-name"><a href="${dayHref}" class="day-link link-black">${toDay(dayIso)}, ${dayDate.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</a></div><button class="day-add" data-date="${dayIso}" aria-label="Add event">+</button></div>`;
+        inner.innerHTML = `<div class="day-header"><div class="day-name"><a href="${dayHref}" class="day-link link-black">${toDay(dayIso)}, ${dayDate.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</a></div><button class="day-add btn-accent-outline" data-date="${dayIso}" aria-label="Add event">+</button></div>`;
 
         // find events for this date and show a compact preview (top 3)
         const todays = eventsForThisTrip.filter(ev => ev.date === dayIso).sort((a,b)=> (a.time||'').localeCompare(b.time||''));
