@@ -158,6 +158,60 @@
       );
     }
 
+    // --- localStorage persistence helpers ---
+    function storageKey(tid){ return `events-${tid}`; }
+    function loadSavedEvents(tid){ try{ const raw = localStorage.getItem(storageKey(tid)); return raw ? JSON.parse(raw) : null; } catch(e){ return null; } }
+    function saveEventsToStorage(tid, events){ try{ localStorage.setItem(storageKey(tid), JSON.stringify(events)); } catch(e){ /* ignore */ } }
+
+    // If user has saved events in localStorage, prefer those (local edits persist).
+    const saved = loadSavedEvents(trip.id);
+    if(Array.isArray(saved) && saved.length){
+      eventsForThisTrip.length = 0;
+      eventsForThisTrip.push(...saved);
+    }
+
+    // Quick-add modal: create once and reuse
+    let _quickAddModal = null;
+    function ensureQuickAddModal(){
+      if(_quickAddModal) return _quickAddModal;
+      const overlay = document.createElement('div'); overlay.className = 'qa-overlay'; overlay.style.display='none';
+      const modal = document.createElement('div'); modal.className = 'qa-modal';
+      modal.innerHTML = `
+        <form class="qa-form">
+          <div><label>Time <input type="time" name="time"></label></div>
+          <div><label>Title <input type="text" name="title" placeholder="Event title"></label></div>
+          <div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end;">
+            <button type="button" class="qa-cancel">Cancel</button>
+            <button type="submit" class="qa-add">Add</button>
+          </div>
+        </form>
+      `;
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      const form = modal.querySelector('.qa-form');
+      const cancel = modal.querySelector('.qa-cancel');
+
+      cancel.addEventListener('click', ()=>{ overlay.style.display='none'; });
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const formData = new FormData(form);
+        const time = formData.get('time') || '';
+        const title = (formData.get('title') || '').trim();
+        const date = overlay.dataset.date;
+        if(!title){ form.querySelector('input[name="title"]').focus(); return; }
+        const newEv = { id: `local-${Date.now()}`, title, time, date };
+        eventsForThisTrip.unshift(newEv);
+        saveEventsToStorage(trip.id, eventsForThisTrip);
+        overlay.style.display='none';
+        render();
+      });
+
+      _quickAddModal = overlay;
+      return _quickAddModal;
+    }
+    function showQuickAddModal(date){ const m = ensureQuickAddModal(); m.dataset.date = date; m.querySelector('input[name="time"]').value=''; m.querySelector('input[name="title"]').value=''; m.style.display='flex'; m.querySelector('input[name="title"]').focus(); }
+
     // Compute the week that contains the trip.startDate. Week starts Monday.
     function startOfWeekMonday(d){
       const date = new Date(d);
@@ -197,7 +251,8 @@
         const col = document.createElement('div'); col.className = 'week-column';
         const inner = document.createElement('div'); inner.className = 'week-column__inner';
         // Place day name and date as separate elements so CSS can keep them on one line
-        inner.innerHTML = `<div class="day-header"><div class="day-name">${toDay(dayIso)}</div><div class="day-date">${dayDate.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</div></div>`;
+        // Combine weekday and short date into one element so they render continuously
+        inner.innerHTML = `<div class="day-header"><div class="day-name">${toDay(dayIso)}, ${dayDate.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</div><button class="day-add" data-date="${dayIso}" aria-label="Add event">+</button></div>`;
 
         // find events for this date
         const todays = eventsForThisTrip.filter(ev => ev.date === dayIso);
@@ -210,6 +265,10 @@
         } else {
           const empty = document.createElement('div'); empty.className='day-empty'; empty.textContent = 'No events'; inner.appendChild(empty);
         }
+
+        // attach quick-add handler for this day
+        const addBtn = inner.querySelector('.day-add');
+        if(addBtn){ addBtn.addEventListener('click', (e)=>{ e.stopPropagation(); showQuickAddModal(dayIso); }); }
 
         col.appendChild(inner);
         listEl.appendChild(col);
