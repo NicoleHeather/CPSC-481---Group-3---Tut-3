@@ -254,14 +254,26 @@
         // Combine weekday and short date into one element so they render continuously
         inner.innerHTML = `<div class="day-header"><div class="day-name">${toDay(dayIso)}, ${dayDate.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</div><button class="day-add" data-date="${dayIso}" aria-label="Add event">+</button></div>`;
 
-        // find events for this date
-        const todays = eventsForThisTrip.filter(ev => ev.date === dayIso);
+        // find events for this date and show a compact preview (top 3)
+        const todays = eventsForThisTrip.filter(ev => ev.date === dayIso).sort((a,b)=> (a.time||'').localeCompare(b.time||''));
+        const SHOW = 3;
         if(todays.length){
-          todays.forEach(ev =>{
+          todays.slice(0, SHOW).forEach(ev =>{
             const card = document.createElement('div'); card.className='event-item';
             card.innerHTML = `<div class="event-time">${ev.time || ''}</div><div class="event-title">${ev.title}</div>`;
             inner.appendChild(card);
           });
+          const hidden = todays.length - SHOW;
+          if(hidden > 0){
+            const moreHref = `${basePath()}/pages/ItineraryDay.html?trip=${encodeURIComponent(trip.id)}&date=${encodeURIComponent(dayIso)}`;
+            const moreLink = document.createElement('a');
+            moreLink.className = 'day-more-btn';
+            moreLink.href = moreHref;
+            moreLink.setAttribute('aria-controls', `day-${dayIso}-list`);
+            moreLink.setAttribute('aria-expanded', 'false');
+            moreLink.textContent = `+${hidden} more`;
+            inner.appendChild(moreLink);
+          }
         } else {
           const empty = document.createElement('div'); empty.className='day-empty'; empty.textContent = 'No events'; inner.appendChild(empty);
         }
