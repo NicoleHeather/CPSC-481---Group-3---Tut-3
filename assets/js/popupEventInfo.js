@@ -11,7 +11,10 @@ const modal2 = document.querySelector('.modal-2');
 
 const startTimeOptions = document.getElementById('start-time-options');
 const editForm = document.getElementById('event-form');
-const saveButton = document.getElementById('save-btn')
+const saveButton = document.getElementById('save-btn');
+
+const cancelRemove = document.getElementById('cancel-remove');
+const confirmRemove = document.getElementById('yes-remove')
 
 //Stored event info
 const currentTitle = document.querySelector('#event-title-stored');
@@ -133,8 +136,17 @@ removeButton.addEventListener('click', function () {
     removePopupForm.style.display = 'block';
     modal2.style.display = 'block';
 });
- 
 
+cancelRemove.addEventListener('click', function () {
+    removePopupForm.style.display = 'none';
+    modal2.style.display = 'none';  
+})
+
+confirmRemove.addEventListener('click', function () {
+    removePopupForm.style.display = 'none';
+    modal2.style.display = 'none';     
+})
+ 
 editButton.addEventListener('click', function () {
 
     titleInput.value = currentTitle.textContent;
