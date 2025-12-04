@@ -63,7 +63,7 @@ window.onload = function () {
 
             //Replace later
             console.log(intineraryInfo);
-            console.log(intineraryInfo[0])
+            //console.log(intineraryInfo[0])
 
             for (let i = 0; i < intineraryInfo.length; i ++)
             {
@@ -75,7 +75,9 @@ window.onload = function () {
                 }
             }
 
+            console.log(currentEvent);
             customEvent = currentEvent.custom;
+
             console.log(customEvent);
 
             currentTitle.innerHTML = currentEvent.title;

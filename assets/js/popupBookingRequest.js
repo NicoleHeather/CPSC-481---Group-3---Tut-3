@@ -10,6 +10,8 @@ const processingDisplay = document.getElementById('booking-request-processing');
 const addEventButton = document.getElementById('booking-request-confirm');
 
 const missingInfoOkayButton = document.getElementById('missing-required-info-ok');
+const bookingRequestView = document.getElementById('booking-request-conflict-view-event');
+const backToBookingButton = document.getElementById('booking-request-conflict-ok');
 
 //Track Input
 const time = document.querySelector('#time');
@@ -23,14 +25,17 @@ const evTitle = document.getElementById('event-name-booking')
 //Timeout
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
+let eventId;
 
 window.onload = function () {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    //console.log(urlParams);
+    console.log(urlParams);
     const paramTime = urlParams.get('time');
     const paramDate = urlParams.get('date')
     const paramTitle = urlParams.get('title')
+    eventId = urlParams.get('id');
+    console.log(eventId)
     console.log('D:', paramDate);
     console.log('T:', paramTime);
 
@@ -55,7 +60,7 @@ bookingConfirmtButton.addEventListener('click', async function () {
     }
 
     //If the time input is the same as the conflicting event time, show conflict popup.
-    if (submittedTime == "6:00 PM" || submittedTime == "6 PM") {
+    if (submittedTime == "6:00 PM" || submittedTime == "6 PM" || submittedTime == "11:00") {
         bookingConflictForm.style.display = 'flex';
         modal.style.display = "block";
         return;
@@ -71,7 +76,7 @@ bookingConfirmtButton.addEventListener('click', async function () {
 });
 
 addEventButton.addEventListener ('click', function () {
-    
+    addEventButton.href = 'ItineraryWeek.html'
 });
 
 missingInfoOkayButton.addEventListener ('click', function () {
@@ -79,3 +84,12 @@ missingInfoOkayButton.addEventListener ('click', function () {
     modal.style.display = "none";
 });
 
+bookingRequestView.addEventListener ('click', function () {
+
+    bookingRequestView.href = `EventInfo.html?id=${eventId}&source=booking`;
+});
+
+backToBookingButton.addEventListener ('click', function () {
+    bookingConflictForm.style.display = 'none';
+    modal.style.display = "none";  
+})
