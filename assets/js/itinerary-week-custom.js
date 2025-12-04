@@ -302,8 +302,18 @@
       if(weekRangeEl){
         const startStr = toShort(iso(weekStart));
         const endStr = toShort(iso(addDays(weekStart,6)));
-        // use innerHTML so the break after the dash can be honoured if desired
-        weekRangeEl.innerHTML = `${startStr} —<br>${endStr}`;
+        // render the date range and the window indicator on one line
+        try {
+          const lastWindowStart = getLastWindowStart();
+          const msPerDay = 24 * 60 * 60 * 1000;
+          const totalWindows = Math.floor(((lastWindowStart - tripStart) / (7 * msPerDay))) + 1;
+          const currentWindowIndex = Math.floor(((weekStart - tripStart) / (7 * msPerDay))) + 1;
+          // single-line: "Start — End · Viewing window X of Y"
+          weekRangeEl.innerText = `${startStr} — ${endStr} · Viewing window ${currentWindowIndex} of ${totalWindows}`;
+        } catch(e) {
+          // fallback to simple range if anything goes wrong
+          weekRangeEl.innerText = `${startStr} — ${endStr}`;
+        }
       }
 
       // disable prev/next when at trip bounds so navigation steps by 7 days

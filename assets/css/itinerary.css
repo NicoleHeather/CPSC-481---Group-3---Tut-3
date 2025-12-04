@@ -72,13 +72,12 @@
   align-items: stretch;
   padding: 4px 0 0 0; /* small top padding so cards sit a little below the header */
   /* fit the viewport so the page itself doesn't scroll — panels will scroll internally */
-  height: calc(100vh - 184px); /* header + controls + bottom nav approx. */
+  height: calc(100vh - 188px); /* header + controls + bottom nav approx. (reduced 4px) */
 }
 /* legacy helper removed: do not force display on the grid container */
 /* .trip-week-columns rule intentionally removed so `.week-columns` can stay a grid */
 .week-column {
-  /* increase saturation of the panel background and border for stronger cards */
-  background: rgba(255,127,39,0.10); /* stronger tint */
+  background: rgba(255,127,39,0.10);
   border: 1px solid rgba(255,127,39,0.22);
   border-radius: 12px;
   padding: 8px;
@@ -161,9 +160,8 @@
   margin: 0;
 }
 
-/* Minor layout tuning */
-.week-columns { padding: 14px 0px; }
-.week-column { min-height: 100px;}
+.week-columns { padding: 6px 0px 48px; }
+.week-column { min-height: 96px;}
 
 /* header column keeps its `.trip-dates` styling; no special .day-date overrides here */
 .event-item {
@@ -250,6 +248,16 @@
 .header-control.right { position: absolute; right: 8px; }
 .header-control:focus { outline: 3px solid rgba(255,127,39,0.14); outline-offset: 3px; }
 
+/* Week range + window indicator: small, italic, muted */
+  .week-range {
+    font-size: 15px !important;
+    /* font-style: italic; */
+    color: #666;
+    margin-top: 6px;
+    text-align: center;
+    padding: 6px 0;
+  }
+
 /* Disabled state for header controls (Prev/Next anchors) */
 .header-control.disabled {
   opacity: 0.48;
@@ -276,18 +284,18 @@ body.itinerary-fixed {
 /* Ensure week grid fits available space when fixed mode is active. This
    keeps header and footer visible while panels can scroll internally. */
 body.itinerary-fixed .week-columns {
-  height: calc(100vh - 184px);
+  height: calc(100vh - 192px);
 }
 
 @media (max-width: 920px) {
   /* On narrow viewports, keep 2x4 layout but increase vertical space slightly */
-  .week-columns { height: calc(100vh - 220px); }
+  .week-columns { height: calc(100vh - 224px); }
 }
 
 /* For most phones keep two columns so panels appear side-by-side.
    Only collapse to one column on very narrow devices (less than 380px). */
 @media (max-width: 540px) {
-  .week-columns { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, minmax(160px, 1fr)); height: calc(100vh - 220px); }
+  .week-columns { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(4, minmax(150px, 1fr)); height: calc(100vh - 224px); }
 }
 
 @media (max-width: 380px) {
