@@ -365,11 +365,11 @@
       for(let i=0;i<7;i++){
         const dayDate = addDays(weekStart, i);
         const dayIso = iso(dayDate);
+        const dayHref = `${basePath()}/pages/ItineraryDay.html?trip=${encodeURIComponent(trip.id)}&date=${encodeURIComponent(dayIso)}`;
         const col = document.createElement('div'); col.className = 'week-column';
         const inner = document.createElement('div'); inner.className = 'week-column__inner';
-        // Place day name and date as separate elements so CSS can keep them on one line
-        // Combine weekday and short date into one element so they render continuously
-        inner.innerHTML = `<div class="day-header"><div class="day-name">${toDay(dayIso)}, ${dayDate.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</div><button class="day-add" data-date="${dayIso}" aria-label="Add event">+</button></div>`;
+        // Place day name and date as a link so clicking the day opens Day view
+        inner.innerHTML = `<div class="day-header"><div class="day-name"><a href="${dayHref}" class="day-link link-black">${toDay(dayIso)}, ${dayDate.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</a></div><button class="day-add" data-date="${dayIso}" aria-label="Add event">+</button></div>`;
 
         // find events for this date and show a compact preview (top 3)
         const todays = eventsForThisTrip.filter(ev => ev.date === dayIso).sort((a,b)=> (a.time||'').localeCompare(b.time||''));
@@ -382,7 +382,7 @@
           });
           const hidden = todays.length - SHOW;
           if(hidden > 0){
-            const moreHref = `${basePath()}/pages/ItineraryDay.html?trip=${encodeURIComponent(trip.id)}&date=${encodeURIComponent(dayIso)}`;
+            const moreHref = dayHref;
             const moreLink = document.createElement('a');
             moreLink.className = 'day-more-btn';
             moreLink.href = moreHref;

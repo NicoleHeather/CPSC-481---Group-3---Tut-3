@@ -103,8 +103,8 @@ body.no-header-gap .container > h1, body.no-header-gap .container > h2 { margin-
 .link-white {
   color: #ffffff;
   text-decoration: underline;
-  font-weight: 400; /* non-bold */
-  font-size: 12px;
+  font-weight: 400;
+  font-size: 13px;
   line-height: 1;
   background: transparent;
   border: none;
@@ -116,8 +116,8 @@ body.no-header-gap .container > h1, body.no-header-gap .container > h2 { margin-
 .link-black {
   color: #111111;
   text-decoration: underline;
-  font-weight: 400;
-  font-size: 12px;
+  font-weight: inherit; /* match surrounding weight */
+  font-size: 14px; /* slightly larger */
   line-height: 1;
   background: transparent;
   border: none;
@@ -400,8 +400,10 @@ main.container { padding-bottom: 92px; }
 
 /* Global link styles (only affect regular links, not UI buttons/pills) */
 a { color: #000; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-/* only change hover/focus for links that are not styled UI elements */
-a:not(.btn):not(.pill):hover { color: var(--color-accent); text-decoration: none; }
+/* Visited links: bold orange and always underlined */
+a:visited { color: #000000; text-decoration: underline; text-underline-offset: 3px; }
+/* only change hover for non-visited links that are not styled UI elements */
+a:not(.btn):not(.pill):not(:visited):hover { color: var(--color-accent); text-decoration: none; }
 a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline-offset: 3px; }
 
 /* Home / Trip card carousel styles moved to assets/css/pages/home.css */
