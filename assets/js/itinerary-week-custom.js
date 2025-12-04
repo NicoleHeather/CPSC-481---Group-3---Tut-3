@@ -225,8 +225,10 @@
     function addDays(d, n){ const x = new Date(d); x.setDate(x.getDate()+n); return x; }
     function iso(d){ return d.toISOString().slice(0,10); }
 
+    // start the week view on the trip's start date (so the first panel
+    // corresponds to the trip start) rather than always starting on Monday.
     const tripStart = new Date(trip.startDate + 'T00:00:00');
-    let weekStart = startOfWeekMonday(tripStart);
+    let weekStart = new Date(trip.startDate + 'T00:00:00');
 
     function render(){
       listEl.innerHTML = '';
@@ -294,13 +296,38 @@
         // use innerHTML so the break after the dash can be honoured if desired
         weekRangeEl.innerHTML = `${startStr} —<br>${endStr}`;
       }
+
+      // disable prev/next when at trip bounds so navigation steps by 7 days
+      // only when there are more trip days to show.
+      try {
+        const tripStartDate = new Date(trip.startDate + 'T00:00:00');
+        const tripEndDate = new Date(trip.endDate + 'T00:00:00');
+        if(typeof prevBtn !== 'undefined' && prevBtn){
+          const prevDisabled = (weekStart <= tripStartDate);
+          prevBtn.setAttribute('aria-disabled', prevDisabled ? 'true' : 'false');
+          prevDisabled ? prevBtn.classList.add('disabled') : prevBtn.classList.remove('disabled');
+        }
+        if(typeof nextBtn !== 'undefined' && nextBtn){
+          const nextDisabled = (addDays(weekStart,7) > tripEndDate);
+          nextBtn.setAttribute('aria-disabled', nextDisabled ? 'true' : 'false');
+          nextDisabled ? nextBtn.classList.add('disabled') : nextBtn.classList.remove('disabled');
+        }
+      } catch(e) { /* ignore if buttons not present */ }
     }
 
     // prev/next
     const prevBtn = document.getElementById('prev-week');
     const nextBtn = document.getElementById('next-week');
-    if(prevBtn) prevBtn.addEventListener('click', (e)=>{ if(e && e.preventDefault) e.preventDefault(); weekStart = addDays(weekStart, -7); render(); });
-    if(nextBtn) nextBtn.addEventListener('click', (e)=>{ if(e && e.preventDefault) e.preventDefault(); weekStart = addDays(weekStart, 7); render(); });
+    if(prevBtn) prevBtn.addEventListener('click', (e)=>{ 
+      if(e && e.preventDefault) e.preventDefault();
+      if(prevBtn.getAttribute('aria-disabled') === 'true') return;
+      weekStart = addDays(weekStart, -7); render();
+    });
+    if(nextBtn) nextBtn.addEventListener('click', (e)=>{ 
+      if(e && e.preventDefault) e.preventDefault();
+      if(nextBtn.getAttribute('aria-disabled') === 'true') return;
+      weekStart = addDays(weekStart, 7); render();
+    });
 
     render();
   })();

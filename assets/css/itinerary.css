@@ -250,6 +250,14 @@
 .header-control.right { position: absolute; right: 8px; }
 .header-control:focus { outline: 3px solid rgba(255,127,39,0.14); outline-offset: 3px; }
 
+/* Disabled state for header controls (Prev/Next anchors) */
+.header-control.disabled {
+  opacity: 0.48;
+  pointer-events: none;
+  cursor: default;
+  filter: grayscale(20%);
+}
+
 @media (max-width: 420px) {
   .header-control { flex: 0 0 72px; width: 72px; padding:6px 8px; font-size: .92rem; }
   .page-header-row { padding: 0 36px; }
