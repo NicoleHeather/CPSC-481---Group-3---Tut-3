@@ -74,25 +74,10 @@ document.addEventListener('DOMContentLoaded', function () {
           subtitle.textContent = '';
         }
         overlay.appendChild(subtitle);
-        // Insert a minimal list of sample events (start time + title)
-        const miniList = document.createElement('ul');
-        miniList.className = 'itinerary-mini-list';
-        // Build a candidate pool: prefer same-location events, otherwise use all
-        const candidates = allEvents.filter(ev => ev.location === trip.title);
-        const pool = (candidates.length ? candidates.slice() : allEvents.slice());
-        shuffle(pool);
-        // pick up to 3 different events for preview
-        const pickCount = Math.min(pool.length, 3);
-        for(let i=0;i<pickCount;i++){
-          const ev = Object.assign({}, pool[i]);
-          // ensure event date sits within trip range
-          if(trip.startDate && trip.endDate){ ev.date = randomDateBetween(trip.startDate, trip.endDate); }
-          if(!ev.time) ev.time = `${randInt(9,20)}:00`;
-          const li = document.createElement('li');
-          li.innerHTML = `<span class="mini-time">${ev.time}</span> <span class="mini-title">${ev.title}</span>`;
-          miniList.appendChild(li);
-        }
-        overlay.appendChild(miniList);
+        // Previously we inserted a small list of sample events into each
+        // itinerary card as a preview. That caused unwanted event previews
+        // to appear on the Itineraries page. Remove the mini-list so cards
+        // only show the trip title and date range.
         a.appendChild(overlay);
 
         // assemble wrapper
