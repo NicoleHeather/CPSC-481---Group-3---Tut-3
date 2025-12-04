@@ -228,7 +228,16 @@
     // start the week view on the trip's start date (so the first panel
     // corresponds to the trip start) rather than always starting on Monday.
     const tripStart = new Date(trip.startDate + 'T00:00:00');
+    const tripEnd = new Date(trip.endDate + 'T00:00:00');
     let weekStart = new Date(trip.startDate + 'T00:00:00');
+
+    // Compute the latest allowed weekStart so the final 7-day window
+    // always includes the trip end. That is: lastWindowStart = tripEnd - 6 days,
+    // but never earlier than tripStart.
+    function getLastWindowStart(){
+      const candidate = addDays(tripEnd, -6);
+      return candidate < tripStart ? new Date(tripStart) : candidate;
+    }
 
     function render(){
       listEl.innerHTML = '';
@@ -300,15 +309,14 @@
       // disable prev/next when at trip bounds so navigation steps by 7 days
       // only when there are more trip days to show.
       try {
-        const tripStartDate = new Date(trip.startDate + 'T00:00:00');
-        const tripEndDate = new Date(trip.endDate + 'T00:00:00');
+        const lastWindowStart = getLastWindowStart();
         if(typeof prevBtn !== 'undefined' && prevBtn){
-          const prevDisabled = (weekStart <= tripStartDate);
+          const prevDisabled = (weekStart <= tripStart);
           prevBtn.setAttribute('aria-disabled', prevDisabled ? 'true' : 'false');
           prevDisabled ? prevBtn.classList.add('disabled') : prevBtn.classList.remove('disabled');
         }
         if(typeof nextBtn !== 'undefined' && nextBtn){
-          const nextDisabled = (addDays(weekStart,7) > tripEndDate);
+          const nextDisabled = (weekStart >= lastWindowStart);
           nextBtn.setAttribute('aria-disabled', nextDisabled ? 'true' : 'false');
           nextDisabled ? nextBtn.classList.add('disabled') : nextBtn.classList.remove('disabled');
         }
@@ -321,12 +329,17 @@
     if(prevBtn) prevBtn.addEventListener('click', (e)=>{ 
       if(e && e.preventDefault) e.preventDefault();
       if(prevBtn.getAttribute('aria-disabled') === 'true') return;
-      weekStart = addDays(weekStart, -7); render();
+      const candidate = addDays(weekStart, -7);
+      weekStart = candidate < tripStart ? new Date(tripStart) : candidate;
+      render();
     });
     if(nextBtn) nextBtn.addEventListener('click', (e)=>{ 
       if(e && e.preventDefault) e.preventDefault();
       if(nextBtn.getAttribute('aria-disabled') === 'true') return;
-      weekStart = addDays(weekStart, 7); render();
+      const candidate = addDays(weekStart, 7);
+      const last = getLastWindowStart();
+      weekStart = candidate > last ? new Date(last) : candidate;
+      render();
     });
 
     render();
