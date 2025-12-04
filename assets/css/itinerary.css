@@ -211,6 +211,17 @@
   text-overflow: ellipsis;
 }
 .day-more-btn:focus { outline: 3px solid rgba(0,0,0,0.08); }
+/* Force stable gray color for the +N link in all states so it meets contrast
+   requirements and doesn't inherit global link hover/visited colors. */
+.day-more-btn,
+.day-more-btn:visited,
+.day-more-btn:active,
+.day-more-btn:focus,
+.day-more-btn:hover {
+  color: var(--color-muted) !important;
+  font-style: italic !important;
+  text-decoration: underline !important;
+}
 
 /* Quick-add modal styles */
 .qa-overlay { position: fixed; inset: 0; background: rgba(2,6,10,0.45); display: none; align-items: center; justify-content: center; z-index: 1200; }
