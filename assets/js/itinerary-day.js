@@ -9,9 +9,21 @@
     return (await fetch(`${base}/assets/data/trips.json`).then(r => r.json())).trips || [];
   }
 
-  async function loadEvents() {
+  async function loadEvents(tripId) {
     const base = window.location.pathname.includes("/pages/") ? ".." : ".";
-    return (await fetch(`${base}/assets/data/events.json`).then(r => r.json())).explore || [];
+    // Prefer localStorage (per-trip), then per-trip JSON file, then shared events.json
+    try {
+      const storageKey = `events-${tripId}`;
+      const raw = localStorage.getItem(storageKey);
+      if (raw) return JSON.parse(raw);
+    } catch(e){ /* ignore */ }
+    // Try per-trip file
+    try {
+      const resp = await fetch(`${base}/assets/data/events-${encodeURIComponent(tripId)}.json`);
+      if (resp && resp.ok){ const b = await resp.json(); if (b && Array.isArray(b.explore) && b.explore.length) return b.explore.slice(); }
+    } catch(e){ /* ignore */ }
+    // Fallback to shared pool
+    try { return (await fetch(`${base}/assets/data/events.json`).then(r => r.json())).explore || []; } catch(e){ return []; }
   }
 
   function parse(d) { return new Date(d + "T00:00:00"); }
@@ -90,7 +102,7 @@
 
   (async () => {
     const trips = await loadTrips();
-    const events = await loadEvents();
+    const events = await loadEvents(tripId);
 
     const trip = trips.find(t => t.id === tripId);
     if (!trip) return;

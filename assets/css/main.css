@@ -65,7 +65,66 @@ body.no-header-gap .container > h1, body.no-header-gap .container > h2 { margin-
 
 /* Header small layout */
 .header-inner { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-.header-left, .header-right { width:40px; display:flex; align-items:center; }
+.header-left, .header-right { width: 40px; display:flex; align-items:center; }
+
+/* Demo Reset top-header button: appear as a white link with right padding */
+.demo-reset-btn-top {
+  position: absolute;
+  right: 27px;
+  top: 50%;
+  transform: translateY(calc(-50% - 3px));
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 10px 6px 6px;
+  cursor: pointer;
+  z-index: 9999;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+.demo-reset-btn-top:hover,
+.demo-reset-btn-top:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+/* On very small screens, keep header compact and hide the reset to avoid overlap */
+@media (max-width:420px) {
+  .demo-reset-btn-top { display: none; }
+}
+
+/* force visible when debugging: ensure container and button are not hidden */
+#demo-reset-container { display: block !important; }
+.demo-reset-btn-top { display: inline-block !important; }
+
+/* Link style utilities */
+.link-white {
+  color: #ffffff;
+  text-decoration: underline;
+  font-weight: 400; /* non-bold */
+  font-size: 12px;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.link-white:focus { outline: 3px solid rgba(255,255,255,0.14); outline-offset: 3px; }
+
+.link-black {
+  color: #111111;
+  text-decoration: underline;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.link-black:focus { outline: 3px solid rgba(0,0,0,0.08); outline-offset: 3px; }
 
 /* When a page opts out of the back button, center the brand in the header */
 body.no-back .header-inner { justify-content: center !important; }

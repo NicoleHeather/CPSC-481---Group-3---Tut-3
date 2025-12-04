@@ -88,11 +88,27 @@
     const trip = trips.find(t => t.id === tripId);
     if(!trip){ listEl.innerHTML = `<p>Trip '${tripId}' not found. Return to <a href="../pages/Itineraries.html">Itineraries</a>.</p>`; return; }
 
-    // Prepare events: take candidates (prefer same-location) and assign random
-    // dates within the trip range so the week view shows sample events.
+    // Prepare events: prefer a per-trip JSON seed file if it exists in the repo.
+    // Fallback order: per-trip JSON -> shared events.json -> deterministic generator.
     const allEvents = events || [];
     const tripDays = eachDate(trip.startDate, trip.endDate);
-    const candidates = allEvents.filter(ev => ev.location === trip.title);
+
+    // Attempt to fetch `assets/data/events-<tripId>.json` for canonical seeds.
+    let perTripSeed = null;
+    try {
+      const resp = await fetch(`${basePath()}/assets/data/events-${encodeURIComponent(trip.id)}.json`);
+      if (resp && resp.ok) {
+        const body = await resp.json();
+        if (body && Array.isArray(body.explore) && body.explore.length) {
+          perTripSeed = body.explore.slice();
+          console.info('[week] loaded per-trip seed file for', trip.id, perTripSeed.length, 'events');
+        }
+      }
+    } catch (e) {
+      /* ignore - no per-trip seed available */
+    }
+
+    const candidates = (allEvents || []).filter(ev => ev.location === trip.title);
     const pool = (candidates.length ? candidates : allEvents).slice();
 
     // Deterministic RNG per-trip so events don't change on refresh for the same trip.
@@ -115,19 +131,24 @@
       return new Date(t).toISOString().slice(0,10);
     }
 
-    // Limit generated events to roughly two per day to avoid overcrowding
-    const maxEvents = tripDays.length * 2;
     // Shuffle pool (Fisher-Yates) using deterministic RNG
     for(let i=pool.length-1;i>0;i--){ const j = Math.floor(rand() * (i+1)); [pool[i],pool[j]] = [pool[j],pool[i]]; }
 
+    // Assign 0-5 deterministic events per trip day (using seeded rand).
+    // This ensures each day has a predictable but varied number of events.
     const eventsForThisTrip = [];
-    for(let i=0;i<Math.min(pool.length, maxEvents); i++){
-      const ev = Object.assign({}, pool[i]);
-      // assign a random date within the trip (ISO yyyy-mm-dd)
-      ev.date = randomDateBetween(trip.startDate, trip.endDate);
-      // keep time if present, otherwise random hour between 9 and 20
-      if(!ev.time) ev.time = `${randInt(9,20)}:00`;
-      eventsForThisTrip.push(ev);
+    let poolIndex = 0;
+    for(let d=0; d<tripDays.length; d++){
+      const dayIso = tripDays[d];
+      // deterministic count 0..5
+      const count = Math.floor(rand() * 6);
+      for(let k=0;k<count;k++){
+        if(poolIndex >= pool.length) break; // no more source events
+        const ev = Object.assign({}, pool[poolIndex++]);
+        ev.date = dayIso;
+        if(!ev.time) ev.time = `${randInt(9,20)}:00`;
+        eventsForThisTrip.push(ev);
+      }
     }
 
     // DEBUG HELPER: if `?debug_multi=1` is present, inject 2-3 extra events
@@ -144,19 +165,9 @@
       eventsForThisTrip.push(...extras);
     }
 
-    // Permanent prototype sample events for a specific trip id.
-    // These are static and will always be used for the Calgary prototype trip.
-    if (trip.id === 'trip-calgary-2026') {
-      eventsForThisTrip.length = 0;
-      eventsForThisTrip.push(
-        { id: 'sample-calgary-1', title: 'Heritage Walk', time: '08:30', date: '2026-05-03' },
-        { id: 'sample-calgary-2', title: 'Riverside Brunch', time: '11:00', date: '2026-05-03' },
-        { id: 'sample-calgary-3', title: 'Mountain Day Tour', time: '09:00', date: '2026-05-08' },
-        { id: 'sample-calgary-4', title: 'Art Gallery', time: '14:00', date: '2026-05-08' },
-        { id: 'sample-calgary-5', title: 'Evening Concert', time: '19:30', date: '2026-05-08' },
-        { id: 'sample-calgary-6', title: 'Farewell Dinner', time: '18:00', date: '2026-05-12' }
-      );
-    }
+    // Note: per-trip seed files in `assets/data/events-<tripId>.json` are
+    // preferred and will be used to initialize storage for new users. Hardcoded
+    // prototype blocks have been removed so repo files remain canonical.
 
     // --- localStorage persistence helpers ---
     function storageKey(tid){ return `events-${tid}`; }
@@ -164,10 +175,39 @@
     function saveEventsToStorage(tid, events){ try{ localStorage.setItem(storageKey(tid), JSON.stringify(events)); } catch(e){ /* ignore */ } }
 
     // If user has saved events in localStorage, prefer those (local edits persist).
+    // Otherwise persist the seeded/generated events so subsequent loads show
+    // the same initial events and users can add/remove them locally.
     const saved = loadSavedEvents(trip.id);
-    if(Array.isArray(saved) && saved.length){
+    const forceSeed = getQueryParam('force_seed') === '1';
+    // Allow clearing stored events for debugging: `?clear_storage=1`
+    const clearStorage = getQueryParam('clear_storage') === '1';
+    if (clearStorage) {
+      try { localStorage.removeItem(storageKey(trip.id)); console.info('[week] cleared localStorage for', trip.id); } catch(e){ /* ignore */ }
+    }
+
+    if (forceSeed) {
+      // Force re-seed: prefer per-trip seed if available, otherwise use
+      // whatever eventsForThisTrip currently contains (deterministic generator).
+      try {
+        const toSave = (perTripSeed && perTripSeed.length) ? perTripSeed : eventsForThisTrip;
+        saveEventsToStorage(trip.id, toSave);
+        console.info('[week] force_seed=1: wrote', (toSave||[]).length, 'events to', storageKey(trip.id));
+        const after = loadSavedEvents(trip.id);
+        if (Array.isArray(after) && after.length){ eventsForThisTrip.length = 0; eventsForThisTrip.push(...after); console.info('[week] reloaded', after.length, 'events after force-seed'); }
+      } catch(e){ console.warn('[week] force_seed failed', e); }
+    } else if (Array.isArray(saved) && saved.length) {
+      // Use user's saved local edits when present
+      console.info('[week] using saved events from localStorage:', saved.length);
       eventsForThisTrip.length = 0;
       eventsForThisTrip.push(...saved);
+    } else if (perTripSeed && perTripSeed.length) {
+      // No saved events: initialize storage with the per-trip JSON seed so
+      // the repo-provided itinerary is consistent for new visitors.
+      try { saveEventsToStorage(trip.id, perTripSeed); eventsForThisTrip.length = 0; eventsForThisTrip.push(...perTripSeed); console.info('[week] initialized storage with per-trip seed:', perTripSeed.length); } catch(e){ /* ignore */ }
+    } else {
+      // No saved events and no per-trip seed: initialize storage with
+      // the deterministic generator output.
+      try { saveEventsToStorage(trip.id, eventsForThisTrip); console.info('[week] initialized storage with', eventsForThisTrip.length, 'seeded events'); } catch(e){ /* ignore */ }
     }
 
     // Quick-add modal: create once and reuse
@@ -249,11 +289,77 @@
       // Insert a line break after the dash so the end date appears on the next line.
       // Keep the header simple and styled like the other panels (no extra event card).
       headerInner.innerHTML = `
-        <h3 class="trip-title">${trip.title}</h3>
-        <div class="trip-dates">${toShort(trip.startDate)} —<br>${toShort(trip.endDate)}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <div>
+            <h3 class="trip-title">${trip.title}</h3>
+            <div class="trip-dates">${toShort(trip.startDate)} —<br>${toShort(trip.endDate)}</div>
+          </div>
+          <div style="text-align:right;">
+            <!-- Header-cell demo reset removed; top-header control is used instead -->
+          </div>
+        </div>
       `;
       headerCol.appendChild(headerInner);
       listEl.appendChild(headerCol);
+
+      // Populate Demo Reset into the top site header (only on itinerary pages).
+      // The header partial is injected asynchronously by `include.js`, so try a
+      // few times before giving up to ensure the container exists.
+      (function attachDemoResetToHeader(attempt){
+        try { console.info('[week] attachDemoReset attempt', attempt||0); } catch(e){}
+        const demoContainer = document.getElementById('demo-reset-container');
+        const headerContainer = document.querySelector('.site-header .container');
+        const siteHeader = document.querySelector('.site-header');
+        // Prefer attaching to the `.site-header` element itself so the button
+        // reliably overlays the header area and isn't constrained by child boxes.
+        const targetContainer = siteHeader || headerContainer || demoContainer || document.body;
+
+        if (targetContainer) {
+          // make sure the container is positioned so our absolute button can align
+          try { targetContainer.style.position = targetContainer.style.position || 'relative'; } catch(e){}
+          try {
+            if (demoContainer) {
+              // If the placeholder was left hidden via inline style, force it visible
+              try {
+                const cs = getComputedStyle(demoContainer);
+                if (cs && cs.display === 'none') demoContainer.style.display = 'flex';
+                else demoContainer.style.display = demoContainer.style.display || '';
+              } catch(e) {
+                demoContainer.style.display = demoContainer.style.display || '';
+              }
+            }
+          } catch(e){}
+
+          if (!targetContainer.querySelector('.demo-reset-btn-top')) {
+            const btn = document.createElement('button');
+            btn.className = 'demo-reset-btn-top link-white';
+            btn.type = 'button';
+            btn.setAttribute('aria-label', 'Demo Reset to repo seed');
+            btn.title = 'Demo Reset to repo seed';
+            btn.textContent = 'Demo Reset';
+            btn.addEventListener('click', (e)=>{
+              e.stopPropagation();
+              if (perTripSeed && perTripSeed.length){
+                try{
+                  saveEventsToStorage(trip.id, perTripSeed);
+                  eventsForThisTrip.length = 0;
+                  eventsForThisTrip.push(...perTripSeed);
+                  console.info('[week] Demo Reset: wrote', perTripSeed.length, 'events to storage');
+                  render();
+                }catch(err){ console.warn('[week] reset failed', err); alert('Reset failed - see console for details.'); }
+              } else {
+                alert('No per-trip seed file available to reset.');
+              }
+            });
+            targetContainer.appendChild(btn);
+            try { console.info('[week] Demo Reset attached to', targetContainer.tagName, targetContainer.id||targetContainer.className); } catch(e){}
+          }
+        } else if ((attempt||0) < 10) {
+          setTimeout(()=> attachDemoResetToHeader((attempt||0)+1), 160);
+        } else {
+          try { console.warn('[week] failed to attach Demo Reset after retries'); } catch(e){}
+        }
+      })();
 
       // Next 7 columns: Monday..Sunday
       for(let i=0;i<7;i++){
