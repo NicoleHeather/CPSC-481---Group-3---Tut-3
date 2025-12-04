@@ -9,6 +9,8 @@ const missingInfoForm = document.getElementById('missing-required-info');
 const processingDisplay = document.getElementById('booking-request-processing');
 const addEventButton = document.getElementById('booking-request-confirm');
 
+const missingInfoOkayButton = document.getElementById('missing-required-info-ok');
+
 //Track Input
 const time = document.querySelector('#time');
 const date = document.querySelector('#date');
@@ -71,3 +73,9 @@ bookingConfirmtButton.addEventListener('click', async function () {
 addEventButton.addEventListener ('click', function () {
     
 });
+
+missingInfoOkayButton.addEventListener ('click', function () {
+    missingInfoForm.style.display = 'none';
+    modal.style.display = "none";
+});
+
