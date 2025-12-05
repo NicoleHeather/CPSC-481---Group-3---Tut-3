@@ -45,19 +45,6 @@ body.no-header-gap .container > h1, body.no-header-gap .container > h2 { margin-
 .grid { display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 .card { background:var(--color-surface); padding:16px; border-radius:var(--radius); box-shadow: 0 14px 40px rgba(0,0,0,0.16); transition: transform .18s ease, box-shadow .18s ease; border: 1px solid rgba(0,0,0,0.04); position: relative; }
 .card:hover { transform: translateY(-6px); box-shadow: 0 26px 56px rgba(0,0,0,0.22); }
-.btn { display:inline-block; background: linear-gradient(90deg,var(--color-primary), var(--color-accent)); color:white; padding:10px 14px; border-radius:10px; text-decoration:none; box-shadow: 0 6px 18px rgba(200,30,45,0.12); transition: transform .12s ease, box-shadow .12s ease; border: none; }
-.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(200,30,45,0.16); }
-.btn:active { transform: translateY(0); box-shadow: 0 6px 12px rgba(0,0,0,0.06); }
-.hidden { display:none !important; }
-
-/* Buttons, pills and bottom-nav: keep stable text color (no global-link hover overrides) */
-.btn, .btn:visited, .btn:hover, .btn:focus, .btn:active {
-  color: white;
-}
-
-.pill, .pill:visited, .pill:hover, .pill:focus, .pill:active {
-  color: inherit;
-}
 
 .bottom-nav .nav-item, .bottom-nav .nav-item:visited, .bottom-nav .nav-item:hover, .bottom-nav .nav-item:active, .bottom-nav .nav-item:focus {
   color: #ffffff;
@@ -66,34 +53,6 @@ body.no-header-gap .container > h1, body.no-header-gap .container > h2 { margin-
 /* Header small layout */
 .header-inner { display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .header-left, .header-right { width: 40px; display:flex; align-items:center; }
-
-/* Demo Reset top-header button: appear as a white link with right padding */
-.demo-reset-btn-top {
-  position: absolute;
-  right: 27px;
-  top: 50%;
-  transform: translateY(calc(-50% - 3px));
-  background: transparent;
-  border: none;
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 600;
-  padding: 6px 10px 6px 6px;
-  cursor: pointer;
-  z-index: 9999;
-  font-size: 0.95rem;
-  line-height: 1;
-}
-.demo-reset-btn-top:hover,
-.demo-reset-btn-top:focus {
-  text-decoration: underline;
-  outline: none;
-}
-
-/* On very small screens, keep header compact and hide the reset to avoid overlap */
-@media (max-width:420px) {
-  .demo-reset-btn-top { display: none; }
-}
 
 /* Debugging helpers removed: Demo Reset visibility should be controlled by script/CSS */
 
@@ -209,6 +168,9 @@ main.container { padding-bottom: 92px; }
   display: block;
   margin: 0 auto;
 }
+
+/* ======================================== BUTTONS ============================================== */
+
 .btn-primary { background: var(--color-primary); color: #fff; }
 .btn-secondary { background: var(--color-accent); color: #fff; }
 .btn-black { background: #111; color: #fff; border: none; }
@@ -217,6 +179,188 @@ main.container { padding-bottom: 92px; }
 /* accessible focus style for keyboard users */
 .btn:focus { outline: 3px solid rgba(255,127,39,0.16); outline-offset: 3px; }
 .btn-large { padding: .75rem 1rem; font-size: 1.05rem; }
+
+.btn { display:inline-block; background: linear-gradient(90deg,var(--color-primary), var(--color-accent)); color:white; padding:10px 14px; border-radius:10px; text-decoration:none; box-shadow: 0 6px 18px rgba(200,30,45,0.12); transition: transform .12s ease, box-shadow .12s ease; border: none; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(200,30,45,0.16); }
+.btn:active { transform: translateY(0); box-shadow: 0 6px 12px rgba(0,0,0,0.06); }
+.hidden { display:none !important; }
+
+.btn, .btn:visited, .btn:hover, .btn:focus, .btn:active {
+  color: white;
+  white-space: nowrap; 
+
+}
+
+.pill, .pill:visited, .pill:hover, .pill:focus, .pill:active {
+  color: inherit;
+}
+
+/* Demo Reset top-header button: appear as a white link with right padding */
+.demo-reset-btn-top {
+  position: absolute;
+  right: 27px;
+  top: 50%;
+  transform: translateY(calc(-50% - 3px));
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 10px 6px 6px;
+  cursor: pointer;
+  z-index: 9999;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+.demo-reset-btn-top:hover,
+.demo-reset-btn-top:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+/* On very small screens, keep header compact and hide the reset to avoid overlap */
+@media (max-width:420px) {
+  .demo-reset-btn-top { display: none; }
+}
+
+.btn-cancel {
+  background: transparent;
+  color: var(--color-muted);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+  border-color: var(--color-muted);
+  color: var(--color-text);
+}
+
+.danger-zone {
+  border-left: 4px solid #dc2626;
+  background: #fef2f2;
+}
+
+.danger-zone h2 {
+  color: #dc2626;
+}
+
+.btn-danger {
+  background: #dc2626;
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.btn-save {
+  background: var(--color-primary);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-save:hover {
+  background: #a00d25;
+  transform: translateY(-1px);
+}
+
+/* Accent outlined button used across itinerary (small action buttons) */
+.btn-accent-outline {
+  background: rgba(255,127,39,0.3);
+  border: 1px solid rgba(255,127,39,0.18);
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--color-text);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+.btn-accent-outline:focus { outline: 3px solid rgba(255,127,39,0.18); outline-offset: 3px; }
+
+/* Filled accent button (used for primary small actions like Edit Dates) */
+.btn-accent-filled {
+  background: linear-gradient(90deg, rgba(255,127,39,0.98), rgba(200,16,46,0.98)) !important;
+  background-color: #FF7F27 !important;
+  color: #111 !important;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(200,16,46,0.9) !important;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(200,30,45,0.08);
+}
+.btn-accent-filled:focus { outline: 3px solid rgba(255,127,39,0.14); outline-offset: 3px; }
+
+/* Stronger specificity for the header 'Edit Dates' button to ensure
+   the filled accent appearance overrides any other button rules. */
+.edit-dates-btn.btn-accent-filled {
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(90deg, rgba(255,127,39,0.98), rgba(200,16,46,0.98)) !important;
+  background-color: #FF7F27 !important;
+  color: #111 !important;
+  border: 1px solid rgba(200,16,46,0.9) !important;
+  padding: 6px 10px !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 6px 18px rgba(200,30,45,0.08) !important;
+}
+
+/* Kebab menu (three-dots) for card actions */
+.kebab-btn {
+  /* Match the visual style of the price badge: plain white background, subtle border */
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,0,0,0.06);
+  color: #111;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  cursor: pointer;
+  font-size: 7px; /* larger meatballs */
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.kebab-btn:hover, .kebab-btn:focus { background: #ffffff; box-shadow: 0 10px 22px rgba(0,0,0,0.08); outline: none; }
+.kebab-menu { position: absolute; right: 12px; top: 48px; background: #fff; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 10px 24px rgba(0,0,0,0.12); border-radius:8px; min-width:140px; z-index:1200; display:none; flex-direction:column; }
+.kebab-menu.visible { display:flex; }
+.kebab-menu button { background: transparent; border: none; padding: 10px 12px; text-align: left; width:100%; cursor:pointer; font-weight:600; }
+.kebab-menu button:hover, .kebab-menu button:focus { background: rgba(0,0,0,0.04); outline: none; }
+
+/* ====================================================================================== */
 
 .page-header { font-size: 1.1rem; margin: .25rem 0 .75rem; padding-bottom: .25rem; border-bottom: 2px solid #000; }
 .page-header--accent { border-color: var(--color-accent); }
@@ -543,145 +687,8 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
   margin-top: var(--spacing-md);
 }
 
-.btn-save {
-  background: var(--color-primary);
-  color: white;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: none;
-  border-radius: var(--radius);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-save:hover {
-  background: #a00d25;
-  transform: translateY(-1px);
-}
-
-/* Accent outlined button used across itinerary (small action buttons) */
-.btn-accent-outline {
-  background: rgba(255,127,39,0.3);
-  border: 1px solid rgba(255,127,39,0.18);
-  border-radius: 6px;
-  padding: 6px 10px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 12px;
-  cursor: pointer;
-  color: var(--color-text);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-}
-.btn-accent-outline:focus { outline: 3px solid rgba(255,127,39,0.18); outline-offset: 3px; }
-
-/* Filled accent button (used for primary small actions like Edit Dates) */
-.btn-accent-filled {
-  background: linear-gradient(90deg, rgba(255,127,39,0.98), rgba(200,16,46,0.98)) !important;
-  background-color: #FF7F27 !important;
-  color: #111 !important;
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid rgba(200,16,46,0.9) !important;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 18px rgba(200,30,45,0.08);
-}
-.btn-accent-filled:focus { outline: 3px solid rgba(255,127,39,0.14); outline-offset: 3px; }
-
-/* Stronger specificity for the header 'Edit Dates' button to ensure
-   the filled accent appearance overrides any other button rules. */
-.edit-dates-btn.btn-accent-filled {
-  -webkit-appearance: none;
-  appearance: none;
-  background: linear-gradient(90deg, rgba(255,127,39,0.98), rgba(200,16,46,0.98)) !important;
-  background-color: #FF7F27 !important;
-  color: #111 !important;
-  border: 1px solid rgba(200,16,46,0.9) !important;
-  padding: 6px 10px !important;
-  border-radius: 8px !important;
-  font-weight: 700 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-shadow: 0 6px 18px rgba(200,30,45,0.08) !important;
-}
-
-/* Kebab menu (three-dots) for card actions */
-.kebab-btn {
-  /* Match the visual style of the price badge: plain white background, subtle border */
-  position: absolute;
-  right: 12px;
-  top: 12px;
-  width: 34px;
-  height: 34px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.96);
-  border: 1px solid rgba(0,0,0,0.06);
-  color: #111;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
-  cursor: pointer;
-  font-size: 8px; /* larger meatballs */
-  font-weight: 800;
-  letter-spacing: 1px;
-  line-height: 1;
-}
-.kebab-btn:hover, .kebab-btn:focus { background: #ffffff; box-shadow: 0 10px 22px rgba(0,0,0,0.08); outline: none; }
-.kebab-menu { position: absolute; right: 12px; top: 48px; background: #fff; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 10px 24px rgba(0,0,0,0.12); border-radius:8px; min-width:140px; z-index:1200; display:none; flex-direction:column; }
-.kebab-menu.visible { display:flex; }
-.kebab-menu button { background: transparent; border: none; padding: 10px 12px; text-align: left; width:100%; cursor:pointer; font-weight:600; }
-.kebab-menu button:hover, .kebab-menu button:focus { background: rgba(0,0,0,0.04); outline: none; }
-
 /* Place actions container relative so kebab menu can absolute position within card */
 .itinerary-card { position: relative; }
-
-.btn-cancel {
-  background: transparent;
-  color: var(--color-muted);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: 2px solid rgba(0,0,0,0.1);
-  border-radius: var(--radius);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-cancel:hover {
-  border-color: var(--color-muted);
-  color: var(--color-text);
-}
-
-.danger-zone {
-  border-left: 4px solid #dc2626;
-  background: #fef2f2;
-}
-
-.danger-zone h2 {
-  color: #dc2626;
-}
-
-.btn-danger {
-  background: #dc2626;
-  color: white;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: none;
-  border-radius: var(--radius);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-danger:hover {
-  background: #b91c1c;
-  transform: translateY(-1px);
-}
 
 .profile-info {
   display: flex;

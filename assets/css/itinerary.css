@@ -56,24 +56,6 @@
 }
 .trip-card__header[aria-expanded="false"]::after { content: '▸'; }
 
-/* Compact Add Itinerary button for the Itineraries page
-   Keep the original vertical padding so height remains unchanged,
-   reduce horizontal padding to make the button narrower, and
-   enforce single-line text. */
-#add-trip-btn {
-  padding: 10px 10px !important; /* preserve vertical height (10px) */
-  min-width: 0 !important;
-  width: auto !important;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap; /* keep label on one line */
-  font-weight: 600;
-  font-size: 12px; /* requested size */
-  line-height: 1; /* compact, preserve height */
-}
-
-
 .day-list { margin: 0 0 0; padding-left: 8px; }
 .day-list li { font-size: 12px; line-height: 1.15; margin: 2px 0; }
 .day-time { font-weight: 600; margin-right: 6px; color: #c0531a; }
