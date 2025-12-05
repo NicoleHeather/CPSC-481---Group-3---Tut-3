@@ -276,6 +276,22 @@
 				eventsGrid.innerHTML = '<p class="no-results">Error loading data. Run with Live Server.</p>';
 			});
 
+		// NEW: Function to calculate end time
+		function calculateEndTime(startTime, duration) {
+			if (!startTime || !duration) return '';
+			const [startHour, startMin] = startTime.split(':').map(Number);
+			const totalDurationMins = parseFloat(duration) * 60;
+			
+			let totalMins = startHour * 60 + startMin + totalDurationMins;
+			
+			// Ensure the end time wraps around if it exceeds 24 hours (e.g., a multi-day event)
+			let endHour = Math.floor((totalMins / 60) % 24); 
+			let endMin = totalMins % 60;
+
+			return `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
+		}
+
+
 		// Render Logic
 		function renderEvents(data) {
 			eventsGrid.innerHTML = '';
@@ -295,12 +311,16 @@
 
 				const priceDisplay = event.price === 0 ? 'Free' : `$${event.price}`;
 				const dateDisplay = formatDate(event.date);
+				
+				// NEW: Calculate and format the 24-hour time range
+				const endTime = calculateEndTime(event.time, event.duration);
+				const timeRange = endTime ? `${event.time} - ${endTime}` : event.time; // Display start-end or just start
 
 				card.innerHTML = `
 					<div class="event-card__overlay">
 						<div class="event-card__meta">
 							<h4 class="event-card__title">${event.title}</h4>
-							<p class="event-card__subtitle">${event.location} • ${dateDisplay}, ${convertTo12Hour(event.time)}</p>
+							<p class="event-card__subtitle">${event.location} • ${dateDisplay}, ${timeRange}</p>
 						</div>
 						<div class="price-badge">${priceDisplay}</div>
 					</div>
@@ -314,14 +334,8 @@
 			const date = new Date(dateStr + 'T00:00:00');
 			return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 		}
-
-		function convertTo12Hour(time) {
-			let [hours, mins] = time.split(':');
-			const ampm = hours >= 12 ? 'PM' : 'AM';
-			hours = hours % 12;
-			hours = hours ? hours : 12; 
-			return `${hours}:${mins} ${ampm}`;
-		}
+		
+		// REMOVED: convertTo12Hour function
 
 		// Filter & Sort Logic
 		function getFilteredAndSortedEvents() {
