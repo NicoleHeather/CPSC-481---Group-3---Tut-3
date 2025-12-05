@@ -218,11 +218,6 @@ main.container { padding-bottom: 92px; }
   outline: none;
 }
 
-/* On very small screens, keep header compact and hide the reset to avoid overlap */
-@media (max-width:420px) {
-  .demo-reset-btn-top { display: none; }
-}
-
 .btn-cancel {
   background: transparent;
   color: var(--color-muted);
