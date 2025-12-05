@@ -173,6 +173,26 @@ document.addEventListener('DOMContentLoaded', function () {
       // Wire Add Trip button
       if (addTripBtn) addTripBtn.addEventListener('click', ()=> openAddModal());
 
+      // Listen for global demo reset requests (header button fallback)
+      // When received, attempt to reset saved events for all known trips
+      try {
+        window.addEventListener('demo:reset-request', async function onDemoResetRequest() {
+          try {
+            // Remove any stored per-trip events so pages re-seed from repo files
+            // We name keys `events-<tripId>` in other code; remove those keys.
+            const removed = [];
+            merged.forEach(t => { try{ localStorage.removeItem(`events-${t.id}`); removed.push(t.id); }catch(e){} });
+            // Also remove any additional saved overrides used by itineraries list
+            try{ localStorage.removeItem('itineraries.extras'); }catch(e){}
+            try{ localStorage.removeItem('itineraries.deleted'); }catch(e){}
+            try{ localStorage.removeItem('itineraries.overrides'); }catch(e){}
+
+            // Let other scripts know we've reset; provide counts for UX
+            try{ window.dispatchEvent(new CustomEvent('demo:reset', { detail: { message: 'All itineraries reset to repo seed.', tripsReset: removed.length, tripIds: removed } })); }catch(e){}
+          }catch(err){ console.warn('demo:reset-request handling failed', err); }
+        });
+      } catch(e) { /* ignore if addEventListener not available */ }
+
       // --- helper functions: modals, add/edit/delete, toast/undo ---
       function openAddModal(){
         const modal = createTripForm(null, (newTrip)=>{

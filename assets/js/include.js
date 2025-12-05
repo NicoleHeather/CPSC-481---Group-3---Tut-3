@@ -8,17 +8,47 @@
     const first = document.body.firstChild;
     const temp = document.createElement('div');
     temp.innerHTML = html;
+    // Extract and remove any script tags so we can execute them explicitly
+    const scripts = Array.from(temp.querySelectorAll('script'));
+    scripts.forEach(s => s.parentNode && s.parentNode.removeChild(s));
     while (temp.firstChild) {
       document.body.insertBefore(temp.firstChild, first);
     }
+    // Execute scripts in order after insertion
+    scripts.forEach(s => {
+      const newScript = document.createElement('script');
+      if (s.src) {
+        newScript.src = s.src;
+        // preserve async/defer if present
+        if (s.async) newScript.async = true;
+        if (s.defer) newScript.defer = true;
+      } else {
+        newScript.textContent = s.textContent || s.innerText || '';
+      }
+      document.head.appendChild(newScript);
+    });
   }
 
   function insertFooterToBody(html) {
     const temp = document.createElement('div');
     temp.innerHTML = html;
+    // Extract and remove scripts to execute separately
+    const scripts = Array.from(temp.querySelectorAll('script'));
+    scripts.forEach(s => s.parentNode && s.parentNode.removeChild(s));
     while (temp.firstChild) {
       document.body.appendChild(temp.firstChild);
     }
+    scripts.forEach(s => {
+      const newScript = document.createElement('script');
+      if (s.src) {
+        newScript.src = s.src;
+        if (s.async) newScript.async = true;
+        if (s.defer) newScript.defer = true;
+      } else {
+        newScript.textContent = s.textContent || s.innerText || '';
+      }
+      document.head.appendChild(newScript);
+    });
   }
 
   // compute base path: if current URL path contains '/pages/', go up one level

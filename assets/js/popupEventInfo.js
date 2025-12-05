@@ -11,7 +11,10 @@ const modal2 = document.querySelector('.modal-2');
 
 const startTimeOptions = document.getElementById('start-time-options');
 const editForm = document.getElementById('event-form');
-const saveButton = document.getElementById('save-btn')
+const saveButton = document.getElementById('save-btn');
+
+const cancelRemove = document.getElementById('cancel-remove');
+const confirmRemove = document.getElementById('yes-remove')
 
 //Stored event info
 const currentTitle = document.querySelector('#event-title-stored');
@@ -63,7 +66,7 @@ window.onload = function () {
 
             //Replace later
             console.log(intineraryInfo);
-            console.log(intineraryInfo[0])
+            //console.log(intineraryInfo[0])
 
             for (let i = 0; i < intineraryInfo.length; i ++)
             {
@@ -75,7 +78,9 @@ window.onload = function () {
                 }
             }
 
+            console.log(currentEvent);
             customEvent = currentEvent.custom;
+
             console.log(customEvent);
 
             currentTitle.innerHTML = currentEvent.title;
@@ -131,8 +136,17 @@ removeButton.addEventListener('click', function () {
     removePopupForm.style.display = 'block';
     modal2.style.display = 'block';
 });
- 
 
+cancelRemove.addEventListener('click', function () {
+    removePopupForm.style.display = 'none';
+    modal2.style.display = 'none';  
+})
+
+confirmRemove.addEventListener('click', function () {
+    removePopupForm.style.display = 'none';
+    modal2.style.display = 'none';     
+})
+ 
 editButton.addEventListener('click', function () {
 
     titleInput.value = currentTitle.textContent;

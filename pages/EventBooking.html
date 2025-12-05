@@ -40,8 +40,7 @@
                 </p>
             </div>
 
-            <a id="booking-request-btn" href="../pages/BookingRequest.html" class="btn continue-button"
-                style="text-align:center; font-weight:500">
+            <a id="booking-request-btn" class="btn continue-button" style="text-align:center; font-weight:500">
                 Create Booking Request
             </a>
             <p></p>
@@ -164,7 +163,7 @@
         document.getElementById('page-title').textContent = window.currentEvent.title;
         document.getElementById('page-image').src = window.currentEvent.img;
         document.getElementById('booking-request-btn').href = 
-            `../pages/BookingRequest.html?id=${window.currentEvent.id}&title=${encodeURIComponent(window.currentEvent.title)}`;
+            `BookingRequest.html?id=${window.currentEvent.id}&title=${encodeURIComponent(window.currentEvent.title)}&date=${window.currentEvent.date}&time=${window.currentEvent.time}`;
         
         // Update description if it exists
         const descriptionEl = document.getElementById('page-description');
