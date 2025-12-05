@@ -1,4 +1,13 @@
 // Minimal JS for prototype interactions
+// Compute repo-aware site base for GitHub Pages (e.g. '/CPSC-481---Group-3---Tut-3')
+(function(){
+  try{
+    const REPO_NAME = 'CPSC-481---Group-3---Tut-3';
+    const seg = window.location.pathname.split('/').filter(Boolean)[0] || '';
+    window.SITE_BASE = (seg === REPO_NAME) ? ('/' + REPO_NAME) : '';
+  }catch(e){ window.SITE_BASE = ''; }
+})();
+
 document.addEventListener('DOMContentLoaded', function () {
   // Mobile nav toggle
   const navToggle = document.getElementById('nav-toggle');
