@@ -171,11 +171,6 @@ main.container { padding-bottom: 92px; }
 
 /* ======================================== BUTTONS ============================================== */
 
-.btn-primary { background: var(--color-primary); color: #fff; }
-.btn-secondary { background: var(--color-accent); color: #fff; }
-.btn-black { background: #111; color: #fff; border: none; }
-.btn-black:hover { background: #000; }
-
 /* accessible focus style for keyboard users */
 .btn:focus { outline: 3px solid rgba(255,127,39,0.16); outline-offset: 3px; }
 .btn-large { padding: .75rem 1rem; font-size: 1.05rem; }
@@ -184,6 +179,11 @@ main.container { padding-bottom: 92px; }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(200,30,45,0.16); }
 .btn:active { transform: translateY(0); box-shadow: 0 6px 12px rgba(0,0,0,0.06); }
 .hidden { display:none !important; }
+
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-secondary { background: var(--color-accent); color: #fff; }
+.btn-black { background: #111; color: #fff; border: none; }
+.btn-black:hover { background: #000; }
 
 .btn, .btn:visited, .btn:hover, .btn:focus, .btn:active {
   color: white;
