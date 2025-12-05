@@ -45,6 +45,16 @@
   cursor: pointer;
 }
 
+#call-contact-btn {
+  display: "none";
+  width: 25%;
+}
+
+#edit-contact {
+  display: "none";
+  width: 35%; 
+}
+
 #search-input-container {
   align-items: center;
 }
