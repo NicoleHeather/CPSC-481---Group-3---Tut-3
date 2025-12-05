@@ -118,7 +118,7 @@
   justify-content: flex-start;
   gap: 6px;
   padding: 2px 6px 2px 0;
-  padding-right: 160px; /* reserve space for the add button */
+  padding-right: 56px; /* reserve space for the add button */
   position: relative; /* anchor the add button to the header */
   white-space: nowrap; /* keep weekday + date on a single line */
 }
@@ -127,7 +127,7 @@
   margin: 0;
   line-height: 1;
   color: var(--color-text);
-  padding-right: 160px; /* ensure text won't underlap the add button */
+  padding-right: 56px; /* ensure text won't underlap the add button */
   display: inline-block;
   white-space: nowrap;
   overflow: visible; /* show full header text */
@@ -226,7 +226,26 @@
 .qa-modal input[type="text"], .qa-modal input[type="time"] { width: 100%; padding: 8px 10px; border: 2px solid rgba(0,0,0,0.08); border-radius: 8px; background: var(--color-surface); }
 
 /* Edit Dates button keeps only positioning/spacing specifics; visuals come from .btn-accent-outline */
-.day-add { width:24px; height:24px; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); z-index: 60; }
+.day-add {
+  /* Compact circular add button: use inline-flex so the '+' centers
+     regardless of inherited padding from .btn. Remove default padding
+     and explicitly size the control. */
+  width: 28px;
+  height: 28px;
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 60;
+  padding: 0; /* override .btn padding */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none; /* ensure no UA border shows */
+  font-size: 14px;
+  line-height: 1;
+  border-radius: 6px;
+}
 .day-add:focus { outline: none; }
 .edit-dates-btn { margin-top: 8px; }
 .edit-dates-btn:focus { outline: none; }

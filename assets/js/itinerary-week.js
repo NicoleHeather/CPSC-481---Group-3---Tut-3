@@ -294,7 +294,7 @@
           <div>
             <h3 class="trip-title">${trip.title}</h3>
             <div class="trip-dates">${toShort(trip.startDate)} —<br>${toShort(trip.endDate)}</div>
-            <div style="margin-top:8px;"><button class="edit-dates-btn btn-accent-outline" type="button" aria-label="Edit trip dates">Edit Dates</button></div>
+            <div style="margin-top:8px;"><button class="btn btn-secondary edit-dates-btn" type="button" aria-label="Edit trip dates">Edit Dates</button></div>
           </div>
           <div style="text-align:right;">
             <!-- Header-cell demo reset removed; top-header control is used instead -->
@@ -402,7 +402,7 @@
         const col = document.createElement('div'); col.className = 'week-column';
         const inner = document.createElement('div'); inner.className = 'week-column__inner';
         // Place day name and date as a link so clicking the day opens Day view
-        inner.innerHTML = `<div class="day-header"><div class="day-name"><a href="${dayHref}" class="day-link link-black">${toDay(dayIso)}, ${dayDate.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</a></div><button class="day-add btn-accent-outline" data-date="${dayIso}" aria-label="Add event">+</button></div>`;
+        inner.innerHTML = `<div class="day-header"><div class="day-name"><a href="${dayHref}" class="day-link link-black">${toDay(dayIso)}, ${dayDate.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</a></div><button class="btn day-add btn-secondary" data-date="${dayIso}" aria-label="Add event">+</button></div>`;
 
         // find events for this date and show a compact preview (top 3)
         const todays = eventsForThisTrip.filter(ev => ev.date === dayIso).sort((a,b)=> (a.time||'').localeCompare(b.time||''));
