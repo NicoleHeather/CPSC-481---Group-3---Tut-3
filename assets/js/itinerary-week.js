@@ -294,7 +294,7 @@
           <div>
             <h3 class="trip-title">${trip.title}</h3>
             <div class="trip-dates">${toShort(trip.startDate)} —<br>${toShort(trip.endDate)}</div>
-            <div style="margin-top:8px;"><button class="btn btn-secondary edit-dates-btn" type="button" aria-label="Edit trip dates">Edit Dates</button></div>
+            <div style="margin-top:8px;"><button class="btn edit-dates-btn" type="button" aria-label="Edit trip dates">Edit Dates</button></div>
           </div>
           <div style="text-align:right;">
             <!-- Header-cell demo reset removed; top-header control is used instead -->
