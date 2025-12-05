@@ -218,24 +218,80 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       function createTripForm(existing, onSave){
-        const wrapper = document.createElement('div'); wrapper.className='modal-overlay'; wrapper.style.position='fixed'; wrapper.style.inset='0'; wrapper.style.display='flex'; wrapper.style.alignItems='center'; wrapper.style.justifyContent='center'; wrapper.style.background='rgba(0,0,0,0.45)'; wrapper.style.zIndex='1200';
-        const modal = document.createElement('div'); modal.className='modal-card'; modal.style.background='#fff'; modal.style.padding='16px'; modal.style.borderRadius='8px'; modal.style.minWidth='300px'; modal.style.maxWidth='90%';
-        modal.innerHTML = `<form>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <label>Title<br><input name="title" value="${existing?existing.title||'':''}" required></label>
-            <label>Start Date<br><input name="startDate" type="date" value="${existing?existing.startDate||'' : ''}" required></label>
-            <label>End Date<br><input name="endDate" type="date" value="${existing?existing.endDate||'' : ''}" required></label>
-            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px;">
-              <button type="button" class="btn-accent-outline cancel">Cancel</button>
+        // Modal using global site styles: .modal, .modal-backdrop, .modal-panel
+        const wrapper = document.createElement('div');
+        wrapper.className = 'modal';
+        wrapper.setAttribute('role','dialog');
+        wrapper.setAttribute('aria-modal','true');
+
+        const backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop';
+
+        const panel = document.createElement('div');
+        panel.className = 'modal-panel';
+        panel.setAttribute('role','document');
+
+        // Header
+        const header = document.createElement('div'); header.className = 'modal-header';
+        const h2 = document.createElement('h2'); h2.textContent = existing ? 'Edit Itinerary' : 'Add Itinerary';
+        header.appendChild(h2);
+
+        // Body with form-group semantics to reuse main.css styles
+        const body = document.createElement('div'); body.className = 'modal-body';
+        const form = document.createElement('form');
+        form.innerHTML = `
+          <div class="settings-section" style="padding:12px; box-shadow:none; border:none;">
+            <div class="form-group">
+              <label>Title</label>
+              <input name="title" value="${existing?existing.title||'' : ''}" required />
+            </div>
+            <div class="form-group">
+              <label>Start Date</label>
+              <input name="startDate" type="date" value="${existing?existing.startDate||'' : ''}" required />
+            </div>
+            <div class="form-group">
+              <label>End Date</label>
+              <input name="endDate" type="date" value="${existing?existing.endDate||'' : ''}" required />
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-cancel cancel">Cancel</button>
               <button type="submit" class="btn">Save</button>
             </div>
           </div>
-        </form>`;
-        wrapper.appendChild(modal);
-        const form = modal.querySelector('form');
-        const cancel = modal.querySelector('.cancel');
-        cancel.addEventListener('click', ()=> wrapper.remove());
-        form.addEventListener('submit', (e)=>{ e.preventDefault(); const fd = new FormData(form); const t = fd.get('title').trim(); const s = fd.get('startDate'); const en = fd.get('endDate'); if(!t||!s||!en){ alert('Please fill fields'); return; } const out = { title: t, startDate: s, endDate: en }; if(existing && existing.id) out.id = existing.id; wrapper.remove(); onSave(out); });
+        `;
+
+        body.appendChild(form);
+
+        // Assemble
+        panel.appendChild(header);
+        panel.appendChild(body);
+        wrapper.appendChild(backdrop);
+        wrapper.appendChild(panel);
+
+        // Focus management
+        setTimeout(()=>{ const first = form.querySelector('input[name="title"]'); if(first) first.focus(); }, 20);
+
+        // Handlers
+        const cancelBtn = form.querySelector('.cancel');
+        cancelBtn.addEventListener('click', ()=> wrapper.remove());
+
+        form.addEventListener('submit', (e)=>{
+          e.preventDefault();
+          const fd = new FormData(form);
+          const t = (fd.get('title')||'').trim();
+          const s = fd.get('startDate');
+          const en = fd.get('endDate');
+          if(!t || !s || !en){ alert('Please fill all fields'); return; }
+          const out = { title: t, startDate: s, endDate: en };
+          if(existing && existing.id) out.id = existing.id;
+          wrapper.remove();
+          onSave(out);
+        });
+
+        // Close modal on backdrop click or Escape
+        backdrop.addEventListener('click', ()=> wrapper.remove());
+        document.addEventListener('keydown', function escHandler(ev){ if(ev.key==='Escape'){ wrapper.remove(); document.removeEventListener('keydown', escHandler); } });
+
         return wrapper;
       }
 
