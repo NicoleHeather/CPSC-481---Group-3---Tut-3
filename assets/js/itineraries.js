@@ -262,11 +262,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         body.appendChild(form);
 
-        // Assemble
+        // Assemble and show (use .open / aria-hidden so CSS displays the modal)
         panel.appendChild(header);
         panel.appendChild(body);
         wrapper.appendChild(backdrop);
         wrapper.appendChild(panel);
+        wrapper.classList.add('open');
+        wrapper.setAttribute('aria-hidden', 'false');
 
         // Focus management
         setTimeout(()=>{ const first = form.querySelector('input[name="title"]'); if(first) first.focus(); }, 20);
