@@ -143,12 +143,20 @@ input {
 }
 
 #booking-request-confirm, #booking-request-conflict-ok, #booking-request-conflict-override, #booking-request-conflict-view-event {
-    width: 85%;
-    font-size: "large";
+    width: 95%;
+    height: 40%;
+    font-size: "medium";
+    text-align: center;
+}
+
+#booking-request-confirm {
+    height: 40px;
+    padding-bottom: 5px;
 }
 
 #success-message, #error-message {
     text-align: center;
+    align-items: center;
 }
 
 #success-container, #error-container {
@@ -158,6 +166,17 @@ input {
     justify-content: center;
     gap: 20px;
     border-radius: 20px;
+    margin-left: 40x;
+}
+
+#button-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    border-radius: 20px;
+    padding-left: 0x;   
 }
 
 #choose-itinerary {
