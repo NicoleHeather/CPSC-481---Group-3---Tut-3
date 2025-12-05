@@ -406,14 +406,15 @@ main.container { padding-bottom: 92px; }
 /* Inner card scales slightly for depth while the wrapper translates. */
 .itinerary-card:hover .event-card,
 .itinerary-card:focus-within .event-card {
-  transform: scale(1.015);
+  /* keep the stronger shadow for lift but do not scale the background image */
+  transform: none;
   box-shadow: 0 26px 52px rgba(0,0,0,.26);
 }
 
 /* Direct hover on the inner card (mouse) should match the wrapper behavior
    but must avoid applying an extra translate (no double-translate). */
-.event-card:hover { transform: scale(1.015); box-shadow: 0 26px 52px rgba(0,0,0,.26); }
-.event-card:active { transform: scale(1.01); }
+.event-card:hover { transform: none; box-shadow: 0 26px 52px rgba(0,0,0,.26); }
+.event-card:active { transform: none; }
 
 /* keyboard focus style for accessibility: focus-visible highlights the card
    but the wrapper handles the translate so users see the tab move too. */

@@ -323,3 +323,16 @@ body.itinerary-fixed .week-columns {
   /* Extra-small devices: stack into single column */
   .week-columns { grid-template-columns: 1fr; grid-template-rows: repeat(8, auto); height: auto; }
 }
+
+/* Itinerary-specific override: avoid background-size: cover which can make
+   images look zoomed/cropped. Use `contain` so the full image is visible and
+   center it. This only affects itinerary card thumbnails (not other site cards).
+*/
+.itinerary-card .event-card {
+  /* Fill the card while preserving aspect ratio so the image fits the
+     container (may crop edges). This gives a consistent, edge-to-edge
+     thumbnail appearance. */
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
