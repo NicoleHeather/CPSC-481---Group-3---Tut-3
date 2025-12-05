@@ -611,7 +611,29 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
 }
 
 /* Kebab menu (three-dots) for card actions */
-.kebab-btn { padding: 6px; min-width:36px; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; position: absolute; right: 12px; top: 12px; }
+.kebab-btn {
+  /* Match the visual style of the price badge: plain white background, subtle border */
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(0,0,0,0.06);
+  color: #111;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+  cursor: pointer;
+  font-size: 8px; /* larger meatballs */
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.kebab-btn:hover, .kebab-btn:focus { background: #ffffff; box-shadow: 0 10px 22px rgba(0,0,0,0.08); outline: none; }
 .kebab-menu { position: absolute; right: 12px; top: 48px; background: #fff; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 10px 24px rgba(0,0,0,0.12); border-radius:8px; min-width:140px; z-index:1200; display:none; flex-direction:column; }
 .kebab-menu.visible { display:flex; }
 .kebab-menu button { background: transparent; border: none; padding: 10px 12px; text-align: left; width:100%; cursor:pointer; font-weight:600; }

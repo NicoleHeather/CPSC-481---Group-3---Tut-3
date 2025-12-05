@@ -115,7 +115,8 @@ document.addEventListener('DOMContentLoaded', function () {
         kebabBtn.className = 'btn-accent-outline kebab-btn';
         kebabBtn.setAttribute('aria-expanded', 'false');
         kebabBtn.setAttribute('aria-label', `Open actions for ${trip.title || 'itinerary'}`);
-        kebabBtn.innerHTML = '&#x22EF;'; // horizontal ellipsis (meatballs)
+        // Use three bold filled dots for a stronger meatballs visual
+        kebabBtn.innerHTML = '&#x25CF;&nbsp;&#x25CF;&nbsp;&#x25CF;';
 
         const menu = document.createElement('div');
         menu.className = 'kebab-menu';
