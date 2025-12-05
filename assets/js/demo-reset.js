@@ -71,10 +71,26 @@
         };
         window.addEventListener('demo:reset', onEvent);
 
-        // fallback: if nothing reports back, show a generic success after 1.2s
+        // fallback: if nothing reports back, perform a best-effort reset after 1.2s
         var fallbackTimer = setTimeout(function(){
           try{ window.removeEventListener('demo:reset', onEvent); }catch(e){}
-          settle('Events and trips have been reset to the defaults.');
+          try{
+            // Best-effort: clear any localStorage keys that match `events-<tripId>`
+            var removed = [];
+            try{
+              for(var i=0;i<localStorage.length;i++){
+                var k = localStorage.key(i);
+                if(!k) continue;
+                if(k.indexOf('events-') === 0){ removed.push(k); }
+              }
+              removed.forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+              // Also clear itineraries local overrides so list pages re-seed
+              try{ localStorage.removeItem('itineraries.extras'); }catch(e){}
+              try{ localStorage.removeItem('itineraries.deleted'); }catch(e){}
+              try{ localStorage.removeItem('itineraries.overrides'); }catch(e){}
+            }catch(e){ /* ignore localStorage errors */ }
+            settle('Demo Reset: performed fallback reset (cleared saved events).', { removedKeys: removed });
+          }catch(e){ settle('Events and trips have been reset to the defaults.'); }
         }, 1200);
 
         // Attempt to call the real reset function. If it doesn't exist but a fallback helper exists,
@@ -90,10 +106,14 @@
             try{ window.dispatchEvent(new CustomEvent('demo:reset', { detail: { message: 'Demo Reset executed (fallback).', eventsWritten: null } })); }catch(e){}
           }catch(err){ clearTimeout(fallbackTimer); settle('Demo Reset failed — see console.', { error: String(err) }); }
         } else {
-          // no handler available
-          clearTimeout(fallbackTimer);
-          try{ window.removeEventListener('demo:reset', onEvent); }catch(e){}
-          settle('Demo Reset: no handler registered on this page.');
+          // No direct handler found: broadcast a request event so pages that
+          // know how to reset can respond by dispatching `demo:reset`.
+          try{
+            window.dispatchEvent(new Event('demo:reset-request'));
+          }catch(e){ /* ignore */ }
+          // Leave the `onEvent` listener active — the page may respond and
+          // settle via the `demo:reset` event. If nothing responds before the
+          // fallback timer fires, a generic message will be shown.
         }
       }catch(err){ console.warn('Demo Reset handler failed', err); alert('Demo Reset failed — see console.'); }
     });
