@@ -17,12 +17,19 @@
 		<h1>Emergency Info</h1>
 		<div id="contact-input">
 			<div class="contact-name" style="display:flex;">
-				<p>Name:</p><input id="name-input" type="text", placeholder="John Smith..."/><br>
+				<p id="label-name">Name:</p><input id="name-input" type="text", placeholder="John Smith..."/><br>
+				<p id="name" style="display:none"></p>
 			</div>
 			<div class="contact-phone" style="display:flex;">
-				<p>Phone Num:</p><input id="phone-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
+				<p id="label-phone">Phone:</p><input id="phone-input" type="text", placeholder="XXX-XXX-XXXX"/><br>
+				<p id="phone" style="display:none"></p>
 			</div>
 			<button id="save-info-btn" class="btn btn-secondary">Save Info</button>
+			<div style="display:flex; flex-direction:row;">
+				<button id="call-contact-btn" style="display: none;" class="btn">Call</button>
+				<div style="padding-right:120px"></div>
+				<button id="edit-contact" style="display: none;" class="btn btn-secondary">Edit Contact</button>
+			</div>
 
 		<!-- Emergency Services Input -->
 		 <div id="search-input-container">
