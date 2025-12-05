@@ -61,7 +61,13 @@ document.addEventListener('DOMContentLoaded', function () {
         a.href = `../pages/ItineraryWeek.html?trip=${encodeURIComponent(trip.id || '')}`;
         a.setAttribute('role', 'group');
         a.setAttribute('aria-label', trip.title || 'Itinerary');
-        if (img) a.style.backgroundImage = `url(${img})`;
+        if (img) {
+          a.style.backgroundImage = `url(${img})`;
+        } else {
+          /* Very light orange fallback using brand accent hues */
+          a.style.backgroundImage = 'linear-gradient(180deg, rgba(255,127,39,0.06), rgba(255,127,39,0.02))';
+          a.style.backgroundColor = '#fff8f3';
+        }
 
         // optional price badge (kept conditional but usually not used for itineraries)
         if (trip.price) {
@@ -128,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const actions = document.createElement('div');
         actions.style.display = 'flex';
         actions.style.gap = '8px';
-        actions.style.marginTop = '8px';
+        actions.style.marginTop = '0';
         actions.style.justifyContent = 'flex-start';
 
         const tab = document.createElement('button');

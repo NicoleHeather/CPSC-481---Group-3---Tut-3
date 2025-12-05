@@ -250,7 +250,8 @@ main.container { padding-bottom: 92px; }
 
 /* Modern inline budget button placed at the top-right of the card */
 /* Bottom action tab (Manage Budget) attached to card */
-.itinerary-card .event-card { border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-bottom: 0; }
+.itinerary-card { gap: 0; }
+.itinerary-card .event-card { border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-bottom: 0 !important; }
 .itinerary-card__tab {
   display: block;
   width: 100%;
@@ -260,13 +261,16 @@ main.container { padding-bottom: 92px; }
   background: linear-gradient(90deg, rgba(255,127,39,0.98), rgba(200,16,46,0.98));
   color: white;
   font-weight: 700;
+  /* top corners must be square so the tab sits flush against the card */
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   border-bottom-left-radius: .5rem;
   border-bottom-right-radius: .5rem;
   box-shadow: none;
   text-decoration: none;
   cursor: pointer;
   border: none;
-  margin-top: 0; /* sit flush to card */
+  margin: 0; /* sit flush to card */
   position: relative;
   transition: transform .18s ease, box-shadow .18s ease, background .12s ease;
 }
@@ -557,7 +561,7 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
 
 /* Accent outlined button used across itinerary (small action buttons) */
 .btn-accent-outline {
-  background: rgba(255,127,39,0.12);
+  background: rgba(255,127,39,0.3);
   border: 1px solid rgba(255,127,39,0.18);
   border-radius: 6px;
   padding: 6px 10px;
@@ -565,6 +569,7 @@ a:not(.btn):not(.pill):focus { outline: 3px solid rgba(200,127,39,0.16); outline
   align-items: center;
   justify-content: center;
   font-weight: 600;
+  font-size: 12px;
   cursor: pointer;
   color: var(--color-text);
   box-shadow: 0 1px 2px rgba(0,0,0,0.06);
