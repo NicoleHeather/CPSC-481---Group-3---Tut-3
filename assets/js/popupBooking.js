@@ -8,6 +8,11 @@ let currentEvent;
 const pageTitle = document.getElementById("page-title");
 const pageDescription = document.getElementById("page-description")
 const pageImage = document.getElementById("page-image");
+const pageDate = document.getElementById("page-date");
+const pageTime = document.getElementById("page-time");
+const pageLocation = document.getElementById("page-location");
+const pageCost = document.getElementById("page-cost")
+const pageDuration = document.getElementById("page-duration");
 
 window.onload = function () {
     const queryString = window.location.search;
@@ -57,13 +62,23 @@ window.onload = function () {
 
             console.log(currentEvent);
             
-
             pageTitle.innerText = currentEvent.title;
             pageDescription.innerText = currentEvent.description;
             pageImage.src = currentEvent.img;
+            pageDate.innerText = currentEvent.date;
+            pageTime.innerText = currentEvent.time;
+            pageLocation.innerText = currentEvent.location;
+
+            if (currentEvent.price == undefined){
+                pageCost.innerText = "Free";
+            }
+            else {
+                pageCost.innerText = currentEvent.price;
+            }
+
+            pageDuration.innerText = currentEvent.duration + " HR";
         })
 };
-
 
 
 bookingRequestButton.addEventListener('click', function () {
