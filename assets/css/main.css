@@ -198,18 +198,19 @@ main.container { padding-bottom: 92px; }
 /* Demo Reset top-header button: appear as a white link with right padding */
 .demo-reset-btn-top {
   position: absolute;
-  right: 27px;
-  top: 50%;
+  right: 16px;
+  top: 55%;
   transform: translateY(calc(-50% - 3px));
   background: transparent;
   border: none;
   color: #ffffff;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 400;
   padding: 6px 10px 6px 6px;
   cursor: pointer;
   z-index: 9999;
-  font-size: 0.95rem;
+  font-size: 13px;
+  text-decoration: underline;
   line-height: 1;
 }
 .demo-reset-btn-top:hover,

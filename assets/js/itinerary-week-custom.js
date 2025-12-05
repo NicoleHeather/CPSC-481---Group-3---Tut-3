@@ -365,13 +365,14 @@
 
           if (!targetContainer.querySelector('.demo-reset-btn-top')) {
             const btn = document.createElement('button');
-            btn.className = 'demo-reset-btn-top link-white';
+            btn.className = 'demo-reset-btn-top';
             btn.type = 'button';
             btn.setAttribute('aria-label', 'Demo Reset to repo seed');
             btn.title = 'Demo Reset to repo seed';
             btn.textContent = 'Demo Reset';
-            btn.addEventListener('click', (e)=>{
-              e.stopPropagation();
+
+            // Extract core reset behavior so it can be called from the header helper
+            function performDemoReset(){
               if (perTripSeed && perTripSeed.length){
                 try{
                   saveEventsToStorage(trip.id, perTripSeed);
@@ -379,10 +380,24 @@
                   eventsForThisTrip.push(...perTripSeed);
                   console.info('[week] Demo Reset: wrote', perTripSeed.length, 'events to storage');
                   render();
-                }catch(err){ console.warn('[week] reset failed', err); alert('Reset failed - see console for details.'); }
-              } else {
-                alert('No per-trip seed file available to reset.');
+                  try{
+                    window.dispatchEvent(new CustomEvent('demo:reset', { detail: { message: 'Events for this trip have been reset to the repo seed.', tripId: trip.id, eventsWritten: perTripSeed.length } }));
+                  }catch(e){ /* ignore */ }
+                  return true;
+                }catch(err){ console.warn('[week] reset failed', err); return false; }
               }
+              return false;
+            }
+
+            // Expose a global hook so `demo-reset.js` header button can invoke the same reset.
+            try{ window.demoResetAll = window.demoResetAll || function(){
+              const ok = performDemoReset(); if(!ok) { console.warn('[week] demoResetAll: no per-trip seed available'); }
+            }; }catch(e){ /* ignore */ }
+
+            btn.addEventListener('click', (e)=>{
+              e.stopPropagation();
+              const ok = performDemoReset();
+              if(!ok){ alert('No per-trip seed file available to reset.'); }
             });
             targetContainer.appendChild(btn);
             try { console.info('[week] Demo Reset attached to', targetContainer.tagName, targetContainer.id||targetContainer.className); } catch(e){}
