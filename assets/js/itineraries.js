@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
   const container = document.getElementById('itineraries-grid');
   if (!container) return;
+  const modalsRoot = document.getElementById('modals');
+  const toastRoot = document.getElementById('toast-container');
+  const addTripBtn = document.getElementById('add-trip-btn');
 
   // Load trips + events so we can show sample events on each card
   Promise.all([
@@ -10,7 +13,24 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(([tripsData, eventsData]) => {
       const trips = (tripsData && tripsData.trips) || [];
       const allEvents = (eventsData && (eventsData.explore || [])).concat((eventsData && eventsData.saved) || []) || [];
-      if (!trips.length) {
+      // Load local overrides / extras / deleted lists from localStorage
+      const KEY_EXTRAS = 'itineraries.extras';
+      const KEY_DELETED = 'itineraries.deleted';
+      const KEY_OVERRIDES = 'itineraries.overrides';
+
+      function loadJSON(key){ try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }catch(e){return null;} }
+      function saveJSON(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
+
+      const extras = loadJSON(KEY_EXTRAS) || [];
+      const deleted = new Set((loadJSON(KEY_DELETED) || []));
+      const overrides = loadJSON(KEY_OVERRIDES) || {};
+
+      // Merge fetched trips with extras and apply overrides; filter deleted
+      let merged = trips.concat(extras.map(t=>Object.assign({isExtra:true}, t)));
+      merged = merged.filter(t => !deleted.has(t.id));
+      merged = merged.map(t => overrides[t.id] ? Object.assign({}, t, overrides[t.id]) : t);
+
+      if (!merged.length) {
         container.innerHTML = '<p>No itineraries found.</p>';
         return;
       }
@@ -27,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=randInt(0,i); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
 
-      trips.forEach(trip => {
+      merged.forEach(trip => {
         const link = trip.link || '#';
         const img = (trip.images && trip.images[0]) || '';
 
@@ -83,7 +103,34 @@ document.addEventListener('DOMContentLoaded', function () {
         // assemble wrapper
         wrapper.appendChild(a);
 
-        // bottom action tab: Manage Budget
+        // Kebab (meatballs) menu: render button inside the card overlay at top-right
+        const kebabBtn = document.createElement('button');
+        kebabBtn.type = 'button';
+        kebabBtn.className = 'btn-accent-outline kebab-btn';
+        kebabBtn.setAttribute('aria-expanded', 'false');
+        kebabBtn.setAttribute('aria-label', `Open actions for ${trip.title || 'itinerary'}`);
+        kebabBtn.innerHTML = '&#x22EF;'; // horizontal ellipsis (meatballs)
+
+        const menu = document.createElement('div');
+        menu.className = 'kebab-menu';
+        menu.setAttribute('role', 'menu');
+
+        const mEdit = document.createElement('button'); mEdit.type='button'; mEdit.textContent='Edit'; mEdit.setAttribute('role','menuitem');
+        const mDelete = document.createElement('button'); mDelete.type='button'; mDelete.textContent='Delete'; mDelete.setAttribute('role','menuitem');
+        const mShare = document.createElement('button'); mShare.type='button'; mShare.textContent='Share'; mShare.setAttribute('role','menuitem');
+        menu.appendChild(mEdit); menu.appendChild(mDelete); menu.appendChild(mShare);
+
+        // place kebab button and menu inside the overlay so it overlays the image
+        overlay.appendChild(kebabBtn);
+        overlay.appendChild(menu);
+
+        // Maintain existing Manage Budget tab for parity (rendered under the card)
+        const actions = document.createElement('div');
+        actions.style.display = 'flex';
+        actions.style.gap = '8px';
+        actions.style.marginTop = '8px';
+        actions.style.justifyContent = 'flex-start';
+
         const tab = document.createElement('button');
         tab.type = 'button';
         tab.className = 'itinerary-card__tab';
@@ -94,12 +141,115 @@ document.addEventListener('DOMContentLoaded', function () {
           ev.stopPropagation();
           ev.preventDefault();
           console.log('Manage Budget clicked for', tab.dataset.tripId);
-          // TODO: open inline budget modal or navigate to budget panel
         });
 
+        wrapper.appendChild(actions);
         wrapper.appendChild(tab);
         container.appendChild(wrapper);
+
+        // Kebab menu behavior
+        function closeMenu(){ menu.classList.remove('visible'); kebabBtn.setAttribute('aria-expanded','false'); }
+        function openMenu(){ menu.classList.add('visible'); kebabBtn.setAttribute('aria-expanded','true'); const btn = menu.querySelector('button'); if(btn) btn.focus(); }
+
+        kebabBtn.addEventListener('click', (e)=>{ e.stopPropagation(); e.preventDefault(); if(menu.classList.contains('visible')) closeMenu(); else openMenu(); });
+
+        // menu item handlers
+        mEdit.addEventListener('click', (e)=>{ e.stopPropagation(); e.preventDefault(); closeMenu(); openEditModal(trip); });
+        mDelete.addEventListener('click', (e)=>{ e.stopPropagation(); e.preventDefault(); closeMenu(); confirmDelete(trip); });
+        mShare.addEventListener('click', (e)=>{ e.stopPropagation(); e.preventDefault(); closeMenu(); shareTrip(trip); });
+
+        // close on outside click
+        document.addEventListener('click', (ev)=>{ if(!overlay.contains(ev.target)) closeMenu(); });
+        document.addEventListener('keydown', (ev)=>{ if(ev.key === 'Escape') closeMenu(); });
       });
+
+      // Wire Add Trip button
+      if (addTripBtn) addTripBtn.addEventListener('click', ()=> openAddModal());
+
+      // --- helper functions: modals, add/edit/delete, toast/undo ---
+      function openAddModal(){
+        const modal = createTripForm(null, (newTrip)=>{
+          // ensure id
+          if(!newTrip.id) newTrip.id = `trip-${Date.now()}`;
+          extras.unshift(newTrip);
+          saveJSON(KEY_EXTRAS, extras);
+          location.reload();
+        });
+        modalsRoot.appendChild(modal);
+      }
+
+      function openEditModal(trip){
+        const modal = createTripForm(trip, (updated)=>{
+          // if trip is an extra, update extras; otherwise add to overrides
+          if(trip.isExtra){
+            const idx = extras.findIndex(x=>x.id===trip.id);
+            if(idx>=0){ extras[idx] = Object.assign({}, extras[idx], updated); saveJSON(KEY_EXTRAS, extras); }
+          } else {
+            overrides[trip.id] = Object.assign({}, overrides[trip.id]||{}, updated);
+            saveJSON(KEY_OVERRIDES, overrides);
+          }
+          location.reload();
+        });
+        modalsRoot.appendChild(modal);
+      }
+
+      function confirmDelete(trip){
+        // quick confirm then support Undo via toast
+        const ok = confirm(`Delete itinerary "${trip.title}"? This will hide it locally.`);
+        if(!ok) return;
+        // remove: if extra, remove from extras; otherwise add id to deleted set
+        if(trip.isExtra){
+          const idx = extras.findIndex(x=>x.id===trip.id);
+          if(idx>=0) { const removed = extras.splice(idx,1)[0]; saveJSON(KEY_EXTRAS, extras); showUndoToast('Trip removed', ()=>{ extras.splice(idx,0,removed); saveJSON(KEY_EXTRAS, extras); location.reload(); }); }
+        } else {
+          const arr = loadJSON(KEY_DELETED) || [];
+          arr.push(trip.id);
+          saveJSON(KEY_DELETED, arr);
+          showUndoToast('Trip deleted', ()=>{ const cur = loadJSON(KEY_DELETED)||[]; const i = cur.indexOf(trip.id); if(i>=0) cur.splice(i,1); saveJSON(KEY_DELETED, cur); location.reload(); });
+        }
+        location.reload();
+      }
+
+      function createTripForm(existing, onSave){
+        const wrapper = document.createElement('div'); wrapper.className='modal-overlay'; wrapper.style.position='fixed'; wrapper.style.inset='0'; wrapper.style.display='flex'; wrapper.style.alignItems='center'; wrapper.style.justifyContent='center'; wrapper.style.background='rgba(0,0,0,0.45)'; wrapper.style.zIndex='1200';
+        const modal = document.createElement('div'); modal.className='modal-card'; modal.style.background='#fff'; modal.style.padding='16px'; modal.style.borderRadius='8px'; modal.style.minWidth='300px'; modal.style.maxWidth='90%';
+        modal.innerHTML = `<form>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label>Title<br><input name="title" value="${existing?existing.title||'':''}" required></label>
+            <label>Start Date<br><input name="startDate" type="date" value="${existing?existing.startDate||'' : ''}" required></label>
+            <label>End Date<br><input name="endDate" type="date" value="${existing?existing.endDate||'' : ''}" required></label>
+            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px;">
+              <button type="button" class="btn-accent-outline cancel">Cancel</button>
+              <button type="submit" class="btn">Save</button>
+            </div>
+          </div>
+        </form>`;
+        wrapper.appendChild(modal);
+        const form = modal.querySelector('form');
+        const cancel = modal.querySelector('.cancel');
+        cancel.addEventListener('click', ()=> wrapper.remove());
+        form.addEventListener('submit', (e)=>{ e.preventDefault(); const fd = new FormData(form); const t = fd.get('title').trim(); const s = fd.get('startDate'); const en = fd.get('endDate'); if(!t||!s||!en){ alert('Please fill fields'); return; } const out = { title: t, startDate: s, endDate: en }; if(existing && existing.id) out.id = existing.id; wrapper.remove(); onSave(out); });
+        return wrapper;
+      }
+
+      function showUndoToast(msg, onUndo){
+        const box = document.createElement('div'); box.className='toast'; box.style.background='#111'; box.style.color='#fff'; box.style.padding='10px 12px'; box.style.borderRadius='8px'; box.style.marginTop='8px'; box.style.display='flex'; box.style.alignItems='center'; box.style.gap='12px';
+        const span = document.createElement('div'); span.textContent = msg; box.appendChild(span);
+        const undo = document.createElement('button'); undo.className='btn-accent-outline'; undo.textContent='Undo'; undo.addEventListener('click', ()=>{ try{ onUndo(); }catch(e){} finally{ box.remove(); } });
+        box.appendChild(undo);
+        toastRoot.appendChild(box);
+        setTimeout(()=>{ try{ box.remove(); }catch(e){} }, 6000);
+      }
+
+      // Share helper: attempt Web Share API, fallback to copy link prompt
+      function shareTrip(trip){
+        const url = `${location.origin}${location.pathname.replace(/\/pages\/.*$/,'')}/pages/ItineraryWeek.html?trip=${encodeURIComponent(trip.id)}`;
+        if(navigator.share){
+          navigator.share({ title: trip.title, text: trip.title, url }).catch(()=>{ prompt('Share link', url); });
+        } else {
+          try { navigator.clipboard.writeText(url).then(()=> alert('Link copied to clipboard')); } catch(e){ prompt('Share link (copy):', url); }
+        }
+      }
     })
     .catch(err => {
       console.error('Failed to load trips:', err);
