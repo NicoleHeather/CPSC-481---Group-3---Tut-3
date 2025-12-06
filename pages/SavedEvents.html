@@ -357,6 +357,21 @@
 		const savedSection = document.getElementById('savedEventsSection');
 		const searchInput = document.getElementById('searchInput');
 		const sortSelect = document.getElementById('sortSelect');
+		
+		// Function to calculate end time (Used in renderSavedEvents)
+		function calculateEndTime(startTime, duration) {
+			if (!startTime || !duration) return '';
+			const [startHour, startMin] = startTime.split(':').map(Number);
+			const totalDurationMins = parseFloat(duration) * 60;
+			
+			let totalMins = startHour * 60 + startMin + totalDurationMins;
+			
+			let endHour = Math.floor((totalMins / 60) % 24); 
+			let endMin = totalMins % 60;
+
+			return `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
+		}
+
 
 		// 1. Initialize Data (LocalStorage or Fetch)
 		function initSavedEvents() {
@@ -373,6 +388,7 @@
 				fetch('../assets/data/events.json')
 					.then(response => response.json())
 					.then(data => {
+						// Note: This fetch now gets the corrected JSON with durations for saved events.
 						savedEventsData = data.saved;
 						// Save initial state to storage so subsequent changes persist
 						localStorage.setItem(STORAGE_KEY, JSON.stringify(savedEventsData));
@@ -409,12 +425,17 @@
 
 				const priceDisplay = event.price === 0 ? 'Free' : `$${event.price}`;
 				const dateDisplay = formatDate(event.date);
+				
+				// FIX: Removed the temporary '|| 2' default value. The logic now correctly relies on event.duration being present in the data.
+				const endTime = calculateEndTime(event.time, event.duration);
+				const timeRange = endTime ? `${event.time} - ${endTime}` : event.time;
+
 
 				card.innerHTML = `
 					<div class="event-card__overlay">
 						<div class="event-card__meta">
 							<h4 class="event-card__title">${event.title}</h4>
-							<p class="event-card__subtitle">${event.location} • ${dateDisplay}, ${convertTo12Hour(event.time)}</p>
+							<p class="event-card__subtitle">${event.location} • ${dateDisplay}, ${timeRange}</p>
 						</div>
 						<div class="event-card__footer">
 							<div class="price-badge">${priceDisplay}</div>
@@ -433,15 +454,7 @@
 			const date = new Date(dateStr + 'T00:00:00');
 			return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 		}
-
-		function convertTo12Hour(time) {
-			let [hours, mins] = time.split(':');
-			const ampm = hours >= 12 ? 'PM' : 'AM';
-			hours = hours % 12;
-			hours = hours ? hours : 12; 
-			return `${hours}:${mins} ${ampm}`;
-		}
-
+		
 		// 3. Remove Logic (Now Updates LocalStorage)
 		window.toggleSaveStar = function(e, id) {
 			e.stopPropagation(); // Prevent card click
