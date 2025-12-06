@@ -2,6 +2,7 @@
 const saveButton = document.getElementById('save-info-btn');
 const callButton = document.getElementById('call-contact-btn');
 const editContactButton = document.getElementById('edit-contact');
+const searchButton = document.getElementById('button-search');
 
 //Input info
 const inputName = document.getElementById('name-input');
@@ -14,7 +15,19 @@ const storedPhone = document.getElementById('phone');
 const labelName = document.getElementById('label-name');
 const labelPhone = document.getElementById('label-phone');
 
+//Search input
+const cityInput = document.getElementById('city-input');
+const provinceInput = document.getElementById('province-input')
+
 saveButton.addEventListener('click', function () {
+
+    console.log(typeof(inputName.value));
+
+    if (inputName.value == "" || inputPhone.value == ""){
+        alert("Cannot save a non-existent contact!");
+        return;
+    }
+
     saveButton.style.display = "none";
     editContactButton.style.display = "block";
     callButton.style.display = "block";
@@ -23,21 +36,15 @@ saveButton.addEventListener('click', function () {
     inputName.style.display = "none";
     inputPhone.style.display = "none";
 
-    labelName.style.display = "none";
-    labelPhone.style.display = "none";
-
     storedName.style.display = "block";
     storedPhone.style.display = "block";
 
-    storedName.innerText = "Name: " + inputName.value;
-    storedPhone.innerText = "Phone: " + inputPhone.value;
-
-    storedName.style.fontWeight = "bold";
-    storedPhone.style.fontWeight = "bold";
+    storedName.innerText = inputName.value;
+    storedPhone.innerText = inputPhone.value;
 });
 
 callButton.addEventListener('click', function () {
-    alert("Under Development!");
+    alert("Calling functionality under development!");
 });
 
 editContactButton.addEventListener('click', function () {
@@ -50,7 +57,25 @@ editContactButton.addEventListener('click', function () {
 
     storedName.style.display = "none";
     storedPhone.style.display = "none";
+});
 
-    labelName.style.display = "block";
-    labelPhone.style.display = "block";
+searchButton.addEventListener('click', function () {
+
+    let searchResults = document.querySelectorAll('.search-result');
+    console.log(searchResults);
+
+    if (cityInput.value == "Calgary" && provinceInput.value == "Alberta")
+    {
+        for (let i = 0; i < searchResults.length; i++) {
+            console.log(searchResults[i]);
+            searchResults[i].style.display = "block";
+        }   
+    }
+    else {
+        for (let i = 0; i < searchResults.length; i++) {
+            console.log(searchResults[i]);
+            searchResults[i].style.display = "none";
+        } 
+        alert("Search functionality under development!")  
+    }
 });
