@@ -1,4 +1,11 @@
 (function(){
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
+  const tripId = urlParams.get('trip');
+  console.log(tripId);
+
   const $ = (sel, node=document) => node.querySelector(sel);
   // Prefer the new #week-columns container; fall back to legacy #itinerary-list
   const listEl = document.getElementById('week-columns') || document.getElementById('itinerary-list');
@@ -66,7 +73,7 @@
         const li=document.createElement('li');
         li.innerHTML = `
           <span class="day-time">${act.time}</span>
-          <a href="${basePath()}/pages/EventInfo.html?id=${encodeURIComponent(act.id)}" class="day-title">${title}</a>
+          <a href="${basePath()}/pages/EventInfo.html?id=${encodeURIComponent(act.id)}&trip=${trip.id}" class="day-title">${title}</a>
         `;
         list.appendChild(li);
       });

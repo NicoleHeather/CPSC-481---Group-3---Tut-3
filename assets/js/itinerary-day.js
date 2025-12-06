@@ -130,7 +130,7 @@
       `;
 
       block.addEventListener("click", () => {
-        location.href = `./EventInfo.html?id=${ev.id}`;
+        location.href = `./EventInfo.html?id=${ev.id}&trip=${tripId}`;
       });
 
       overlay.appendChild(block);

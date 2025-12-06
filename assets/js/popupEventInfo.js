@@ -53,19 +53,30 @@ window.onload = function () {
     const urlParams = new URLSearchParams(queryString);
 
     const eventId = urlParams.get('id');
+    const tripId = urlParams.get('trip');
+    console.log(tripId);
     console.log('Event ID:', eventId);
 
+    let file;
+
+    if (tripId == "trip-calgary-2026") {
+        file = "../assets/data/events-trip-calgary-2026.json";
+    }
+    else {
+        file = "../assets/data/events-trip-banff-2026.json";
+    }
+
+
     //Replace with whatever json data from the itinerary screen.
-    fetch('../assets/data/events.json')
+    fetch(file)
         .then(response => response.json())
         .then(response => {
             intineraryInfo = response.explore;
 
-            //Replace later
             console.log(intineraryInfo);
-            console.log(intineraryInfo[0])
+            console.log(intineraryInfo[0]);
 
-            for (let i = 0; i < intineraryInfo.length; i ++)
+            /*for (let i = 0; i < intineraryInfo.length; i ++)
             {
                 let tmp = intineraryInfo[i];
 
@@ -74,9 +85,13 @@ window.onload = function () {
                     break;
                 }
             }
+                */
 
-            customEvent = currentEvent.custom;
-            console.log(customEvent);
+            currentEvent = intineraryInfo.find(t => t.id === eventId);
+
+            console.log(currentEvent);
+            ///customEvent = currentEvent.custom;
+            //console.log(currentEvent.custom);
 
             currentTitle.innerHTML = currentEvent.title;
             currentDate.innerHTML = currentEvent.date;
@@ -87,7 +102,13 @@ window.onload = function () {
             currentLocation.innerHTML = currentEvent.location;
             currentCost.innerHTML = currentEvent.price;
             currentDescription.innerHTML = currentEvent.description;
-            currentImage.src = currentEvent.img;
+
+            if (currentEvent.img == "") {
+                currentImage.src = "../assets/img/full-logo-v2.png";
+            }
+            else {
+                currentImage.src = currentEvent.img;   
+            }
 
             console.log(currentStart.innerHTML)
 
