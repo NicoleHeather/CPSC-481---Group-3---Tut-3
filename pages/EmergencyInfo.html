@@ -11,7 +11,7 @@
 <body style="align-items: center;">
 	<!-- header partial will be injected here -->
 
-	<main class="container" style="align-items: center;">
+	<main id="container" class="container" style="align-items: center;">
 
 		<!-- Personal Info Div -->
 		<h1>Emergency Info</h1>
@@ -30,6 +30,14 @@
 				<div style="padding-right:120px"></div>
 				<button id="edit-contact" style="display: none;" class="btn btn-secondary">Edit Contact</button>
 			</div>
+			<div id="missing-contact-modal" style="display:none">
+				<div id="missing-contact-message" style="width:80%; height:50%; background-color:white; align-content:center; align-items:center; text-align:center; font-weight:bold">
+					Missing contact information detected! Be sure to fill out both fields
+					<div>
+						<button class="btn btn-primary" id="close-contact-modal" style="width:50%; height:10%; margin-top:10%">OK</button>	
+					</div>
+				</div>
+			</div>
 
 		<!-- Emergency Services Input -->
 		 <div id="search-input-container">
@@ -43,6 +51,14 @@
 			<p>Specialty: </p><input id="specialty-input" type="text", placeholder="Children, Cancer Research, etc"/>
 		 </div>
 		 </div>
+		</div>
+		<div id="no-search-modal" style="display:none">
+			<div id="no-search-message" style="width:80%; height:50%; background-color:white; align-content:center; align-items:center; text-align:center; font-weight:bold">
+					No hospitals/medical centers nearby!
+				<div>
+					<button class="btn btn-primary" id="close-search-modal" style="width:50%; height:10%; margin-top:10%">OK</button>	
+				</div>
+			</div>
 		</div>
 
 		<!-- Emergency Services Search Results -->
