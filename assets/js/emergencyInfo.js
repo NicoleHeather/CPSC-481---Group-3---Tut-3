@@ -3,6 +3,8 @@ const saveButton = document.getElementById('save-info-btn');
 const callButton = document.getElementById('call-contact-btn');
 const editContactButton = document.getElementById('edit-contact');
 const searchButton = document.getElementById('button-search');
+const closeContactModal = document.getElementById('close-contact-modal');
+const closeSearchModal = document.getElementById('close-search-modal');
 
 //Input info
 const inputName = document.getElementById('name-input');
@@ -19,12 +21,27 @@ const labelPhone = document.getElementById('label-phone');
 const cityInput = document.getElementById('city-input');
 const provinceInput = document.getElementById('province-input')
 
+//Modals
+const missingContactModal = document.getElementById('missing-contact-modal');
+const noSearchResultModal = document.getElementById('no-search-modal');
+
+
+closeSearchModal.addEventListener('click', function () {
+    noSearchResultModal.style.display = "none";    
+})
+
+closeContactModal.addEventListener('click', function () {
+    missingContactModal.style.display = "none";
+});
+
 saveButton.addEventListener('click', function () {
 
     console.log(typeof(inputName.value));
 
     if (inputName.value == "" || inputPhone.value == ""){
-        alert("Cannot save a non-existent contact!");
+        //alert("Cannot save a non-existent contact!");
+        missingContactModal.style.display = "flex";
+        missingContactModal.style.flexDirection = "column";
         return;
     }
 
@@ -76,6 +93,6 @@ searchButton.addEventListener('click', function () {
             console.log(searchResults[i]);
             searchResults[i].style.display = "none";
         } 
-        alert("Search functionality under development!")  
+        noSearchResultModal.style.display = "flex";
     }
 });
