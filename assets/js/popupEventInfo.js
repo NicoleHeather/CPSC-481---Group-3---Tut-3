@@ -90,8 +90,8 @@ window.onload = function () {
             currentEvent = intineraryInfo.find(t => t.id === eventId);
 
             console.log(currentEvent);
-            ///customEvent = currentEvent.custom;
-            //console.log(currentEvent.custom);
+            customEvent = currentEvent.custom;
+            console.log(currentEvent.custom);
 
             currentTitle.innerHTML = currentEvent.title;
             currentDate.innerHTML = currentEvent.date;
