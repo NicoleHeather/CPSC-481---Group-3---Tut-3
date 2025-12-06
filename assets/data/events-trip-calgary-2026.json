@@ -5,7 +5,7 @@
     { "id": "sample-calgary-3", "title": "Mountain Day Tour", "location": "Calgary", "category": "Attraction", "date": "2026-05-08", "time": "09:00", "price": 80, "img": "", "custom": false, "description": "Day trip to nearby mountains." },
     { "id": "sample-calgary-4", "title": "Art Gallery", "location": "Calgary", "category": "Attraction", "date": "2026-05-08", "time": "14:00", "price": 12, "img": "", "custom": false, "description": "Local art exhibits." },
     { "id": "sample-calgary-5", "title": "Evening Concert", "location": "Calgary", "category": "Music", "date": "2026-05-08", "time": "19:30", "price": 45, "img": "", "custom": false, "description": "Music event downtown." },
-    { "id": "sample-calgary-6", "title": "Farewell Dinner", "location": "Calgary", "category": "Restaurant", "date": "2026-05-12", "time": "18:00", "price": 60, "img": "", "custom": false, "description": "Final group dinner." },
+    { "id": "sample-calgary-6", "title": "Farewell Dinner", "location": "Calgary", "category": "Restaurant", "date": "2026-05-12", "time": "18:00", "price": 60, "img": "", "custom": true, "description": "Final group dinner." },
 
     { "id": "cal-007", "title": "Morning Yoga", "location": "Calgary", "category": "Wellness", "date": "2026-05-01", "time": "07:30", "price": 0, "img": "", "custom": false, "description": "Sunrise yoga in the park." },
     { "id": "cal-008", "title": "City Museum Visit", "location": "Calgary", "category": "Attraction", "date": "2026-05-01", "time": "10:00", "price": 15, "img": "", "custom": false, "description": "Local history exhibits." },
@@ -19,7 +19,7 @@
 
     { "id": "cal-013", "title": "Botanical Gardens", "location": "Calgary", "category": "Attraction", "date": "2026-05-05", "time": "09:30", "price": 10, "img": "", "custom": false, "description": "Gardens and conservatory." },
 
-    { "id": "cal-014", "title": "Cooking Class", "location": "Calgary", "category": "Workshop", "date": "2026-05-06", "time": "14:00", "price": 35, "img": "", "custom": false, "description": "Local cuisine workshop." },
+    { "id": "cal-014", "title": "Cooking Class", "location": "Calgary", "category": "Workshop", "date": "2026-05-06", "time": "14:00", "price": 35, "img": "", "custom": true, "description": "Local cuisine workshop." },
 
     { "id": "cal-015", "title": "Cycling Loop", "location": "Calgary", "category": "Outdoors", "date": "2026-05-07", "time": "08:00", "price": 0, "img": "", "custom": false, "description": "Guided bike ride." },
     { "id": "cal-016", "title": "Coffee Meetup", "location": "Calgary", "category": "Social", "date": "2026-05-07", "time": "10:30", "price": 0, "img": "", "custom": false, "description": "Casual group meetup." },
@@ -42,6 +42,6 @@
     { "id": "cal-027", "title": "Outdoor Concert", "location": "Calgary", "category": "Music", "date": "2026-05-13", "time": "18:00", "price": 30, "img": "", "custom": false, "description": "Park concert series." },
     { "id": "cal-028", "title": "Night Market", "location": "Calgary", "category": "Shopping", "date": "2026-05-13", "time": "20:00", "price": 0, "img": "", "custom": false, "description": "Evening food and crafts market." },
 
-    { "id": "cal-029", "title": "Farewell Brunch", "location": "Calgary", "category": "Restaurant", "date": "2026-05-14", "time": "10:30", "price": 30, "img": "", "custom": false, "description": "Final group brunch before departure." }
+    { "id": "cal-029", "title": "Farewell Brunch", "location": "Calgary", "category": "Restaurant", "date": "2026-05-14", "time": "10:30", "price": 30, "img": "", "custom": true, "description": "Final group brunch before departure." }
   ]
 }
