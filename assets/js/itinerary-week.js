@@ -108,7 +108,7 @@
         const li=document.createElement('li');
         li.innerHTML = `
           <span class="day-time">${act.time}</span>
-          <a href="${basePath()}/pages/EventInfo.html?id=${encodeURIComponent(act.id)}&trip=${trip.id}" class="day-title">${title}</a>
+          <span class="day-title">${title}</span>
         `;
         list.appendChild(li);
       });

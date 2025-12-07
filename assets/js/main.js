@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
       data.events.forEach(ev => {
         const card = document.createElement('article');
         card.className = 'card';
-        card.innerHTML = `<h3>${ev.title}</h3><p class="muted">${ev.date} • ${ev.location}</p><p>${ev.description}</p><a class="btn" href="${base}/pages/EventInfo.html">View</a>`;
+        card.innerHTML = `<h3>${ev.title}</h3><p class="muted">${ev.date} • ${ev.location}</p><p>${ev.description}</p>`;
         eventsEl.appendChild(card);
       });
     }
