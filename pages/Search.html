@@ -24,7 +24,7 @@
 			display: flex;
 			align-items: center;
 			background: #fff;
-			border-radius: 1.5rem;
+			border-radius: var(--radius);
 			padding: 0.4rem 0.8rem;
 			
 			/* FORCE TOP ROW */
@@ -50,6 +50,8 @@
 			padding: 0.4rem 0.8rem;
 			text-align: center;
 			white-space: nowrap;
+			font-weight: 400;
+			font-size: 1rem;
 		}
 
 		/* 2. Sort: Fill the space BETWEEN the buttons */
@@ -107,8 +109,8 @@
 
 		.filter-content h2 {
 			margin-top: 0;
-			text-align: center;
-			color: var(--color-primary);
+			text-align: left;
+			color: #000;
 		}
 
 		.filter-section-title {
@@ -155,11 +157,13 @@
 
 		.modal-actions {
 			display: flex;
-			justify-content: space-between;
+			justify-content: flex-end;
+			gap: 0.5rem;
 			margin-top: var(--spacing-lg);
 			padding-top: var(--spacing-sm);
 			border-top: 1px solid var(--color-background);
 		}
+
 
 		main.container {
 			overflow-y: auto;
@@ -241,8 +245,8 @@
 			</div>
 
 			<div class="modal-actions">
-				<button class="btn btn-secondary" id="closeFilter">Close</button>
-				<button class="btn btn-primary" id="applyFilters">Apply Filters</button>
+				<button class="btn-cancel" id="closeFilter">Close</button>
+				<button class="btn" id="applyFilters">Apply Filters</button>
 			</div>
 		</div>
 	</div>

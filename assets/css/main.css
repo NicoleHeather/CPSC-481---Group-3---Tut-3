@@ -184,6 +184,7 @@ main.container { padding-bottom: 92px; }
 .btn-secondary { background: var(--color-accent); color: #fff; }
 .btn-black { background: #111; color: #fff; border: none; }
 .btn-black:hover { background: #000; }
+.btn-cancel { background: var(--color-gray); color: var(--color-text);}
 
 .btn, .btn:visited, .btn:hover, .btn:focus, .btn:active {
   color: white;
@@ -221,19 +222,20 @@ main.container { padding-bottom: 92px; }
 }
 
 .btn-cancel {
-  background: transparent;
-  color: var(--color-muted);
+  background: rgba(0,0,0,0.08);
+  color: var(--color-text);
   padding: var(--spacing-sm) var(--spacing-md);
-  border: 2px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,0,0,0.10);
   border-radius: var(--radius);
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
 }
 
-.btn-cancel:hover {
-  border-color: var(--color-muted);
-  color: var(--color-text);
+.btn-cancel:hover,
+.btn-cancel:focus {
+  background: rgba(0,0,0,0.12);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 .danger-zone {
