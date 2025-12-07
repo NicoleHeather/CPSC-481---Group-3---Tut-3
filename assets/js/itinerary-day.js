@@ -165,40 +165,9 @@
     addEventCard.addEventListener('click', () => {
       if (addEventModal) {
         addEventModal.modal.querySelector('input[name="date"]').value = dateISO;
-        const timeSelect = addEventModal.modal.querySelector('select[name="time"]');
-        if (timeSelect) {
-          timeSelect.innerHTML = '';
-          for (let h = 0; h < 24; h++) {
-            for (let m of [0, 30]) {
-              const time = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-              const opt = document.createElement('option');
-              opt.value = time;
-              opt.textContent = to12Hour(time);
-              timeSelect.appendChild(opt);
-            }
-          }
-          timeSelect.value = '09:00';
-
-          // Update end time when start time or duration changes
-          const endTimeInput = addEventModal.modal.querySelector('input[name="endTime"]');
-          const durSelect = addEventModal.modal.querySelector('select[name="duration"]');
-          
-          const updateEndTime = () => {
-            const start = timeSelect.value;
-            const durMins = 60; // default to 1 hour
-            if (start) {
-              const [h, m] = start.split(':').map(Number);
-              const totalMins = h * 60 + m + durMins;
-              const endH = Math.floor(totalMins / 60) % 24;
-              const endM = totalMins % 60;
-              const endTime24 = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
-              endTimeInput.value = to12Hour(endTime24);
-            }
-          };
-
-          timeSelect.addEventListener('change', updateEndTime);
-          updateEndTime();
-        }
+        // Clear time inputs so they're blank
+        addEventModal.modal.querySelector('input[name="time"]').value = '';
+        addEventModal.modal.querySelector('input[name="endTime"]').value = '';
         addEventModal.show();
         const titleInput = addEventModal.modal.querySelector('input[name="title"]');
         if (titleInput) titleInput.focus();

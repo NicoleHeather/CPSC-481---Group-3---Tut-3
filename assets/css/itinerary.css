@@ -260,6 +260,7 @@
 
 /* Quick-add modal styles - reuses event detail modal structure */
 .qa-overlay { position: fixed; inset: 0; background: rgba(2,6,10,0.45); display: none; align-items: center; justify-content: center; z-index: 1200; padding: 16px; }
+.qa-overlay[style*="display: block"] { display: flex !important; }
 .qa-modal { max-width: 500px; }
 .qa-modal .evd-input { display: block !important; }
 .qa-modal .evd-body { padding: 16px; }

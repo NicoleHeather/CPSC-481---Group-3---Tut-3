@@ -93,13 +93,12 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 })();
 
-// Reusable Add Event Modal Factory
+// Reusable Add Event Modal Factory (extracted from itinerary-week.js)
 window.createAddEventModal = function(options = {}) {
   const {
     onSubmit = null,
     onCancel = null,
-    prefilledDate = null,
-    timeFormat = 'select' // 'select' for daily view, 'time-input' for weekly view
+    prefilledDate = null
   } = options;
 
   const overlay = document.createElement('div');
@@ -131,8 +130,10 @@ window.createAddEventModal = function(options = {}) {
       <div class="evd-field evd-time-row">
         <svg class="evd-label" title="Time" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
         <div>
-          <div class="evd-time-inputs qa-time-container">
-            <!-- Time inputs will be populated based on timeFormat -->
+          <div class="evd-time-inputs">
+            <input class="evd-input qa-input" type="time" name="time" aria-label="Start Time" placeholder="Start">
+            <span class="evd-time-separator">–</span>
+            <input class="evd-input qa-input" type="time" name="endTime" aria-label="End Time" placeholder="End">
           </div>
           <div class="evd-time-inputs">
             <span class="evd-error qa-time-error"></span>
@@ -170,41 +171,149 @@ window.createAddEventModal = function(options = {}) {
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
 
-  // Setup time inputs based on format
-  const timeContainer = modal.querySelector('.qa-time-container');
-  if (timeFormat === 'select') {
-    timeContainer.innerHTML = `
-      <select class="evd-input qa-input" name="time" required aria-label="Start Time"></select>
-      <span class="evd-time-separator">–</span>
-      <input class="evd-input qa-input" type="text" name="endTime" readonly placeholder="End" aria-label="End Time">
-    `;
-  } else {
-    timeContainer.innerHTML = `
-      <input class="evd-input qa-input" type="time" name="time" aria-label="Start Time" placeholder="Start">
-      <span class="evd-time-separator">–</span>
-      <input class="evd-input qa-input" type="time" name="endTime" aria-label="End Time" placeholder="End">
-    `;
+  // Get form elements
+  const cancel = modal.querySelector('.qa-cancel');
+  const addBtn = modal.querySelector('.qa-add');
+  const titleInput = modal.querySelector('input[name="title"]');
+  const dateInput = modal.querySelector('input[name="date"]');
+  const timeInput = modal.querySelector('input[name="time"]');
+  const endTimeInput = modal.querySelector('input[name="endTime"]');
+  const priceInput = modal.querySelector('input[name="price"]');
+  const titleError = modal.querySelector('.qa-title-error');
+  const dateError = modal.querySelector('.qa-date-error');
+  const timeError = modal.querySelector('.qa-time-error');
+  const endTimeError = modal.querySelector('.qa-endtime-error');
+  const priceError = modal.querySelector('.qa-price-error');
+
+  function showFieldError(input, errorEl, message) {
+    if(input && errorEl) {
+      input.classList.add('evd-invalid');
+      errorEl.innerHTML = `<svg viewBox="0 0 16 16" fill="none" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;"><circle cx="8" cy="8" r="7" fill="#ff7f27"/><path d="M8 4v5M8 11h.01" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>${message}`;
+    }
   }
 
-  const dateInput = modal.querySelector('input[name="date"]');
+  function clearFieldError(input, errorEl) {
+    if(input && errorEl) {
+      input.classList.remove('evd-invalid');
+      errorEl.textContent = '';
+    }
+  }
+
+  // Real-time validation
+  titleInput.addEventListener('input', () => {
+    const trimmed = titleInput.value.trim();
+    if(trimmed) {
+      clearFieldError(titleInput, titleError);
+    } else {
+      showFieldError(titleInput, titleError, 'Title cannot be empty');
+    }
+  });
+
+  timeInput.addEventListener('input', () => {
+    if(timeInput.value) {
+      clearFieldError(timeInput, timeError);
+    } else {
+      showFieldError(timeInput, timeError, 'Start time is required');
+    }
+  });
+  
+  endTimeInput.addEventListener('input', () => {
+    if(!endTimeInput.value) {
+      showFieldError(endTimeInput, endTimeError, 'End time is required');
+    } else if(timeInput.value) {
+      const [startH, startM] = timeInput.value.split(':').map(Number);
+      const [endH, endM] = endTimeInput.value.split(':').map(Number);
+      const startMins = startH * 60 + startM;
+      const endMins = endH * 60 + endM;
+      if(endMins <= startMins && endMins !== 0) {
+        showFieldError(endTimeInput, endTimeError, 'End time must be after start time');
+      } else {
+        clearFieldError(endTimeInput, endTimeError);
+      }
+    }
+  });
+
+  timeInput.addEventListener('change', () => {
+    if(timeInput.value) {
+      const [h, m] = timeInput.value.split(':').map(Number);
+      const endH = h;
+      const endM = m + 60;
+      const endHours = Math.floor(endM / 60) + endH;
+      const endMins = endM % 60;
+      endTimeInput.value = `${String(endHours % 24).padStart(2,'0')}:${String(endMins).padStart(2,'0')}`;
+      clearFieldError(endTimeInput, endTimeError);
+    }
+  });
+
   if (prefilledDate) dateInput.value = prefilledDate;
 
-  const cancelBtn = modal.querySelector('.qa-cancel');
-  const addBtn = modal.querySelector('.qa-add');
-
-  cancelBtn.addEventListener('click', () => {
+  cancel.addEventListener('click', () => {
     overlay.style.display = 'none';
     if (onCancel) onCancel();
   });
 
   addBtn.addEventListener('click', () => {
+    // Validate before submitting
+    let isValid = true;
+
+    const title = titleInput.value.trim();
+    if (!title) {
+      showFieldError(titleInput, titleError, 'Title cannot be empty');
+      isValid = false;
+    } else {
+      clearFieldError(titleInput, titleError);
+    }
+
+    const date = dateInput.value;
+    if (!date) {
+      showFieldError(dateInput, dateError, 'Date is required');
+      isValid = false;
+    } else {
+      clearFieldError(dateInput, dateError);
+    }
+
+    const time = timeInput.value;
+    if (!time) {
+      showFieldError(timeInput, timeError, 'Start time is required');
+      isValid = false;
+    } else {
+      clearFieldError(timeInput, timeError);
+    }
+
+    const endTime = endTimeInput.value;
+    if (!endTime) {
+      showFieldError(endTimeInput, endTimeError, 'End time is required');
+      isValid = false;
+    } else if(time) {
+      const [startH, startM] = time.split(':').map(Number);
+      const [endH, endM] = endTime.split(':').map(Number);
+      const startMins = startH * 60 + startM;
+      const endMins = endH * 60 + endM;
+      if(endMins <= startMins) {
+        showFieldError(endTimeInput, endTimeError, 'End time must be after start time');
+        isValid = false;
+      } else {
+        clearFieldError(endTimeInput, endTimeError);
+      }
+    }
+
+    const price = priceInput.value;
+    if (price && isNaN(parseFloat(price))) {
+      showFieldError(priceInput, priceError, 'Price must be a valid number');
+      isValid = false;
+    } else {
+      clearFieldError(priceInput, priceError);
+    }
+
+    if (!isValid) return;
+
     const formData = {
-      title: modal.querySelector('input[name="title"]').value.trim(),
-      date: dateInput.value,
-      time: modal.querySelector('input[name="time"]') ? modal.querySelector('input[name="time"]').value : modal.querySelector('select[name="time"]').value,
-      endTime: modal.querySelector('input[name="endTime"]').value,
+      title,
+      date,
+      time,
+      endTime,
       location: modal.querySelector('input[name="location"]').value.trim(),
-      price: modal.querySelector('input[name="price"]').value,
+      price: price || '0',
       description: modal.querySelector('textarea[name="description"]').value.trim()
     };
 
