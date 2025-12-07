@@ -316,6 +316,11 @@
           render();
         }
         overlay.style.display='none';
+        // Close event detail modal if it's open
+        const eventDetailOverlay = _eventDetailModal;
+        if(eventDetailOverlay) {
+          eventDetailOverlay.style.display='none';
+        }
       });
 
       _confirmDeleteModal = overlay;
@@ -893,7 +898,7 @@
           }
           overlay.style.display='none';
           setEventDetailMode('view');
-          showConfirmDeleteModal(event);
+          showConfirmDeleteModal(event.id, event.title);
         } catch(err) {
           console.error('Error in remove button handler:', err);
         }
