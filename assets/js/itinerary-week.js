@@ -134,66 +134,59 @@
     const perTripStartDate = trip.startDate;
     const perTripEndDate = trip.endDate;
 
-    // Prepare events: prefer a per-trip JSON seed file if it exists in the repo.
-    // Fallback order: per-trip JSON -> shared events.json -> deterministic generator.
     const allEvents = events || [];
     const tripDays = eachDate(trip.startDate, trip.endDate);
-
-    // Attempt to fetch `assets/data/events-<tripId>.json` for canonical seeds.
+    let eventsForThisTrip = [];
     let perTripSeed = null;
-    try {
-      const resp = await fetch(`${basePath()}/assets/data/events-${encodeURIComponent(trip.id)}.json`);
-      if (resp && resp.ok) {
-        const body = await resp.json();
-        if (body && Array.isArray(body.explore) && body.explore.length) {
-          perTripSeed = body.explore.slice();
-          console.info('[week] loaded per-trip seed file for', trip.id, perTripSeed.length, 'events');
+    if (trip.isExtra) {
+      // User-created itinerary: start blank
+      eventsForThisTrip = [];
+    } else {
+      // Original trip: keep existing seeding logic
+      try {
+        const resp = await fetch(`${basePath()}/assets/data/events-${encodeURIComponent(trip.id)}.json`);
+        if (resp && resp.ok) {
+          const body = await resp.json();
+          if (body && Array.isArray(body.explore) && body.explore.length) {
+            perTripSeed = body.explore.slice();
+            console.info('[week] loaded per-trip seed file for', trip.id, perTripSeed.length, 'events');
+          }
         }
+      } catch (e) {
+        /* ignore - no per-trip seed available */
       }
-    } catch (e) {
-      /* ignore - no per-trip seed available */
-    }
-
-    const candidates = (allEvents || []).filter(ev => ev.location === trip.title);
-    const pool = (candidates.length ? candidates : allEvents).slice();
-
-    // Deterministic RNG per-trip so events don't change on refresh for the same trip.
-    // Use xmur3 -> mulberry32 to generate a seeded PRNG from a string seed.
-    function xmur3(str){
-      for(var i=0,h=1779033703;i<str.length;i++) h = Math.imul(h ^ str.charCodeAt(i), 3432918353), h = (h<<13) | (h>>>19);
-      return function(){ h = Math.imul(h ^ (h>>>16), 2246822507); h = Math.imul(h ^ (h>>>13), 3266489909); return (h ^= (h>>>16)) >>> 0; };
-    }
-    function mulberry32(a){
-      return function(){ var t = a += 0x6D2B79F5; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
-    }
-    const seedSource = (trip.id || '') + '|' + (trip.startDate || '');
-    const seed = xmur3(seedSource)();
-    const rand = mulberry32(seed);
-    function randInt(min, max){ return Math.floor(rand()*(max-min+1))+min; }
-    function randomDateBetween(startIso, endIso){
-      const s = parseISO(startIso); const e = parseISO(endIso);
-      const diff = e.getTime() - s.getTime();
-      const t = s.getTime() + Math.floor(rand() * (diff+1));
-      return new Date(t).toISOString().slice(0,10);
-    }
-
-    // Shuffle pool (Fisher-Yates) using deterministic RNG
-    for(let i=pool.length-1;i>0;i--){ const j = Math.floor(rand() * (i+1)); [pool[i],pool[j]] = [pool[j],pool[i]]; }
-
-    // Assign 0-5 deterministic events per trip day (using seeded rand).
-    // This ensures each day has a predictable but varied number of events.
-    const eventsForThisTrip = [];
-    let poolIndex = 0;
-    for(let d=0; d<tripDays.length; d++){
-      const dayIso = tripDays[d];
-      // deterministic count 0..5
-      const count = Math.floor(rand() * 6);
-      for(let k=0;k<count;k++){
-        if(poolIndex >= pool.length) break; // no more source events
-        const ev = Object.assign({}, pool[poolIndex++]);
-        ev.date = dayIso;
-        if(!ev.time) ev.time = `${randInt(9,20)}:00`;
-        eventsForThisTrip.push(ev);
+      const candidates = (allEvents || []).filter(ev => ev.location === trip.title);
+      const pool = (candidates.length ? candidates : allEvents).slice();
+      function xmur3(str){
+        for(var i=0,h=1779033703;i<str.length;i++) h = Math.imul(h ^ str.charCodeAt(i), 3432918353), h = (h<<13) | (h>>>19);
+        return function(){ h = Math.imul(h ^ (h>>>16), 2246822507); h = Math.imul(h ^ (h>>>13), 3266489909); return (h ^= (h>>>16)) >>> 0; };
+      }
+      function mulberry32(a){
+        return function(){ var t = a += 0x6D2B79F5; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }
+      }
+      const seedSource = (trip.id || '') + '|' + (trip.startDate || '');
+      const seed = xmur3(seedSource)();
+      const rand = mulberry32(seed);
+      function randInt(min, max){ return Math.floor(rand()*(max-min+1))+min; }
+      function randomDateBetween(startIso, endIso){
+        const s = parseISO(startIso); const e = parseISO(endIso);
+        const diff = e.getTime() - s.getTime();
+        const t = s.getTime() + Math.floor(rand() * (diff+1));
+        return new Date(t).toISOString().slice(0,10);
+      }
+      for(let i=pool.length-1;i>0;i--){ const j = Math.floor(rand() * (i+1)); [pool[i],pool[j]] = [pool[j],pool[i]]; }
+      eventsForThisTrip = [];
+      let poolIndex = 0;
+      for(let d=0; d<tripDays.length; d++){
+        const dayIso = tripDays[d];
+        const count = Math.floor(rand() * 6);
+        for(let k=0;k<count;k++){
+          if(poolIndex >= pool.length) break;
+          const ev = Object.assign({}, pool[poolIndex++]);
+          ev.date = dayIso;
+          if(!ev.time) ev.time = `${randInt(9,20)}:00`;
+          eventsForThisTrip.push(ev);
+        }
       }
     }
 
