@@ -301,11 +301,23 @@ document.addEventListener('DOMContentLoaded', function () {
             if (newStart > prevStart || newEnd < prevEnd) {
               // load any cached events for this trip (from week/day views)
               let savedEvents = [];
-              try {
-                const raw = localStorage.getItem(`events-${existing.id}`);
-                if (raw) savedEvents = JSON.parse(raw) || [];
-              } catch(err) { savedEvents = []; }
-              const toLose = savedEvents.filter(ev => {
+              // consider both legacy key shapes
+              const keys = [`events-${existing.id}`, `events.${existing.id}`];
+              keys.forEach((k)=>{
+                try {
+                  const raw = localStorage.getItem(k);
+                  if (raw) savedEvents = savedEvents.concat(JSON.parse(raw) || []);
+                } catch(e) { /* ignore bad parse */ }
+              });
+
+              // If nothing is in localStorage yet, fall back to base events for this trip (if any)
+              let candidates = savedEvents;
+              if (!candidates.length && Array.isArray(allEvents)) {
+                const tripName = existing.title || existing.location || '';
+                candidates = allEvents.filter(ev => ev && ev.location === tripName && ev.date);
+              }
+
+              const toLose = candidates.filter(ev => {
                 if (!ev || !ev.date) return false;
                 const d = parseISO(ev.date);
                 return d < newStart || d > newEnd;
