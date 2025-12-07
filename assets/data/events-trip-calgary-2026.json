@@ -1,11 +1,11 @@
 {
   "explore": [
-    { "id": "sample-calgary-1", "title": "Heritage Walk", "location": "Calgary", "category": "Attraction", "date": "2026-05-03", "time": "08:30", "duration": "1.5", "price": 0, "img": "", "custom": false, "description": "Guided walk through historic districts." },
-    { "id": "sample-calgary-2", "title": "Riverside Brunch", "location": "Calgary", "category": "Restaurant", "date": "2026-05-03", "time": "11:00", "duration": "1", "price": 25, "img": "", "custom": false, "description": "Brunch along the river." },
-    { "id": "sample-calgary-3", "title": "Mountain Day Tour", "location": "Calgary", "category": "Attraction", "date": "2026-05-08", "time": "09:00", "duration": "6", "price": 80, "img": "", "custom": false, "description": "Day trip to nearby mountains." },
-    { "id": "sample-calgary-4", "title": "Art Gallery", "location": "Calgary", "category": "Attraction", "date": "2026-05-08", "time": "14:00", "duration": "2", "price": 12, "img": "", "custom": false, "description": "Local art exhibits." },
-    { "id": "sample-calgary-5", "title": "Evening Concert", "location": "Calgary", "category": "Music", "date": "2026-05-08", "time": "19:30", "duration": "2.5", "price": 45, "img": "", "custom": false, "description": "Music event downtown." },
-    { "id": "sample-calgary-6", "title": "Farewell Dinner", "location": "Calgary", "category": "Restaurant", "date": "2026-05-12", "time": "18:00", "duration": "2", "price": 60, "img": "", "custom": true, "description": "Final group dinner." },
+    { "id": "cal-001", "title": "Heritage Walk", "location": "Calgary", "category": "Attraction", "date": "2026-05-03", "time": "08:30", "duration": "1.5", "price": 0, "img": "", "custom": false, "description": "Guided walk through historic districts." },
+    { "id": "cal-002", "title": "Riverside Brunch", "location": "Calgary", "category": "Restaurant", "date": "2026-05-03", "time": "11:00", "duration": "1", "price": 25, "img": "", "custom": false, "description": "Brunch along the river." },
+    { "id": "cal-003", "title": "Mountain Day Tour", "location": "Calgary", "category": "Attraction", "date": "2026-05-08", "time": "09:00", "duration": "6", "price": 80, "img": "", "custom": false, "description": "Day trip to nearby mountains." },
+    { "id": "cal-004", "title": "Art Gallery", "location": "Calgary", "category": "Attraction", "date": "2026-05-08", "time": "14:00", "duration": "2", "price": 12, "img": "", "custom": false, "description": "Local art exhibits." },
+    { "id": "cal-005", "title": "Evening Concert", "location": "Calgary", "category": "Music", "date": "2026-05-08", "time": "19:30", "duration": "2.5", "price": 45, "img": "", "custom": false, "description": "Music event downtown." },
+    { "id": "cal-006", "title": "Farewell Dinner", "location": "Calgary", "category": "Restaurant", "date": "2026-05-12", "time": "18:00", "duration": "2", "price": 60, "img": "", "custom": true, "description": "Final group dinner." },
 
     { "id": "cal-007", "title": "Morning Yoga", "location": "Calgary", "category": "Wellness", "date": "2026-05-01", "time": "07:30", "duration": "1", "price": 0, "img": "", "custom": false, "description": "Sunrise yoga in the park." },
     { "id": "cal-008", "title": "City Museum Visit", "location": "Calgary", "category": "Attraction", "date": "2026-05-01", "time": "10:00", "duration": "1.5", "price": 15, "img": "", "custom": false, "description": "Local history exhibits." },
