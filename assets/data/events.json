@@ -1,6 +1,19 @@
 {
   "explore": [
     {
+      "id": "events-test",
+      "title": "Test Event Today",
+      "location": "Calgary",
+      "category": "Testing",
+      "date": "2025-12-06",
+      "time": "14:00",
+      "duration" : "1",
+      "price": 0,
+      "img": "https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=800&q=80",
+      "custom": true,
+      "description": "A test event to check if the modal opens correctly when clicked."
+    },
+    {
       "id": "events-1",
       "title": "Jazz Night",
       "location": "Calgary",

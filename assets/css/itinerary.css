@@ -317,46 +317,61 @@
 .evd-modal { background: var(--color-surface); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
 .evd-header { padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); }
 .evd-header h3 { margin: 0; font-size: 1.2rem; color: var(--color-text); font-weight: 700; }
-.evd-body { padding: 16px; }
+.evd-body { padding: 16px; padding-left: 0; }
 .evd-image-container { margin-bottom: 16px; }
 .evd-image { width: 100%; height: auto; border-radius: 8px; object-fit: cover; max-height: 250px; }
 .evd-field { margin-bottom: 12px; font-size: 0.95rem; line-height: 1.5; }
 .evd-label { font-weight: 600; color: var(--color-muted); display: inline-block; min-width: 80px; }
-.evd-title { color: var(--color-text); font-weight: 600; font-size: 1rem; }
-.evd-date, .evd-time, .evd-location, .evd-category, .evd-price { color: var(--color-text); }
-.evd-description-field { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.08); }
-.evd-description-field .evd-label { display: block; margin-bottom: 8px; font-size: 0.95rem; }
-.evd-description { margin: 0; color: var(--color-text); font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; }
-.evd-footer { padding: 12px 16px; display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid rgba(0,0,0,0.08); }
-.evd-footer .btn { flex: 0 0 auto; }
-.evd-close { background: rgba(0,0,0,0.08); color: var(--color-text); }
-.evd-close:hover { background: rgba(0,0,0,0.12); }
+.evd-title { color: var(--color-text); font-weight: 600; font-size: 1rem; display: block; }
+.evd-date, .evd-time, .evd-location, .evd-category, .evd-price { color: var(--color-text); display: block; }
+.evd-description-field { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.08); display: flex; align-items: flex-start; gap: 8px; padding-left: 16px; }
+.evd-description-field .evd-label { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0; font-size: 1.2rem; width: 20px; height: 20px; min-width: 20px; flex-shrink: 0; }
+.evd-description { margin: 0; color: var(--color-text); font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; display: block; }
+.evd-header { display: flex; align-items: center; justify-content: space-between; padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); }
+.evd-header h3 { margin: 0; flex: 1; text-align: center; }
+.evd-header-actions { display: flex; gap: 8px; align-items: center; }
+.evd-edit-icon, .evd-close-icon, .evd-menu-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; padding: 4px 8px; color: var(--color-muted); border-radius: 4px; transition: all 0.2s; }
+.evd-edit-icon:hover, .evd-menu-btn:hover { background: rgba(0,0,0,0.08); color: var(--color-primary); }
+.evd-close-icon:hover { background: rgba(0,0,0,0.08); color: var(--color-text); }
+.evd-menu-container { position: relative; }
+.evd-menu-dropdown { position: absolute; top: 100%; right: 0; background: white; border: 1px solid rgba(0,0,0,0.12); border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); min-width: 160px; display: none; z-index: 1000; margin-top: 4px; }
+.evd-menu-dropdown.evd-menu-open { display: block; }
+.evd-menu-item { display: block; width: 100%; padding: 10px 16px; border: none; background: none; text-align: left; cursor: pointer; font-size: 0.95rem; color: var(--color-text); transition: background 0.2s; }
+.evd-menu-item:hover { background: rgba(0,0,0,0.04); }
+.evd-menu-item:first-child { border-radius: 6px 6px 0 0; }
+.evd-menu-item:last-child { border-radius: 0 0 6px 6px; }
+.evd-remove-menu { color: #c1121f; }
+.evd-remove-menu:hover { background: rgba(193, 18, 31, 0.08); }
 .evd-edit { background: var(--color-primary); color: white; }
 .evd-edit:hover { background: #a00d25; }
 .evd-input { display: none !important; width: 100%; margin-top: 4px; padding: 6px 8px; border: 2px solid rgba(0,0,0,0.08); border-radius: 6px; background: var(--color-surface); font-size: 0.9rem; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); }
 .evd-input:focus { outline: none; border-color: var(--color-primary); }
 .evd-date-input { accent-color: var(--color-primary); color-scheme: light; }
 .evd-date-input::-webkit-calendar-picker-indicator { filter: invert(0.8) hue-rotate(320deg); }
-.evd-field { margin-bottom: 10px; font-size: 0.9rem; line-height: 1.4; }
-.evd-label { font-weight: 600; color: var(--color-muted); display: inline-block; min-width: 70px; }
-.evd-input-wrapper { display: inline-flex; align-items: center; position: relative; max-width: 100%; display: none !important; }
-.evd-price-wrapper { max-width: 60%; }
-.evd-duration-wrapper { max-width: 60%; }
+.evd-field { margin-bottom: 10px; font-size: 0.9rem; line-height: 1.4; display: flex; align-items: flex-start; gap: 8px; padding-left: 16px; }
+.evd-label { font-weight: 600; color: var(--color-muted); display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem; opacity: 0.6; width: 20px; height: 20px; min-width: 20px; stroke: var(--color-muted); flex-shrink: 0; }
+.evd-field > div:not(.evd-label):not(.evd-input-wrapper) { flex: 1; display: flex; flex-direction: column; width: 100%; gap: 4px; }
+.evd-field .evd-view, .evd-field .evd-input { display: block; width: 100%; }
+.evd-input-wrapper { display: flex; align-items: center; position: relative; width: 100%; }
+.evd-price-wrapper { width: 100%; }
+.evd-duration-wrapper { width: 100%; }
 .evd-input-prefix { position: absolute; left: 8px; font-weight: 600; color: var(--color-muted); font-size: 0.9rem; pointer-events: none; }
 .evd-input-suffix { margin-left: 6px; color: var(--color-muted); font-size: 0.9rem; font-weight: 500; white-space: nowrap; }
 .evd-price-wrapper .evd-price-input { padding-left: 24px; }
-.evd-mode-edit .evd-input-wrapper { display: inline-flex !important; }
+.evd-mode-edit .evd-input-wrapper { display: flex !important; }
 .evd-mode-edit .evd-field { margin-bottom: 8px; }
 .evd-mode-edit .evd-time-input { max-width: 50%; }
 .evd-mode-edit .evd-duration-input { max-width: 100%; margin-top: 0; }
 .evd-edit-field { display: none !important; }
 .evd-edit-mode { display: none !important; }
+.evd-remove { display: block; }
+.evd-mode-edit .evd-remove { display: none !important; }
 .evd-mode-edit .evd-view { display: none !important; }
-.evd-mode-edit .evd-edit-field { display: inline-block !important; }
+.evd-mode-edit .evd-edit-field { display: block !important; width: 100%; }
 .evd-mode-edit .evd-edit-mode { display: inline-flex !important; }
 .evd-mode-edit .evd-description-input { display: block !important; }
-.evd-mode-edit .evd-time-input { max-width: 50%; }
-.evd-mode-edit .evd-duration-input { max-width: 60%; margin-top: 6px; }
+.evd-mode-edit .evd-time-input { width: 100%; }
+.evd-mode-edit .evd-duration-input { width: 100%; margin-top: 0; }
 .evd-duration-row .evd-view { margin-left: 4px; }
 .evd-cancel { background: rgba(0,0,0,0.08); color: var(--color-text); }
 .evd-cancel:hover { background: rgba(0,0,0,0.12); }

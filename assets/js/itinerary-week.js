@@ -430,68 +430,82 @@
     let _eventDetailModal = null;
     function ensureEventDetailModal(){
       if(_eventDetailModal) return _eventDetailModal;
-      const overlay = document.createElement('div'); overlay.className='evd-overlay';
+      const overlay = document.createElement('div'); overlay.className='evd-overlay'; overlay.style.display='none';
       const modal = document.createElement('div'); modal.className='evd-modal';
       modal.innerHTML = `
-        <div class="evd-header"><h3>Event Details</h3></div>
+        <div class="evd-header">
+          <button type="button" class="evd-close-icon" title="Close" aria-label="Close">✕</button>
+          <h3>Event Details</h3>
+          <div class="evd-header-actions">
+            <button type="button" class="evd-edit-icon" title="Edit event" aria-label="Edit event">✎</button>
+            <div class="evd-menu-container">
+              <button type="button" class="evd-menu-btn" title="More options" aria-label="More options">⋮</button>
+              <div class="evd-menu-dropdown">
+                <button type="button" class="evd-menu-item evd-remove-menu" data-action="remove">Remove Event</button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="evd-body">
           <div class="evd-image-container"></div>
           <div class="evd-field">
-            <span class="evd-label">Title:</span>
-            <span class="evd-title evd-view"></span>
-            <input class="evd-input evd-title-input evd-edit-field" type="text" aria-label="Title">
-            <span class="evd-error evd-title-error"></span>
-          </div>
-          <div class="evd-field">
-            <span class="evd-label">Date:</span>
-            <span class="evd-date evd-view"></span>
-            <input class="evd-input evd-date-input evd-edit-field" type="date" aria-label="Date">
-            <span class="evd-error evd-date-error"></span>
-          </div>
-          <div class="evd-field">
-            <span class="evd-label">Time:</span>
-            <span class="evd-time evd-view"></span>
-            <input class="evd-input evd-time-input evd-edit-field" type="time" aria-label="Time">
-            <span class="evd-error evd-time-error"></span>
-          </div>
-          <div class="evd-field evd-duration-row">
-            <span class="evd-label">Duration:</span>
-            <span class="evd-duration evd-view"></span>
-            <div class="evd-input-wrapper evd-duration-wrapper">
-              <input class="evd-input evd-duration-input evd-edit-field" type="number" step="0.25" min="0" aria-label="Duration (hours)" placeholder="1.5">
-              <span class="evd-input-suffix">hrs</span>
+            <svg class="evd-label" title="Title" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+            <div>
+              <span class="evd-title evd-view"></span>
+              <input class="evd-input evd-title-input evd-edit-field" type="text" aria-label="Title">
+              <span class="evd-error evd-title-error"></span>
             </div>
-            <span class="evd-error evd-duration-error"></span>
+          </div>
+          <div class="evd-field">
+            <svg class="evd-label" title="Date" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <div>
+              <span class="evd-date evd-view"></span>
+              <input class="evd-input evd-date-input evd-edit-field" type="date" aria-label="Date">
+              <span class="evd-error evd-date-error"></span>
+            </div>
+          </div>
+          <div class="evd-field">
+            <svg class="evd-label" title="Time" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <div>
+              <span class="evd-time evd-view"></span>
+              <input class="evd-input evd-time-input evd-edit-field" type="time" aria-label="Time">
+              <span class="evd-error evd-time-error"></span>
+            </div>
           </div>
           <div class="evd-field evd-location-field">
-            <span class="evd-label">Location:</span>
-            <span class="evd-location evd-view"></span>
-            <input class="evd-input evd-location-input evd-edit-field" type="text" aria-label="Location">
+            <svg class="evd-label" title="Location" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <div>
+              <span class="evd-location evd-view"></span>
+              <input class="evd-input evd-location-input evd-edit-field" type="text" aria-label="Location">
+            </div>
           </div>
           <div class="evd-field evd-category-field">
-            <span class="evd-label">Category:</span>
-            <span class="evd-category evd-view"></span>
-            <input class="evd-input evd-category-input evd-edit-field" type="text" aria-label="Category">
+            <svg class="evd-label" title="Category" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><circle cx="8" cy="8" r="1.5"></circle></svg>
+            <div>
+              <span class="evd-category evd-view"></span>
+              <input class="evd-input evd-category-input evd-edit-field" type="text" aria-label="Category">
+            </div>
           </div>
           <div class="evd-field evd-price-field">
-            <span class="evd-label">Price:</span>
-            <span class="evd-price evd-view"></span>
-            <div class="evd-input-wrapper evd-price-wrapper">
-              <span class="evd-input-prefix">$</span>
-              <input class="evd-input evd-price-input evd-edit-field" type="number" step="1" min="0" aria-label="Price" placeholder="0">
+            <svg class="evd-label" title="Price" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <div>
+              <span class="evd-price evd-view"></span>
+              <div class="evd-input-wrapper evd-price-wrapper">
+                <span class="evd-input-prefix">$</span>
+                <input class="evd-input evd-price-input evd-edit-field" type="number" step="1" min="0" aria-label="Price" placeholder="0">
+              </div>
+              <span class="evd-error evd-price-error"></span>
             </div>
-            <span class="evd-error evd-price-error"></span>
           </div>
           <div class="evd-description-field">
-            <div class="evd-label">Description:</div>
-            <p class="evd-description evd-view"></p>
-            <textarea class="evd-input evd-description-input evd-edit-field" rows="3" aria-label="Description"></textarea>
+            <svg class="evd-label" title="Description" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <div>
+              <p class="evd-description evd-view"></p>
+              <textarea class="evd-input evd-description-input evd-edit-field" rows="3" aria-label="Description"></textarea>
+            </div>
           </div>
         </div>
         <div class="evd-footer">
-          <button type="button" class="btn evd-close evd-view">Close</button>
-          <button type="button" class="btn btn-primary evd-edit evd-view">Edit</button>
-          <button type="button" class="btn btn-danger evd-remove evd-view">Remove</button>
           <button type="button" class="btn evd-cancel evd-edit-mode">Cancel</button>
           <button type="button" class="btn btn-primary evd-save evd-edit-mode">Save</button>
         </div>
@@ -499,17 +513,17 @@
       overlay.appendChild(modal);
       document.body.appendChild(overlay);
 
-      const closeBtn = modal.querySelector('.evd-close');
-      const editBtn = modal.querySelector('.evd-edit');
-      const removeBtn = modal.querySelector('.evd-remove');
+      const closeBtn = modal.querySelector('.evd-close-icon');
+      const editBtn = modal.querySelector('.evd-edit-icon');
+      const removeBtn = modal.querySelector('.evd-remove-menu');
+      const menuBtn = modal.querySelector('.evd-menu-btn');
+      const menuDropdown = modal.querySelector('.evd-menu-dropdown');
       const saveBtn = modal.querySelector('.evd-save');
       const cancelEditBtn = modal.querySelector('.evd-cancel');
 
       const titleInput = modal.querySelector('.evd-title-input');
       const dateInput = modal.querySelector('.evd-date-input');
       const timeInput = modal.querySelector('.evd-time-input');
-      const durationInput = modal.querySelector('.evd-duration-input');
-      const durationView = modal.querySelector('.evd-duration');
       const locationInput = modal.querySelector('.evd-location-input');
       const categoryInput = modal.querySelector('.evd-category-input');
       const priceInput = modal.querySelector('.evd-price-input');
@@ -527,12 +541,6 @@
 
       function validateTime(value) {
         return value && value.length > 0;
-      }
-
-      function validateDuration(value) {
-        if(!value) return true; // Optional field
-        const num = parseFloat(value);
-        return !isNaN(num) && num > 0;
       }
 
       function validatePrice(value) {
@@ -591,17 +599,6 @@
         });
       }
 
-      if(durationInput) {
-        durationInput.addEventListener('input', () => {
-          const durationError = modal.querySelector('.evd-duration-error');
-          if(validateDuration(durationInput.value)) {
-            clearFieldError(durationInput, durationError);
-          } else {
-            showFieldError(durationInput, durationError, 'Must be a positive number');
-          }
-        });
-      }
-
       if(priceInput) {
         priceInput.addEventListener('input', () => {
           const priceError = modal.querySelector('.evd-price-error');
@@ -610,6 +607,29 @@
           } else {
             showFieldError(priceInput, priceError, 'Must be a valid positive number');
           }
+        });
+      }
+
+      // Menu toggle
+      if(menuBtn && menuDropdown) {
+        menuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          menuDropdown.classList.toggle('evd-menu-open');
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+          if(!modal.contains(e.target)) {
+            menuDropdown.classList.remove('evd-menu-open');
+          }
+        });
+        
+        // Close menu when selecting item
+        const menuItems = menuDropdown.querySelectorAll('.evd-menu-item');
+        menuItems.forEach(item => {
+          item.addEventListener('click', () => {
+            menuDropdown.classList.remove('evd-menu-open');
+          });
         });
       }
 
@@ -629,7 +649,6 @@
             const titleInp = modal.querySelector('.evd-title-input');
             const dateInp = modal.querySelector('.evd-date-input');
             const timeInp = modal.querySelector('.evd-time-input');
-            const durationInp = modal.querySelector('.evd-duration-input');
             const locationInp = modal.querySelector('.evd-location-input');
             const categoryInp = modal.querySelector('.evd-category-input');
             const priceInp = modal.querySelector('.evd-price-input');
@@ -639,7 +658,6 @@
             if(titleInp) titleInp.value = String(ev.title || '');
             if(dateInp) dateInp.value = String(ev.date || '');
             if(timeInp) timeInp.value = String(ev.time || '');
-            if(durationInp) durationInp.value = String(ev.duration || '');
             if(locationInp) locationInp.value = String(ev.location || '');
             if(categoryInp) categoryInp.value = String(ev.category || '');
             if(priceInp) priceInp.value = (ev.price !== undefined && ev.price !== null) ? String(ev.price) : '';
@@ -707,7 +725,6 @@
           const titleInp = modal.querySelector('.evd-title-input');
           const dateInp = modal.querySelector('.evd-date-input');
           const timeInp = modal.querySelector('.evd-time-input');
-          const durationInp = modal.querySelector('.evd-duration-input');
           const locationInp = modal.querySelector('.evd-location-input');
           const categoryInp = modal.querySelector('.evd-category-input');
           const priceInp = modal.querySelector('.evd-price-input');
@@ -740,14 +757,6 @@
             clearFieldError(timeInp, modal.querySelector('.evd-time-error'));
           }
           
-          // Validate duration if provided
-          if(durationInp?.value && !validateDuration(durationInp.value)) {
-            showFieldError(durationInp, modal.querySelector('.evd-duration-error'), 'Must be a positive number');
-            hasErrors = true;
-          } else {
-            clearFieldError(durationInp, modal.querySelector('.evd-duration-error'));
-          }
-          
           // Validate price if provided
           if(priceInp?.value && !validatePrice(priceInp.value)) {
             showFieldError(priceInp, modal.querySelector('.evd-price-error'), 'Must be a valid positive number');
@@ -766,7 +775,6 @@
           const newTitle = (titleInp?.value || '').trim() || 'Untitled Event';
           const newDate = dateInp?.value || ev.date;
           const newTime = timeInp?.value || ev.time;
-          const newDuration = durationInp?.value || ev.duration;
           const newLocation = (locationInp?.value || '').trim();
           const newCategory = (categoryInp?.value || '').trim();
           const newPrice = parseFloat((priceInp?.value || '').trim());
@@ -776,7 +784,6 @@
           ev.title = newTitle;
           ev.date = newDate || ev.date; // Keep original if empty
           ev.time = newTime || ev.time; // Keep original if empty
-          ev.duration = newDuration !== '' ? newDuration : ev.duration;
           ev.location = newLocation;
           ev.category = newCategory;
           ev.price = !isNaN(newPrice) ? newPrice : ev.price; // Keep original price if invalid number
@@ -837,7 +844,6 @@
         const titleEl = modal.querySelector('.evd-title');
         const dateEl = modal.querySelector('.evd-date');
         const timeEl = modal.querySelector('.evd-time');
-        const durationEl = modal.querySelector('.evd-duration');
         const locationEl = modal.querySelector('.evd-location');
         const categoryEl = modal.querySelector('.evd-category');
         const priceEl = modal.querySelector('.evd-price');
@@ -873,7 +879,7 @@
               let timeDisplay = to12Hour(event.time);
               if(event.duration){
                 const endTime24 = calculateEndTime(event.time, event.duration);
-                timeDisplay += ` - ${to12Hour(endTime24)}`;
+                timeDisplay += ` - ${to12Hour(endTime24)} (${event.duration} hrs)`;
               }
               timeEl.textContent = timeDisplay;
             } catch(timeErr) {
@@ -885,14 +891,7 @@
           }
         }
 
-        // Duration view
-        if(durationEl) {
-          if(event.duration){
-            durationEl.textContent = `${event.duration} hrs`;
-          } else {
-            durationEl.textContent = '';
-          }
-        }
+        // Duration is now shown inline with time in the time field
         
         // Location
         if(event.location){
@@ -943,7 +942,9 @@
           }
         }
         
-        if(modal) modal.style.display = 'flex';
+        if(modal) {
+          modal.style.display = 'flex';
+        }
       } catch(err) {
         console.error('Error in showEventDetailModal:', err);
       }
