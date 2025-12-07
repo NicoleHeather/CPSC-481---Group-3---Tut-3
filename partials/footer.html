@@ -1,7 +1,4 @@
 <footer class="site-footer">
-  <!-- <div class="container">© 2025 Tut3 Group3 Prototype</div> -->
-
-  <!-- Bottom navigation -->
   <nav class="bottom-nav" role="navigation" aria-label="Bottom navigation">
     <a class="nav-item" href="../pages/Home.html">
       <span class="icon">${HOME_ICON}</span>
@@ -21,3 +18,49 @@
     </a>
   </nav>
 </footer>
+
+<script>
+// Add this script at the end of your body or in a separate JS file
+document.addEventListener('DOMContentLoaded', function() {
+  // Get the current page filename
+  const currentPage = window.location.pathname.split('/').pop();
+  
+  // Find all navigation items
+  const navItems = document.querySelectorAll('.nav-item');
+  
+  // Check each nav item
+  navItems.forEach(item => {
+    // Get the href of the nav item
+    const href = item.getAttribute('href');
+    const itemPage = href.split('/').pop();
+    
+    // If the nav item's page matches current page, add 'active' class
+    if (itemPage === currentPage) {
+      item.classList.add('active');
+    }
+  });
+});
+</script>
+
+<style>
+/* Add this CSS to your stylesheet */
+.nav-item.active {
+  color: orange !important; /* Orange color for active state */
+}
+
+.nav-item.active .icon {
+  color: orange !important; /* If icons are text/SVG */
+  fill: orange !important; /* If icons are SVG */
+  stroke: orange !important; /* If icons use strokes */
+}
+
+.nav-item.active .label {
+  color: orange !important;
+  font-weight: 600;
+}
+
+/* Optional: Add some transition for smooth effect */
+.nav-item {
+  transition: color 0.2s ease;
+}
+</style>
