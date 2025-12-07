@@ -183,8 +183,8 @@
   padding-left: 6px;
 }
 
-.event-time { font-weight: 600; color: var(--color-primary); width:48px; flex:0 0 48px; }
-.event-title { font-weight: 600; color: var(--color-text); flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.event-time { font-weight: 600; color: var(--color-primary); width:60px; flex:0 0 60px; white-space: nowrap; }
+.event-title { font-weight: 600; color: var(--color-text); flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 8px; }
 
 .event-remove {
   flex: 0 0 auto;

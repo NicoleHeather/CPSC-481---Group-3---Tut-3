@@ -33,6 +33,25 @@
   function toDay(iso){ return DAY_NAMES[parseISO(iso).getDay()]; }
   function toShort(iso){ const d=parseISO(iso); return d.toLocaleDateString(undefined,{month:'short', day:'numeric', year:'numeric'}); }
 
+  // Convert 24-hour time (HH:MM) to 12-hour format with AM/PM
+  function to12Hour(time24){
+    if(!time24) return '';
+    const [hours, minutes] = time24.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours % 12 || 12;
+    return `${hours12}:${minutes.toString().padStart(2,'0')} ${period}`;
+  }
+
+  // Calculate end time given start time and duration in hours
+  function calculateEndTime(startTime, durationHours){
+    if(!startTime || !durationHours) return '';
+    const [hours, minutes] = startTime.split(':').map(Number);
+    const totalMinutes = hours * 60 + minutes + (parseFloat(durationHours) * 60);
+    const endHours = Math.floor(totalMinutes / 60) % 24;
+    const endMinutes = Math.floor(totalMinutes % 60);
+    return `${endHours.toString().padStart(2,'0')}:${endMinutes.toString().padStart(2,'0')}`;
+  }
+
   function mapEventsSequentially(trip, events){
     const days = eachDate(trip.startDate, trip.endDate).map(date=>({date, city: trip.title, activities: []}));
     let index=0, PER_DAY=2;
@@ -589,7 +608,9 @@
         if(todays.length){
           todays.slice(0, SHOW).forEach(ev =>{
             const card = document.createElement('div'); card.className='event-item';
-            card.innerHTML = `<div class="event-time">${ev.time || ''}</div><div class="event-title">${ev.title}</div>`;
+            // Display time in 12-hour format
+            const timeDisplay = to12Hour(ev.time);
+            card.innerHTML = `<div class="event-time">${timeDisplay}</div><div class="event-title">${ev.title}</div>`;
             inner.appendChild(card);
           });
           const hidden = todays.length - SHOW;

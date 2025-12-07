@@ -1,34 +1,34 @@
 {
   "explore": [
-    { "id": "sample-banff-1", "title": "Sunrise Lake Walk", "location": "Banff", "category": "Attraction", "date": "2026-06-11", "time": "06:30", "price": 0, "img": "", "custom": false, "description": "Early morning lakeside walk." },
-    { "id": "sample-banff-2", "title": "Guided Wildlife Tour", "location": "Banff", "category": "Attraction", "date": "2026-06-11", "time": "09:00", "price": 60, "img": "", "custom": false, "description": "Spot local wildlife with a guide." },
-    { "id": "sample-banff-3", "title": "Coffee & Gallery", "location": "Banff", "category": "Restaurant", "date": "2026-06-11", "time": "11:00", "price": 12, "img": "", "custom": false, "description": "Local coffee and art gallery." },
-    { "id": "sample-banff-4", "title": "Local Market Lunch", "location": "Banff", "category": "Food", "date": "2026-06-11", "time": "13:00", "price": 20, "img": "", "custom": false, "description": "Lunch at the local market (busy day)." },
-    { "id": "sample-banff-5", "title": "Gondola Sunset", "location": "Banff", "category": "Attraction", "date": "2026-06-13", "time": "18:30", "price": 40, "img": "", "custom": false, "description": "Sunset from the gondola." },
-    { "id": "sample-banff-6", "title": "Evening Wildlife Talk", "location": "Banff", "category": "Talk", "date": "2026-06-13", "time": "20:00", "price": 15, "img": "", "custom": false, "description": "Evening presentation by park rangers." },
-    { "id": "sample-banff-7", "title": "Hot Springs Relax", "location": "Banff", "category": "Relax", "date": "2026-06-15", "time": "15:00", "price": 25, "img": "", "custom": false, "description": "Soak and relax." },
-    { "id": "sample-banff-8", "title": "Farewell Brunch", "location": "Banff", "category": "Restaurant", "date": "2026-06-17", "time": "10:30", "price": 30, "img": "", "custom": false, "description": "Final brunch before departure." },
+    { "id": "sample-banff-1", "title": "Sunrise Lake Walk", "location": "Banff", "category": "Attraction", "date": "2026-06-11", "time": "06:30", "duration": "1", "price": 0, "img": "", "custom": false, "description": "Early morning lakeside walk." },
+    { "id": "sample-banff-2", "title": "Guided Wildlife Tour", "location": "Banff", "category": "Attraction", "date": "2026-06-11", "time": "09:00", "duration": "2.5", "price": 60, "img": "", "custom": false, "description": "Spot local wildlife with a guide." },
+    { "id": "sample-banff-3", "title": "Coffee & Gallery", "location": "Banff", "category": "Restaurant", "date": "2026-06-11", "time": "11:00", "duration": "1", "price": 12, "img": "", "custom": false, "description": "Local coffee and art gallery." },
+    { "id": "sample-banff-4", "title": "Local Market Lunch", "location": "Banff", "category": "Food", "date": "2026-06-11", "time": "13:00", "duration": "1.5", "price": 20, "img": "", "custom": false, "description": "Lunch at the local market (busy day)." },
+    { "id": "sample-banff-5", "title": "Gondola Sunset", "location": "Banff", "category": "Attraction", "date": "2026-06-13", "time": "18:30", "duration": "2", "price": 40, "img": "", "custom": false, "description": "Sunset from the gondola." },
+    { "id": "sample-banff-6", "title": "Evening Wildlife Talk", "location": "Banff", "category": "Talk", "date": "2026-06-13", "time": "20:00", "duration": "1", "price": 15, "img": "", "custom": false, "description": "Evening presentation by park rangers." },
+    { "id": "sample-banff-7", "title": "Hot Springs Relax", "location": "Banff", "category": "Relax", "date": "2026-06-15", "time": "15:00", "duration": "2", "price": 25, "img": "", "custom": false, "description": "Soak and relax." },
+    { "id": "sample-banff-8", "title": "Farewell Brunch", "location": "Banff", "category": "Restaurant", "date": "2026-06-17", "time": "10:30", "duration": "1.5", "price": 30, "img": "", "custom": false, "description": "Final brunch before departure." },
 
-    { "id": "ban-009", "title": "Trailhead Stretch", "location": "Banff", "category": "Outdoors", "date": "2026-06-09", "time": "07:15", "price": 0, "img": "", "custom": false, "description": "Warm-up and brief hike to viewpoint." },
-    { "id": "ban-010", "title": "Visitor Centre", "location": "Banff", "category": "Attraction", "date": "2026-06-09", "time": "10:00", "price": 0, "img": "", "custom": false, "description": "Park orientation and exhibits." },
+    { "id": "ban-009", "title": "Trailhead Stretch", "location": "Banff", "category": "Outdoors", "date": "2026-06-09", "time": "07:15", "duration": "1.5", "price": 0, "img": "", "custom": false, "description": "Warm-up and brief hike to viewpoint." },
+    { "id": "ban-010", "title": "Visitor Centre", "location": "Banff", "category": "Attraction", "date": "2026-06-09", "time": "10:00", "duration": "1", "price": 0, "img": "", "custom": false, "description": "Park orientation and exhibits." },
 
-    { "id": "ban-011", "title": "Lake Photo Walk", "location": "Banff", "category": "Photography", "date": "2026-06-10", "time": "08:00", "price": 0, "img": "", "custom": false, "description": "Guided photo walk around the lake." },
-    { "id": "ban-012", "title": "Lunch at Lakeside", "location": "Banff", "category": "Food", "date": "2026-06-10", "time": "12:30", "price": 20, "img": "", "custom": false, "description": "Casual lakeside lunch." },
+    { "id": "ban-011", "title": "Lake Photo Walk", "location": "Banff", "category": "Photography", "date": "2026-06-10", "time": "08:00", "duration": "2", "price": 0, "img": "", "custom": false, "description": "Guided photo walk around the lake." },
+    { "id": "ban-012", "title": "Lunch at Lakeside", "location": "Banff", "category": "Food", "date": "2026-06-10", "time": "12:30", "duration": "1", "price": 20, "img": "", "custom": false, "description": "Casual lakeside lunch." },
 
-    { "id": "ban-013", "title": "Interpretive Hike", "location": "Banff", "category": "Outdoors", "date": "2026-06-11", "time": "09:00", "price": 0, "img": "", "custom": false, "description": "Learn about local ecology on a short hike." },
+    { "id": "ban-013", "title": "Interpretive Hike", "location": "Banff", "category": "Outdoors", "date": "2026-06-11", "time": "09:00", "duration": "2", "price": 0, "img": "", "custom": false, "description": "Learn about local ecology on a short hike." },
 
-    { "id": "ban-014", "title": "Picnic & Relax", "location": "Banff", "category": "Outdoors", "date": "2026-06-12", "time": "12:00", "price": 0, "img": "", "custom": false, "description": "Relaxation time at a scenic spot." },
-    { "id": "ban-015", "title": "Artisan Market", "location": "Banff", "category": "Shopping", "date": "2026-06-12", "time": "15:00", "price": 0, "img": "", "custom": false, "description": "Local crafts and food stalls." },
+    { "id": "ban-014", "title": "Picnic & Relax", "location": "Banff", "category": "Outdoors", "date": "2026-06-12", "time": "12:00", "duration": "2", "price": 0, "img": "", "custom": false, "description": "Relaxation time at a scenic spot." },
+    { "id": "ban-015", "title": "Artisan Market", "location": "Banff", "category": "Shopping", "date": "2026-06-12", "time": "15:00", "duration": "1.5", "price": 0, "img": "", "custom": false, "description": "Local crafts and food stalls." },
 
-    { "id": "ban-016", "title": "Canoe Rental", "location": "Banff", "category": "Outdoors", "date": "2026-06-13", "time": "09:30", "price": 25, "img": "", "custom": false, "description": "Morning canoe on the lake." },
-    { "id": "ban-017", "title": "Guided Rock Talk", "location": "Banff", "category": "Talk", "date": "2026-06-13", "time": "14:00", "price": 10, "img": "", "custom": false, "description": "Geology talk at the visitor centre." },
-    { "id": "ban-018", "title": "Evening Music", "location": "Banff", "category": "Music", "date": "2026-06-13", "time": "19:00", "price": 20, "img": "", "custom": false, "description": "Local band at the pavilion." },
+    { "id": "ban-016", "title": "Canoe Rental", "location": "Banff", "category": "Outdoors", "date": "2026-06-13", "time": "09:30", "duration": "2", "price": 25, "img": "", "custom": false, "description": "Morning canoe on the lake." },
+    { "id": "ban-017", "title": "Guided Rock Talk", "location": "Banff", "category": "Talk", "date": "2026-06-13", "time": "14:00", "duration": "1", "price": 10, "img": "", "custom": false, "description": "Geology talk at the visitor centre." },
+    { "id": "ban-018", "title": "Evening Music", "location": "Banff", "category": "Music", "date": "2026-06-13", "time": "19:00", "duration": "2", "price": 20, "img": "", "custom": false, "description": "Local band at the pavilion." },
 
-    { "id": "ban-019", "title": "Short Summit Hike", "location": "Banff", "category": "Outdoors", "date": "2026-06-14", "time": "07:00", "price": 0, "img": "", "custom": false, "description": "Morning guided short summit." },
+    { "id": "ban-019", "title": "Short Summit Hike", "location": "Banff", "category": "Outdoors", "date": "2026-06-14", "time": "07:00", "duration": "3", "price": 0, "img": "", "custom": false, "description": "Morning guided short summit." },
 
-    { "id": "ban-020", "title": "Cafe Brunch", "location": "Banff", "category": "Food", "date": "2026-06-15", "time": "10:30", "price": 18, "img": "", "custom": false, "description": "Brunch at a local café." },
-    { "id": "ban-021", "title": "Hot Springs Evening", "location": "Banff", "category": "Relax", "date": "2026-06-15", "time": "18:00", "price": 25, "img": "", "custom": false, "description": "Soak after a long day." },
+    { "id": "ban-020", "title": "Cafe Brunch", "location": "Banff", "category": "Food", "date": "2026-06-15", "time": "10:30", "duration": "1", "price": 18, "img": "", "custom": false, "description": "Brunch at a local café." },
+    { "id": "ban-021", "title": "Hot Springs Evening", "location": "Banff", "category": "Relax", "date": "2026-06-15", "time": "18:00", "duration": "2", "price": 25, "img": "", "custom": false, "description": "Soak after a long day." },
 
-    { "id": "ban-022", "title": "Departure Coffee", "location": "Banff", "category": "Social", "date": "2026-06-16", "time": "08:30", "price": 0, "img": "", "custom": false, "description": "Quick coffee before departure." }
+    { "id": "ban-022", "title": "Departure Coffee", "location": "Banff", "category": "Social", "date": "2026-06-16", "time": "08:30", "duration": "0.5", "price": 0, "img": "", "custom": false, "description": "Quick coffee before departure." }
   ]
 }
