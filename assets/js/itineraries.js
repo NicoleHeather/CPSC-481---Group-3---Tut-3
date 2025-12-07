@@ -351,13 +351,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 } catch(e) { /* ignore bad parse */ }
               });
 
-              // If nothing is in localStorage yet, fall back to base events for this trip (if any)
+              // Only consider events in localStorage for this trip; do NOT seed with base/sample events
               let candidates = savedEvents;
-              if (!candidates.length && Array.isArray(allEvents)) {
-                const tripName = existing.title || existing.location || '';
-                candidates = allEvents.filter(ev => ev && ev.location === tripName && ev.date);
-              }
-
+              // No fallback to allEvents for new or edited trips
               const toLose = candidates.filter(ev => {
                 if (!ev || !ev.date) return false;
                 const d = parseISO(ev.date);
