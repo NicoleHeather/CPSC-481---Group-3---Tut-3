@@ -762,15 +762,14 @@
             <div>
               <span class="evd-time evd-view"></span>
               <div class="evd-time-inputs evd-edit-field">
-                <div class="evd-time-group">
-                  <input class="evd-input evd-time-input" type="time" aria-label="Start Time">
-                  <span class="evd-error evd-time-error"></span>
-                </div>
+                <input class="evd-input evd-time-input" type="time" aria-label="Start Time">
                 <span class="evd-time-separator">–</span>
-                <div class="evd-time-group">
-                  <input class="evd-input evd-endtime-input" type="time" aria-label="End Time">
-                  <span class="evd-error evd-endtime-error"></span>
-                </div>
+                <input class="evd-input evd-endtime-input" type="time" aria-label="End Time">
+              </div>
+              <div class="evd-time-inputs evd-edit-field">
+                <span class="evd-error evd-time-error"></span>
+                <span class="evd-time-separator" style="visibility:hidden">–</span>
+                <span class="evd-error evd-endtime-error"></span>
               </div>
             </div>
           </div>

@@ -272,9 +272,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
 }
 .evd-time-row .evd-time-inputs .evd-input {
-  width: 110px;
+  flex: 1;
+  min-width: 130px;
   display: inline-block !important;
 }
 .evd-time-separator {
@@ -377,7 +379,8 @@
 .evd-mode-edit .evd-field { margin-bottom: 8px; }
 .evd-mode-edit .evd-time-input { width: 100%; }
 .evd-mode-edit .evd-view { display: none !important; }
-.evd-mode-edit .evd-edit-field { display: block !important; width: 100%; }
+.evd-mode-edit .evd-edit-field { display: flex !important; width: 100%; }
+.evd-mode-edit .evd-time-inputs { display: flex !important; }
 .evd-edit-field { display: none !important; }
 .evd-edit-mode { display: none !important; }
 .evd-mode-edit .evd-edit-mode { display: inline-flex !important; }
