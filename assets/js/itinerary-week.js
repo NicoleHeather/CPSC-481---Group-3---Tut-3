@@ -589,19 +589,8 @@
         if(todays.length){
           todays.slice(0, SHOW).forEach(ev =>{
             const card = document.createElement('div'); card.className='event-item';
-            card.innerHTML = `<div class="event-time">${ev.time || ''}</div><div class="event-title">${ev.title}</div><button class="btn event-remove" data-event-id="${ev.id}" aria-label="Remove event" title="Remove event">×</button>`;
+            card.innerHTML = `<div class="event-time">${ev.time || ''}</div><div class="event-title">${ev.title}</div>`;
             inner.appendChild(card);
-            
-            // Attach remove handler
-            const removeBtn = card.querySelector('.event-remove');
-            if(removeBtn){
-              removeBtn.addEventListener('click', (e)=>{
-                e.stopPropagation();
-                const eventId = removeBtn.dataset.eventId;
-                const eventTitle = ev.title;
-                showConfirmDeleteModal(eventId, eventTitle);
-              });
-            }
           });
           const hidden = todays.length - SHOW;
           if(hidden > 0){
