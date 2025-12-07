@@ -240,37 +240,251 @@
       try { saveEventsToStorage(trip.id, eventsForThisTrip); console.info('[week] initialized storage with', eventsForThisTrip.length, 'seeded events'); } catch(e){ /* ignore */ }
     }
 
-    // Quick-add modal: create once and reuse
+    // Helper functions for time calculations (used by both Add Event and Event Detail modals)
+    function calculateDuration(startTime, endTime) {
+      if(!startTime || !endTime) return 1;
+      const [startHour, startMin] = startTime.split(':').map(Number);
+      const [endHour, endMin] = endTime.split(':').map(Number);
+      const startMinutes = startHour * 60 + startMin;
+      const endMinutes = endHour * 60 + endMin;
+      let diff = endMinutes - startMinutes;
+      if(diff < 0) diff += 24 * 60; // Handle overnight events
+      return Math.max(0.5, Math.round((diff / 60) * 2) / 2); // Round to nearest 0.5
+    }
+
+    function calculateEndTimeFromDuration(startTime, durationHours) {
+      const [startHour, startMin] = startTime.split(':').map(Number);
+      const startMinutes = startHour * 60 + startMin;
+      const durationMinutes = parseFloat(durationHours) * 60;
+      let endMinutes = startMinutes + durationMinutes;
+      
+      // Handle overflow past midnight
+      if(endMinutes >= 24 * 60) endMinutes -= 24 * 60;
+      
+      const endHour = Math.floor(endMinutes / 60);
+      const endMin = Math.floor(endMinutes % 60);
+      return `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
+    }
+
+    // Quick-add modal: create once and reuse (reusing event detail modal structure)
     let _quickAddModal = null;
     function ensureQuickAddModal(){
       if(_quickAddModal) return _quickAddModal;
       const overlay = document.createElement('div'); overlay.className = 'qa-overlay'; overlay.style.display='none';
-      const modal = document.createElement('div'); modal.className = 'qa-modal';
+      const modal = document.createElement('div'); modal.className = 'qa-modal evd-modal';
       modal.innerHTML = `
-        <form class="qa-form">
-          <div><label>Time <input type="time" name="time"></label></div>
-          <div><label>Title <input type="text" name="title" placeholder="Event title"></label></div>
-          <div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end;">
-            <button type="button" class="qa-cancel">Cancel</button>
-            <button type="submit" class="qa-add">Add</button>
+        <div class="evd-header qa-header">
+          <button type="button" class="evd-close-icon" title="Close" aria-label="Close">✕</button>
+          <h3>Add Event</h3>
+        </div>
+        <div class="evd-body qa-body">
+          <div class="evd-field">
+            <svg class="evd-label" title="Title" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+            <div>
+              <input class="evd-input qa-input" type="text" name="title" placeholder="Event title" aria-label="Title">
+              <span class="evd-error qa-title-error"></span>
+            </div>
           </div>
-        </form>
+          <div class="evd-field">
+            <svg class="evd-label" title="Date" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <div>
+              <input class="evd-input qa-input" type="date" name="date" aria-label="Date">
+              <span class="evd-error qa-date-error"></span>
+            </div>
+          </div>
+          <div class="evd-field evd-time-row">
+            <svg class="evd-label" title="Time" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <div>
+              <div class="evd-time-inputs">
+                <input class="evd-input qa-input" type="time" name="time" aria-label="Start Time" placeholder="Start">
+                <span class="evd-time-separator">–</span>
+                <input class="evd-input qa-input" type="time" name="endTime" aria-label="End Time" placeholder="End">
+              </div>
+              <div class="evd-time-inputs">
+                <span class="evd-error qa-time-error"></span>
+                <span class="evd-time-separator" style="visibility:hidden">–</span>
+                <span class="evd-error qa-endtime-error"></span>
+              </div>
+            </div>
+          </div>
+          <div class="evd-field">
+            <svg class="evd-label" title="Location" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <div>
+              <input class="evd-input qa-input" type="text" name="location" placeholder="Event location" aria-label="Location">
+            </div>
+          </div>
+          <div class="evd-field">
+            <svg class="evd-label" title="Category" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><circle cx="8" cy="8" r="1.5"></circle></svg>
+            <div>
+              <input class="evd-input qa-input" type="text" name="category" placeholder="e.g., Food, Culture" aria-label="Category">
+            </div>
+          </div>
+          <div class="evd-field">
+            <svg class="evd-label" title="Price" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <div>
+              <input class="evd-input qa-input" type="number" name="price" placeholder="0 for free" min="0" step="0.01" aria-label="Price">
+              <span class="evd-error qa-price-error"></span>
+            </div>
+          </div>
+          <div class="evd-description-field">
+            <svg class="evd-label" title="Description" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <div>
+              <textarea class="evd-input qa-input" name="description" placeholder="Event details" rows="3" aria-label="Description"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="evd-footer qa-footer">
+          <button type="button" class="btn qa-cancel">Cancel</button>
+          <button type="button" class="btn btn-primary qa-add">Add Event</button>
+        </div>
       `;
       overlay.appendChild(modal);
       document.body.appendChild(overlay);
 
-      const form = modal.querySelector('.qa-form');
+      const closeBtn = modal.querySelector('.evd-close-icon');
       const cancel = modal.querySelector('.qa-cancel');
+      const addBtn = modal.querySelector('.qa-add');
+      const titleInput = modal.querySelector('input[name="title"]');
+      const dateInput = modal.querySelector('input[name="date"]');
+      const timeInput = modal.querySelector('input[name="time"]');
+      const endTimeInput = modal.querySelector('input[name="endTime"]');
+      const priceInput = modal.querySelector('input[name="price"]');
+      const titleError = modal.querySelector('.qa-title-error');
+      const dateError = modal.querySelector('.qa-date-error');
+      const timeError = modal.querySelector('.qa-time-error');
+      const endTimeError = modal.querySelector('.qa-endtime-error');
+      const priceError = modal.querySelector('.qa-price-error');
 
+      function showFieldError(input, errorEl, message) {
+        if(input && errorEl) {
+          input.classList.add('evd-invalid');
+          errorEl.innerHTML = `<svg viewBox="0 0 16 16" fill="none" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;"><circle cx="8" cy="8" r="7" fill="#ff7f27"/><path d="M8 4v5M8 11h.01" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>${message}`;
+        }
+      }
+
+      function clearFieldError(input, errorEl) {
+        if(input && errorEl) {
+          input.classList.remove('evd-invalid');
+          errorEl.textContent = '';
+        }
+      }
+
+      // Real-time validation
+      titleInput.addEventListener('input', () => {
+        const trimmed = titleInput.value.trim();
+        if(trimmed) {
+          clearFieldError(titleInput, titleError);
+        } else {
+          showFieldError(titleInput, titleError, 'Title cannot be empty');
+        }
+      });
+
+      timeInput.addEventListener('input', () => {
+        if(timeInput.value) {
+          clearFieldError(timeInput, timeError);
+        } else {
+          showFieldError(timeInput, timeError, 'Start time is required');
+        }
+      });
+      
+      endTimeInput.addEventListener('input', () => {
+        if(!endTimeInput.value) {
+          showFieldError(endTimeInput, endTimeError, 'End time is required');
+        } else if(timeInput.value) {
+          const [startH, startM] = timeInput.value.split(':').map(Number);
+          const [endH, endM] = endTimeInput.value.split(':').map(Number);
+          const startMins = startH * 60 + startM;
+          const endMins = endH * 60 + endM;
+          if(endMins <= startMins && endMins !== 0) {
+            showFieldError(endTimeInput, endTimeError, 'End time must be after start time');
+          } else {
+            clearFieldError(endTimeInput, endTimeError);
+          }
+        } else {
+          clearFieldError(endTimeInput, endTimeError);
+        }
+      });
+
+      priceInput.addEventListener('input', () => {
+        const val = priceInput.value.trim();
+        if(val === '' || (!isNaN(val) && parseFloat(val) >= 0)) {
+          clearFieldError(priceInput, priceError);
+        }
+      });
+
+      closeBtn.addEventListener('click', ()=>{ overlay.style.display='none'; });
       cancel.addEventListener('click', ()=>{ overlay.style.display='none'; });
-      form.addEventListener('submit', (e)=>{
-        e.preventDefault();
-        const formData = new FormData(form);
-        const time = formData.get('time') || '';
-        const title = (formData.get('title') || '').trim();
-        const date = overlay.dataset.date;
-        if(!title){ form.querySelector('input[name="title"]').focus(); return; }
-        const newEv = { id: `local-${Date.now()}`, title, time, date };
+      
+      addBtn.addEventListener('click', ()=>{
+        // Clear all errors first
+        clearFieldError(titleInput, titleError);
+        clearFieldError(timeInput, timeError);
+        clearFieldError(endTimeInput, endTimeError);
+        clearFieldError(priceInput, priceError);
+        
+        const title = titleInput.value.trim();
+        const date = dateInput.value || overlay.dataset.date;
+        const time = timeInput.value || '';
+        const endTime = endTimeInput.value || '';
+        const locationVal = modal.querySelector('input[name="location"]').value.trim();
+        const categoryVal = modal.querySelector('input[name="category"]').value.trim();
+        const priceVal = priceInput.value || '';
+        const description = modal.querySelector('textarea[name="description"]').value.trim();
+        
+        let hasError = false;
+        
+        // Validate title
+        if(!title){
+          showFieldError(titleInput, titleError, 'Title cannot be empty');
+          hasError = true;
+        }
+        
+        // Validate start time
+        if(!time){
+          showFieldError(timeInput, timeError, 'Start time is required');
+          hasError = true;
+        }
+        
+        // Validate end time
+        if(!endTime){
+          showFieldError(endTimeInput, endTimeError, 'End time is required');
+          hasError = true;
+        } else if(time && endTime) {
+          // Check if end time is after start time (or handle overnight)
+          const [startH, startM] = time.split(':').map(Number);
+          const [endH, endM] = endTime.split(':').map(Number);
+          const startMins = startH * 60 + startM;
+          const endMins = endH * 60 + endM;
+          if(endMins <= startMins && endMins !== 0) { // Allow 00:00 as valid end time
+            showFieldError(endTimeInput, endTimeError, 'End time must be after start time');
+            hasError = true;
+          }
+        }
+        
+        // Validate price
+        if(priceVal && (isNaN(priceVal) || parseFloat(priceVal) < 0)){
+          showFieldError(priceInput, priceError, 'Must be a valid positive number');
+          hasError = true;
+        }
+        
+        if(hasError) {
+          return;
+        }
+        
+        // Calculate duration automatically
+        const duration = calculateDuration(time, endTime);
+        
+        const newEv = { 
+          id: `local-${Date.now()}`, 
+          title, 
+          time, 
+          date,
+          duration: String(duration),
+          location: locationVal || '',
+          category: categoryVal || '',
+          price: parseFloat(priceVal) || 0,
+          description: description || ''
+        };
         eventsForThisTrip.unshift(newEv);
         saveEventsToStorage(trip.id, eventsForThisTrip);
         overlay.style.display='none';
@@ -280,7 +494,28 @@
       _quickAddModal = overlay;
       return _quickAddModal;
     }
-    function showQuickAddModal(date){ const m = ensureQuickAddModal(); m.dataset.date = date; m.querySelector('input[name="time"]').value=''; m.querySelector('input[name="title"]').value=''; m.style.display='flex'; m.querySelector('input[name="title"]').focus(); }
+    function showQuickAddModal(date){ 
+      const m = ensureQuickAddModal(); 
+      m.dataset.date = date;
+      
+      // Clear all inputs
+      m.querySelector('input[name="title"]').value = '';
+      m.querySelector('input[name="date"]').value = date;
+      m.querySelector('input[name="time"]').value = '';
+      m.querySelector('input[name="endTime"]').value = '';
+      m.querySelector('input[name="location"]').value = '';
+      m.querySelector('input[name="category"]').value = '';
+      m.querySelector('input[name="price"]').value = '';
+      m.querySelector('textarea[name="description"]').value = '';
+      // Clear all errors
+      m.querySelector('.qa-title-error').textContent = '';
+      m.querySelector('.qa-date-error').textContent = '';
+      m.querySelector('.qa-time-error').textContent = '';
+      m.querySelector('.qa-endtime-error').textContent = '';
+      m.querySelector('.qa-price-error').textContent = '';
+      m.style.display='flex'; 
+      m.querySelector('input[name="title"]').focus(); 
+    }
 
     // Delete confirmation modal: create once and reuse
     let _confirmDeleteModal = null;
@@ -337,6 +572,9 @@
         
         const modal = document.createElement('div');
         modal.className = 'cd-modal';
+        
+        const cancelBtn = cancelText ? `<button type="button" class="cd-cancel btn">${cancelText}</button>` : '';
+        
         modal.innerHTML = `
           <div class="cd-header">
             <h3>${title}</h3>
@@ -345,7 +583,7 @@
             <p>${message}</p>
           </div>
           <div class="cd-footer">
-            <button type="button" class="cd-cancel btn">${cancelText}</button>
+            ${cancelBtn}
             <button type="button" class="cd-confirm btn btn-primary">${confirmText}</button>
           </div>
         `;
@@ -356,10 +594,13 @@
           overlay.remove();
         };
         
-        modal.querySelector('.cd-cancel').addEventListener('click', () => {
-          cleanup();
-          resolve(false);
-        });
+        const cancelButton = modal.querySelector('.cd-cancel');
+        if(cancelButton) {
+          cancelButton.addEventListener('click', () => {
+            cleanup();
+            resolve(false);
+          });
+        }
         
         modal.querySelector('.cd-confirm').addEventListener('click', () => {
           cleanup();
@@ -367,7 +608,7 @@
         });
         
         overlay.addEventListener('click', (e) => {
-          if (e.target === overlay) {
+          if (e.target === overlay && cancelText) {
             cleanup();
             resolve(false);
           }
@@ -516,12 +757,21 @@
               <span class="evd-error evd-date-error"></span>
             </div>
           </div>
-          <div class="evd-field">
+          <div class="evd-field evd-time-row">
             <svg class="evd-label" title="Time" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             <div>
               <span class="evd-time evd-view"></span>
-              <input class="evd-input evd-time-input evd-edit-field" type="time" aria-label="Time">
-              <span class="evd-error evd-time-error"></span>
+              <div class="evd-time-inputs evd-edit-field">
+                <div class="evd-time-group">
+                  <input class="evd-input evd-time-input" type="time" aria-label="Start Time">
+                  <span class="evd-error evd-time-error"></span>
+                </div>
+                <span class="evd-time-separator">–</span>
+                <div class="evd-time-group">
+                  <input class="evd-input evd-endtime-input" type="time" aria-label="End Time">
+                  <span class="evd-error evd-endtime-error"></span>
+                </div>
+              </div>
             </div>
           </div>
           <div class="evd-field evd-location-field">
@@ -575,6 +825,7 @@
       const titleInput = modal.querySelector('.evd-title-input');
       const dateInput = modal.querySelector('.evd-date-input');
       const timeInput = modal.querySelector('.evd-time-input');
+      const endTimeInput = modal.querySelector('.evd-endtime-input');
       const locationInput = modal.querySelector('.evd-location-input');
       const categoryInput = modal.querySelector('.evd-category-input');
       const priceInput = modal.querySelector('.evd-price-input');
@@ -604,7 +855,7 @@
         if(input && errorEl) {
           input.classList.add('evd-invalid');
           input.classList.remove('evd-valid');
-          errorEl.textContent = message;
+          errorEl.innerHTML = `<svg viewBox="0 0 16 16" fill="none" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;"><circle cx="8" cy="8" r="7" fill="#ff7f27"/><path d="M8 4v5M8 11h.01" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>${message}`;
         }
       }
 
@@ -646,6 +897,28 @@
             clearFieldError(timeInput, timeError);
           } else {
             showFieldError(timeInput, timeError, 'Time is required');
+          }
+        });
+      }
+
+      if(endTimeInput) {
+        endTimeInput.addEventListener('change', () => {
+          const endTimeError = modal.querySelector('.evd-endtime-error');
+          if(!endTimeInput.value) {
+            showFieldError(endTimeInput, endTimeError, 'End time is required');
+          } else if(timeInput.value) {
+            const [startHour, startMin] = timeInput.value.split(':').map(Number);
+            const [endHour, endMin] = endTimeInput.value.split(':').map(Number);
+            const startMins = startHour * 60 + startMin;
+            const endMins = endHour * 60 + endMin;
+            
+            if(endMins <= startMins && endMins !== 0) {
+              showFieldError(endTimeInput, endTimeError, 'End time must be after start time');
+            } else {
+              clearFieldError(endTimeInput, endTimeError);
+            }
+          } else {
+            clearFieldError(endTimeInput, endTimeError);
           }
         });
       }
@@ -700,6 +973,7 @@
             const titleInp = modal.querySelector('.evd-title-input');
             const dateInp = modal.querySelector('.evd-date-input');
             const timeInp = modal.querySelector('.evd-time-input');
+            const endTimeInp = modal.querySelector('.evd-endtime-input');
             const locationInp = modal.querySelector('.evd-location-input');
             const categoryInp = modal.querySelector('.evd-category-input');
             const priceInp = modal.querySelector('.evd-price-input');
@@ -709,6 +983,13 @@
             if(titleInp) titleInp.value = String(ev.title || '');
             if(dateInp) dateInp.value = String(ev.date || '');
             if(timeInp) timeInp.value = String(ev.time || '');
+            
+            // Calculate and populate end time from start time and duration
+            if(endTimeInp && ev.time && ev.duration) {
+              const endTime = calculateEndTimeFromDuration(ev.time, ev.duration);
+              endTimeInp.value = endTime;
+            }
+            
             if(locationInp) locationInp.value = String(ev.location || '');
             if(categoryInp) categoryInp.value = String(ev.category || '');
             if(priceInp) priceInp.value = (ev.price !== undefined && ev.price !== null) ? String(ev.price) : '';
@@ -781,16 +1062,6 @@
 
       saveBtn.addEventListener('click', async ()=>{
         try {
-          const confirmed = await showConfirmDialog(
-            'Save Changes?',
-            'Are you sure you want to save these changes?',
-            'Save',
-            'Cancel'
-          );
-          if(!confirmed) {
-            return;
-          }
-          
           const eventId = overlay.dataset.eventId;
           if(!eventId) {
             console.warn('Save clicked but no eventId found');
@@ -810,12 +1081,13 @@
           const titleInp = modal.querySelector('.evd-title-input');
           const dateInp = modal.querySelector('.evd-date-input');
           const timeInp = modal.querySelector('.evd-time-input');
+          const endTimeInp = modal.querySelector('.evd-endtime-input');
           const locationInp = modal.querySelector('.evd-location-input');
           const categoryInp = modal.querySelector('.evd-category-input');
           const priceInp = modal.querySelector('.evd-price-input');
           const descriptionInp = modal.querySelector('.evd-description-input');
           
-          // Validate all required fields before saving
+          // Validate all required fields before showing confirmation
           let hasErrors = false;
           
           // Validate title
@@ -841,6 +1113,24 @@
           } else {
             clearFieldError(timeInp, modal.querySelector('.evd-time-error'));
           }
+
+          // Validate end time
+          if(!endTimeInp?.value) {
+            showFieldError(endTimeInp, modal.querySelector('.evd-endtime-error'), 'End time is required');
+            hasErrors = true;
+          } else if(timeInp?.value) {
+            const [startHour, startMin] = timeInp.value.split(':').map(Number);
+            const [endHour, endMin] = endTimeInp.value.split(':').map(Number);
+            const startMins = startHour * 60 + startMin;
+            const endMins = endHour * 60 + endMin;
+            
+            if(endMins <= startMins && endMins !== 0) {
+              showFieldError(endTimeInp, modal.querySelector('.evd-endtime-error'), 'End time must be after start time');
+              hasErrors = true;
+            } else {
+              clearFieldError(endTimeInp, modal.querySelector('.evd-endtime-error'));
+            }
+          }
           
           // Validate price if provided
           if(priceInp?.value && !validatePrice(priceInp.value)) {
@@ -850,9 +1140,14 @@
             clearFieldError(priceInp, modal.querySelector('.evd-price-error'));
           }
           
-          // If there are validation errors, don't save
+          // If there are validation errors, show error dialog
           if(hasErrors) {
-            console.warn('Validation failed - cannot save event');
+            await showConfirmDialog(
+              'Missing Required Fields',
+              'Please fill in all required fields before saving.',
+              'OK',
+              ''
+            );
             return;
           }
           
@@ -860,15 +1155,20 @@
           const newTitle = (titleInp?.value || '').trim() || 'Untitled Event';
           const newDate = dateInp?.value || ev.date;
           const newTime = timeInp?.value || ev.time;
+          const newEndTime = endTimeInp?.value || '';
           const newLocation = (locationInp?.value || '').trim();
           const newCategory = (categoryInp?.value || '').trim();
           const newPrice = parseFloat((priceInp?.value || '').trim());
           const newDescription = (descriptionInp?.value || '').trim();
           
+          // Calculate duration from time range
+          const newDuration = calculateDuration(newTime, newEndTime);
+          
           // Update event with validation
           ev.title = newTitle;
           ev.date = newDate || ev.date; // Keep original if empty
           ev.time = newTime || ev.time; // Keep original if empty
+          ev.duration = String(newDuration);
           ev.location = newLocation;
           ev.category = newCategory;
           ev.price = !isNaN(newPrice) ? newPrice : ev.price; // Keep original price if invalid number

@@ -258,16 +258,40 @@
   text-decoration: underline !important;
 }
 
-/* Quick-add modal styles */
-.qa-overlay { position: fixed; inset: 0; background: rgba(2,6,10,0.45); display: none; align-items: center; justify-content: center; z-index: 1200; }
-.qa-modal { background: var(--color-surface); padding: 14px; border-radius: 8px; min-width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
-.qa-modal .qa-form label { display:block; font-size: .95rem; margin-bottom:8px; color: var(--color-text); font-weight:600; }
-/* reuse .form-group input styles from main.css by using the same structure/classes in markup; keep a small fallback */
-.qa-modal input[type="text"], .qa-modal input[type="time"] { width: 100%; padding: 8px 10px; border: 2px solid rgba(0,0,0,0.08); border-radius: 8px; background: var(--color-surface); }
+/* Quick-add modal styles - reuses event detail modal structure */
+.qa-overlay { position: fixed; inset: 0; background: rgba(2,6,10,0.45); display: none; align-items: center; justify-content: center; z-index: 1200; padding: 16px; }
+.qa-modal { max-width: 500px; }
+.qa-modal .evd-input { display: block !important; }
+.qa-modal .evd-body { padding: 16px; }
+.qa-modal .qa-date-display { display: block !important; }
+.qa-modal .qa-cancel { background: rgba(0,0,0,0.08); color: var(--color-text); }
+.qa-modal .qa-cancel:hover { background: rgba(0,0,0,0.12); }
+
+/* Time inputs inline layout */
+.evd-time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.evd-time-row .evd-time-inputs .evd-input {
+  width: 110px;
+  display: inline-block !important;
+}
+.evd-time-separator {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+.evd-time-row .evd-error {
+  width: 110px;
+  font-size: 0.8rem;
+  display: inline-block;
+}
 
 /* Confirmation delete modal styles */
-.cd-overlay { position: fixed; inset: 0; background: rgba(2,6,10,0.45); display: none; align-items: center; justify-content: center; z-index: 1200; }
-.cd-modal { background: var(--color-surface); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); min-width: 320px; overflow: hidden; }
+.cd-overlay { position: fixed; inset: 0; background: rgba(2,6,10,0.45); display: none; align-items: center; justify-content: center; z-index: 1200; padding: 16px; }
+.cd-modal { background: var(--color-surface); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); max-width: 400px; width: 100%; overflow: hidden; }
 .cd-header { padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); }
 .cd-header h3 { margin: 0; font-size: 1.1rem; color: var(--color-text); font-weight: 700; }
 .cd-body { padding: 16px; color: var(--color-text); font-size: 0.95rem; line-height: 1.5; }
@@ -287,8 +311,8 @@
 .ed-form { padding: 16px; }
 .ed-form .form-group { margin-bottom: 14px; }
 .ed-form .form-group label { display: block; font-size: 0.95rem; margin-bottom: 6px; color: var(--color-text); font-weight: 600; }
-.ed-form input[type="date"] { width: 100%; padding: 8px 10px; border: 2px solid rgba(0,0,0,0.08); border-radius: 8px; background: var(--color-surface); color: var(--color-text); font-size: 0.95rem; }
-.ed-form input[type="date"]:focus { outline: none; border-color: var(--color-primary); }
+.ed-form input[type="date"] { width: 100%; padding: 8px 10px; border: 2px solid rgba(0,0,0,0.08); border-radius: 8px; background: var(--color-surface); color: var(--color-text); font-size: 0.95rem; font-family: inherit; }
+.ed-form input[type="date"]:focus { outline: none; border-color: var(--color-accent); }
 .ed-footer { padding: 12px 16px; display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid rgba(0,0,0,0.08); }
 .ed-footer .btn { flex: 0 0 auto; }
 .ed-cancel { background: rgba(0,0,0,0.08); color: var(--color-text); }
@@ -325,6 +349,7 @@
 .evd-label { font-weight: 600; color: var(--color-muted); display: inline-flex; align-items: center; justify-content: center; font-size: 1.2rem; opacity: 0.6; width: 20px; height: 20px; min-width: 20px; stroke: var(--color-muted); flex-shrink: 0; }
 .evd-field > div:not(.evd-label):not(.evd-input-wrapper) { flex: 1; display: flex; flex-direction: column; width: 100%; gap: 0; align-items: flex-start; }
 .evd-field .evd-view { display: block; width: 100%; margin: 0; padding: 0; color: var(--color-text); text-align: left; }
+.evd-time.evd-view { color: var(--color-text) !important; font-weight: normal; }
 .evd-title.evd-view { font-weight: 600; font-size: 1rem; }
 .evd-description-field { margin-top: 0; padding-top: 0; display: flex; align-items: flex-start; gap: 16px; }
 .evd-description-field .evd-label { display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0; font-size: 1.2rem; width: 20px; height: 20px; min-width: 20px; flex-shrink: 0; }
@@ -362,6 +387,7 @@
 .evd-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 16px; border-top: 1px solid rgba(0,0,0,0.08); }
 .evd-error { display: none; color: #c1121f; font-size: 0.8rem; margin-top: 3px; font-weight: 500; }
 .evd-mode-edit .evd-error { display: block; }
+.qa-modal .evd-error { display: block; }
 .evd-input.evd-invalid { border-color: #c1121f; background-color: rgba(193, 18, 31, 0.03); }
 .evd-input.evd-valid { border-color: #4caf50; }
 
