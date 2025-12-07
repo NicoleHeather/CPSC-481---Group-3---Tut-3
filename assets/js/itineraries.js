@@ -351,9 +351,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 } catch(e) { /* ignore bad parse */ }
               });
 
-              // Only consider events in localStorage for this trip; do NOT seed with base/sample events
-              let candidates = savedEvents;
-              // No fallback to allEvents for new or edited trips
+              // For new itineraries, always start with an empty event list
+              let candidates = existing && existing.id ? savedEvents : [];
               const toLose = candidates.filter(ev => {
                 if (!ev || !ev.date) return false;
                 const d = parseISO(ev.date);
