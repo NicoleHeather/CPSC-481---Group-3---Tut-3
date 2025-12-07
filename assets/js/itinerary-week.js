@@ -95,6 +95,10 @@
     const trip = trips.find(t => t.id === tripId);
     if(!trip){ listEl.innerHTML = `<p>Trip '${tripId}' not found. Return to <a href="../pages/Itineraries.html">Itineraries</a>.</p>`; return; }
 
+    // Store original trip dates for demo reset
+    const perTripStartDate = trip.startDate;
+    const perTripEndDate = trip.endDate;
+
     // Prepare events: prefer a per-trip JSON seed file if it exists in the repo.
     // Fallback order: per-trip JSON -> shared events.json -> deterministic generator.
     const allEvents = events || [];
@@ -300,6 +304,107 @@
     }
     function showConfirmDeleteModal(eventId, eventTitle){ const m = ensureConfirmDeleteModal(); m.dataset.eventId = eventId; m.querySelector('.cd-event-title').textContent = eventTitle; m.style.display='flex'; m.querySelector('.cd-confirm').focus(); }
 
+    // Edit dates modal: create once and reuse
+    let _editDatesModal = null;
+    let _editDatesCallback = null;
+    function ensureEditDatesModal(){
+      if(_editDatesModal) return _editDatesModal;
+      const overlay = document.createElement('div'); overlay.className = 'ed-overlay'; overlay.style.display='none';
+      const modal = document.createElement('div'); modal.className = 'ed-modal';
+      modal.innerHTML = `
+        <div class="ed-header">
+          <h3>Edit Trip Dates</h3>
+        </div>
+        <form class="ed-form">
+          <div class="form-group">
+            <label for="ed-start">Start Date</label>
+            <input type="date" id="ed-start" name="startDate" required>
+          </div>
+          <div class="form-group">
+            <label for="ed-end">End Date</label>
+            <input type="date" id="ed-end" name="endDate" required>
+          </div>
+          <div class="ed-footer">
+            <button type="button" class="ed-cancel btn">Cancel</button>
+            <button type="submit" class="ed-save btn">Update Dates</button>
+          </div>
+        </form>
+      `;
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      const form = modal.querySelector('.ed-form');
+      const cancelBtn = modal.querySelector('.ed-cancel');
+
+      cancelBtn.addEventListener('click', ()=>{ overlay.style.display='none'; });
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const formData = new FormData(form);
+        const newStart = formData.get('startDate');
+        const newEnd = formData.get('endDate');
+        if(!newStart || !newEnd){ form.querySelector('input[name="startDate"]').focus(); return; }
+        const s = new Date(newStart + 'T00:00:00');
+        const eDate = new Date(newEnd + 'T00:00:00');
+        if(isNaN(s.getTime()) || isNaN(eDate.getTime()) || s > eDate){ alert('Invalid dates. Please ensure start date is before end date.'); return; }
+        if(_editDatesCallback){ _editDatesCallback(newStart, newEnd); }
+        overlay.style.display='none';
+      });
+
+      _editDatesModal = overlay;
+      return _editDatesModal;
+    }
+    function showEditDatesModal(startDate, endDate, callback){ 
+      const m = ensureEditDatesModal(); 
+      _editDatesCallback = callback;
+      m.querySelector('input[name="startDate"]').value = startDate;
+      m.querySelector('input[name="endDate"]').value = endDate;
+      m.style.display='flex'; 
+      m.querySelector('input[name="startDate"]').focus(); 
+    }
+
+    // Confirm date change modal: create once and reuse
+    let _confirmDateChangeModal = null;
+    let _confirmDateChangeCallback = null;
+    function ensureConfirmDateChangeModal(){
+      if(_confirmDateChangeModal) return _confirmDateChangeModal;
+      const overlay = document.createElement('div'); overlay.className = 'cdc-overlay'; overlay.style.display='none';
+      const modal = document.createElement('div'); modal.className = 'cdc-modal';
+      modal.innerHTML = `
+        <div class="cdc-header">
+          <h3>Events Will Be Removed</h3>
+        </div>
+        <div class="cdc-body">
+          <p>Changing the dates will remove <span class="cdc-event-count"></span> event(s) that fall outside the new date range.</p>
+          <p>Continue anyway?</p>
+        </div>
+        <div class="cdc-footer">
+          <button type="button" class="cdc-cancel btn">Cancel</button>
+          <button type="button" class="cdc-confirm btn btn-danger">Remove Events & Update Dates</button>
+        </div>
+      `;
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      const cancelBtn = modal.querySelector('.cdc-cancel');
+      const confirmBtn = modal.querySelector('.cdc-confirm');
+
+      cancelBtn.addEventListener('click', ()=>{ overlay.style.display='none'; });
+      confirmBtn.addEventListener('click', ()=>{
+        if(_confirmDateChangeCallback){ _confirmDateChangeCallback(); }
+        overlay.style.display='none';
+      });
+
+      _confirmDateChangeModal = overlay;
+      return _confirmDateChangeModal;
+    }
+    function showConfirmDateChangeModal(eventCount, callback){ 
+      const m = ensureConfirmDateChangeModal(); 
+      _confirmDateChangeCallback = callback;
+      m.querySelector('.cdc-event-count').textContent = eventCount;
+      m.style.display='flex'; 
+      m.querySelector('.cdc-confirm').focus(); 
+    }
+
     // Compute the week that contains the trip.startDate. Week starts Monday.
     function startOfWeekMonday(d){
       const date = new Date(d);
@@ -358,27 +463,47 @@
         if (editBtn) {
           editBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            // Prompt user for new start/end dates (YYYY-MM-DD). This is a
-            // lightweight inline editor; validation is minimal.
             const curStart = trip.startDate;
             const curEnd = trip.endDate;
-            const newStart = prompt('Enter new start date (YYYY-MM-DD):', curStart);
-            if (!newStart) return;
-            const newEnd = prompt('Enter new end date (YYYY-MM-DD):', curEnd);
-            if (!newEnd) return;
-            const s = new Date(newStart + 'T00:00:00');
-            const eDate = new Date(newEnd + 'T00:00:00');
-            if (isNaN(s.getTime()) || isNaN(eDate.getTime()) || s > eDate) { alert('Invalid dates entered. Please use YYYY-MM-DD and ensure start <= end.'); return; }
-            // Update trip data in-memory and recompute window bounds
-            try {
-              trip.startDate = newStart;
-              trip.endDate = newEnd;
-              tripStart = new Date(trip.startDate + 'T00:00:00');
-              tripEnd = new Date(trip.endDate + 'T00:00:00');
-              weekStart = new Date(trip.startDate + 'T00:00:00');
-              // Re-render with updated dates
-              render();
-            } catch(err) { console.warn('[week] edit dates failed', err); }
+            const callback = (newStart, newEnd) => {
+              // Check if any events would be deleted by the new date range
+              const newStartDate = new Date(newStart + 'T00:00:00');
+              const newEndDate = new Date(newEnd + 'T00:00:00');
+              const eventsToLose = eventsForThisTrip.filter(ev => {
+                const evDate = new Date(ev.date + 'T00:00:00');
+                return evDate < newStartDate || evDate > newEndDate;
+              });
+              
+              const performUpdate = () => {
+                // Update trip data in-memory and recompute window bounds
+                try {
+                  trip.startDate = newStart;
+                  trip.endDate = newEnd;
+                  tripStart = new Date(trip.startDate + 'T00:00:00');
+                  tripEnd = new Date(trip.endDate + 'T00:00:00');
+                  weekStart = new Date(trip.startDate + 'T00:00:00');
+                  // Remove events outside the new date range
+                  const eventsToKeep = eventsForThisTrip.filter(ev => {
+                    const evDate = new Date(ev.date + 'T00:00:00');
+                    return evDate >= newStartDate && evDate <= newEndDate;
+                  });
+                  eventsForThisTrip.length = 0;
+                  eventsForThisTrip.push(...eventsToKeep);
+                  saveEventsToStorage(trip.id, eventsForThisTrip);
+                  // Re-render with updated dates
+                  render();
+                } catch(err) { console.warn('[week] edit dates failed', err); }
+              };
+              
+              if(eventsToLose.length > 0){
+                // Show themed confirmation modal
+                showConfirmDateChangeModal(eventsToLose.length, performUpdate);
+              } else {
+                // No events to lose, proceed directly
+                performUpdate();
+              }
+            };
+            showEditDatesModal(curStart, curEnd, callback);
           });
         }
       } catch(e) { /* ignore */ }
@@ -425,7 +550,13 @@
                   saveEventsToStorage(trip.id, perTripSeed);
                   eventsForThisTrip.length = 0;
                   eventsForThisTrip.push(...perTripSeed);
-                  console.info('[week] Demo Reset: wrote', perTripSeed.length, 'events to storage');
+                  // Also reset trip dates to original values
+                  trip.startDate = perTripStartDate || trip.startDate;
+                  trip.endDate = perTripEndDate || trip.endDate;
+                  tripStart = new Date(trip.startDate + 'T00:00:00');
+                  tripEnd = new Date(trip.endDate + 'T00:00:00');
+                  weekStart = new Date(trip.startDate + 'T00:00:00');
+                  console.info('[week] Demo Reset: wrote', perTripSeed.length, 'events to storage and reset dates to', trip.startDate, trip.endDate);
                   render();
                 }catch(err){ console.warn('[week] reset failed', err); alert('Reset failed - see console for details.'); }
               } else {
