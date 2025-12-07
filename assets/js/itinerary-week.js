@@ -858,7 +858,7 @@
         <div class="evd-footer">
           <button type="button" class="btn evd-cancel evd-edit-mode">Cancel</button>
           <button type="button" class="btn evd-save evd-edit-mode">Save</button>
-          <button type="button" class="btn evd-close">Close</button>
+          <button type="button" class="btn evd-close evd-view-mode">Close</button>
         </div>
       `;
       overlay.appendChild(modal);
@@ -1007,6 +1007,8 @@
         });
       }
 
+      let originalEventData = null;
+
       function setEventDetailMode(mode, ev){
         try {
           if(!mode) {
@@ -1018,7 +1020,15 @@
           modal.classList.toggle('evd-mode-edit', isEdit);
           overlay.dataset.mode = mode;
           
+          // Show/hide Close button based on mode
+          if(closeBtn) {
+            closeBtn.style.display = isEdit ? 'none' : 'block';
+          }
+          
           if(isEdit && ev){
+            // Store original event data for change detection
+            originalEventData = JSON.parse(JSON.stringify(ev));
+            
             // Re-query inputs to ensure they're available
             const titleInp = modal.querySelector('.evd-title-input');
             const dateInp = modal.querySelector('.evd-date-input');
@@ -1050,6 +1060,26 @@
         }
       }
 
+      function hasChanges(){
+        if(!originalEventData) return false;
+        
+        const titleInp = modal.querySelector('.evd-title-input');
+        const dateInp = modal.querySelector('.evd-date-input');
+        const timeInp = modal.querySelector('.evd-time-input');
+        const locationInp = modal.querySelector('.evd-location-input');
+        const categoryInp = modal.querySelector('.evd-category-input');
+        const priceInp = modal.querySelector('.evd-price-input');
+        const descriptionInp = modal.querySelector('.evd-description-input');
+        
+        return (titleInp && titleInp.value !== String(originalEventData.title || '')) ||
+               (dateInp && dateInp.value !== String(originalEventData.date || '')) ||
+               (timeInp && timeInp.value !== String(originalEventData.time || '')) ||
+               (locationInp && locationInp.value !== String(originalEventData.location || '')) ||
+               (categoryInp && categoryInp.value !== String(originalEventData.category || '')) ||
+               (priceInp && priceInp.value !== ((originalEventData.price !== undefined && originalEventData.price !== null) ? String(originalEventData.price) : '')) ||
+               (descriptionInp && descriptionInp.value !== String(originalEventData.description || ''));
+      }
+
       modal._setMode = setEventDetailMode;
 
       // Header close icon removed; overlay click still closes. If reinstated, guard here.
@@ -1077,18 +1107,21 @@
 
       cancelEditBtn.addEventListener('click', async ()=>{
         try {
-          const confirmed = await showConfirmDialog(
-            'Discard Changes?',
-            'Do you want to discard these changes?',
-            'Discard',
-            'Keep Editing'
-          );
-          if(confirmed) {
-            const eventId = overlay.dataset.eventId;
-            if(!eventId) return;
-            const ev = eventsForThisTrip.find(e => e.id === eventId);
-            if(ev) { setEventDetailMode('view'); showEventDetailModal(ev); }
+          // Only show confirmation dialog if there are actual changes
+          if(hasChanges()) {
+            const confirmed = await showConfirmDialog(
+              'Discard Changes?',
+              'Do you want to discard these changes?',
+              'Discard',
+              'Keep Editing'
+            );
+            if(!confirmed) return;
           }
+          
+          const eventId = overlay.dataset.eventId;
+          if(!eventId) return;
+          const ev = eventsForThisTrip.find(e => e.id === eventId);
+          if(ev) { setEventDetailMode('view'); showEventDetailModal(ev); }
         } catch(err) {
           console.error('Error in cancel button handler:', err);
           setEventDetailMode('view');
