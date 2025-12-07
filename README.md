@@ -52,6 +52,7 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
 
 ### Functionalities Implemented:
 - Upcoming itineraries
+- Quick actions
 - Navigation bar:
   - Home: The current screen
   - Itinerary: Where the itineraries are stored
@@ -59,13 +60,12 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
   - Account: Personal info and account management, i.e settings
 
 ### Not Implemented:
-- Quick actions
-- Create Itinerary
-- Create event
+- NA
 
 ### Suggested Steps:
-- Swipe the images on the upper middle part of the screen to switch between stored itineraries
-- Select the **“Itinerary”** option on the toolbar
+1. Swipe the images on the upper middle part of the screen to switch between stored itineraries
+2. (Optional) Slelect any of the four buttons underneath "Quick actions"
+3. Select the **“Itinerary”** option on the toolbar
 
 ---
 
