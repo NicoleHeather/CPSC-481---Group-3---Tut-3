@@ -312,8 +312,8 @@
 .ed-header { padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); }
 .ed-header h3 { margin: 0; font-size: 1.1rem; color: var(--color-text); font-weight: 700; }
 .ed-form { padding: 16px; }
-.ed-form .form-group { margin-bottom: 14px; }
-.ed-form .form-group label { display: block; font-size: 0.95rem; margin-bottom: 6px; color: var(--color-text); font-weight: 600; }
+.cdc-header { padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); }
+.cdc-header h2 { margin: 0; font-size: 1.05rem; color: var(--color-text); text-align: left; font-weight: 700; }
 .ed-form input[type="date"] { width: 100%; padding: 8px 10px; border: 2px solid rgba(0,0,0,0.08); border-radius: 8px; background: var(--color-surface); color: var(--color-text); font-size: 0.95rem; font-family: inherit; }
 .ed-form input[type="date"]:focus { outline: none; border-color: var(--color-accent); }
 .ed-footer { padding: 12px 16px; display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid rgba(0,0,0,0.08); }

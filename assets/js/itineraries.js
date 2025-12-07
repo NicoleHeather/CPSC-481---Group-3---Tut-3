@@ -90,8 +90,8 @@ document.addEventListener('DOMContentLoaded', function () {
         subtitle.className = 'event-card__subtitle';
         // subtitle: only the date range (non-bold), placed under the title
         if (trip.startDate && trip.endDate) {
-          const sDate = new Date(trip.startDate);
-          const eDate = new Date(trip.endDate);
+          const sDate = parseISO(trip.startDate); // use local-midnight parse to avoid TZ shifting a day
+          const eDate = parseISO(trip.endDate);
           const sameYear = sDate.getFullYear() === eDate.getFullYear();
           const s = sDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + (sameYear ? '' : ` ${sDate.getFullYear()}`);
           const e = eDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });

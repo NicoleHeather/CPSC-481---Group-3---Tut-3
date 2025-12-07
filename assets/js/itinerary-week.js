@@ -17,7 +17,23 @@
   function parseISO(d){ return new Date(d + 'T00:00:00'); }
 
   async function loadTrips(){
-    return (await fetch(`${basePath()}/assets/data/trips.json`).then(r=>r.json())).trips || [];
+    const baseTrips = (await fetch(`${basePath()}/assets/data/trips.json`).then(r=>r.json())).trips || [];
+
+    // Apply local edits from the Itineraries page (extras, deleted, overrides)
+    const KEY_EXTRAS = 'itineraries.extras';
+    const KEY_DELETED = 'itineraries.deleted';
+    const KEY_OVERRIDES = 'itineraries.overrides';
+    const loadJSON = (key)=>{ try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } };
+
+    const extras = loadJSON(KEY_EXTRAS) || [];
+    const deleted = new Set((loadJSON(KEY_DELETED) || []));
+    const overrides = loadJSON(KEY_OVERRIDES) || {};
+
+    let merged = baseTrips.concat(extras.map(t=>Object.assign({isExtra:true}, t)));
+    merged = merged.filter(t => !deleted.has(t.id));
+    merged = merged.map(t => overrides[t.id] ? Object.assign({}, t, overrides[t.id]) : t);
+
+    return merged;
   }
   async function loadEvents(){
     try { return (await fetch(`${basePath()}/assets/data/events.json`).then(r=>r.json())).explore || []; } catch(e){ return []; }
@@ -680,7 +696,7 @@
       const modal = document.createElement('div'); modal.className = 'cdc-modal';
       modal.innerHTML = `
         <div class="cdc-header">
-          <h3>Events Will Be Removed</h3>
+          <h2>Events Will Be Removed</h2>
         </div>
         <div class="cdc-body">
           <p>Changing the dates will remove <span class="cdc-event-count"></span> event(s) that fall outside the new date range.</p>
@@ -688,7 +704,7 @@
         </div>
         <div class="cdc-footer">
           <button type="button" class="cdc-cancel btn">Cancel</button>
-          <button type="button" class="cdc-confirm btn btn-danger">Remove Events & Update Dates</button>
+          <button type="button" class="cdc-confirm btn">Remove Events & Update Dates</button>
         </div>
       `;
       overlay.appendChild(modal);
@@ -1454,6 +1470,13 @@
             btn.textContent = 'Demo Reset';
             btn.addEventListener('click', (e)=>{
               e.stopPropagation();
+              // Clear itinerary-level overrides/extras/deleted so global view resets too
+              try {
+                localStorage.removeItem('itineraries.extras');
+                localStorage.removeItem('itineraries.deleted');
+                localStorage.removeItem('itineraries.overrides');
+              } catch(err) { console.warn('[week] demo reset: failed to clear itinerary state', err); }
+
               if (perTripSeed && perTripSeed.length){
                 try{
                   saveEventsToStorage(trip.id, perTripSeed);
@@ -1466,7 +1489,8 @@
                   tripEnd = new Date(trip.endDate + 'T00:00:00');
                   weekStart = new Date(trip.startDate + 'T00:00:00');
                   console.info('[week] Demo Reset: wrote', perTripSeed.length, 'events to storage and reset dates to', trip.startDate, trip.endDate);
-                  render();
+                  // reload to ensure itinerary list pages also pick up cleared overrides
+                  location.reload();
                 }catch(err){ console.warn('[week] reset failed', err); alert('Reset failed - see console for details.'); }
               } else {
                 alert('No per-trip seed file available to reset.');
