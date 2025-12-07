@@ -387,8 +387,33 @@
   border-radius: 6px;
 }
 .day-add:focus { outline: none; }
+.day-add.btn-outline {
+  display: inline-flex !important;
+}
 .edit-dates-btn { margin-top: 8px; }
 .edit-dates-btn:focus { outline: none; }
+
+/* Outlined button style for subtle actions */
+.btn-outline {
+  display: inline-block;
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 10px 14px;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all .12s ease;
+  cursor: pointer;
+}
+.btn-outline:hover {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.4);
+}
+.btn-outline:active {
+  transform: scale(0.98);
+  background: rgba(0, 0, 0, 0.12);
+}
 
 
 /* Controls (Prev / Next) styling: pill links matching brand accent */
