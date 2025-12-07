@@ -57,12 +57,10 @@
   const calendar = $("#calendar");
   const prevDayBtn = $("#prev-day");
   const nextDayBtn = $("#next-day");
-  const addEventBtn = $("#add-event-btn");
-  const eventModal = $("#event-modal");
-  const eventForm = $("#event-form");
 
   let currentTrip = null;
   let currentEvents = [];
+  let addEventModal = null;
 
   (async () => {
     const trips = await loadTrips();
@@ -165,12 +163,51 @@
       </div>
     `;
     addEventCard.addEventListener('click', () => {
-      if (addEventBtn) addEventBtn.click();
+      if (addEventModal) {
+        addEventModal.modal.querySelector('input[name="date"]').value = dateISO;
+        const timeSelect = addEventModal.modal.querySelector('select[name="time"]');
+        if (timeSelect) {
+          timeSelect.innerHTML = '';
+          for (let h = 0; h < 24; h++) {
+            for (let m of [0, 30]) {
+              const time = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+              const opt = document.createElement('option');
+              opt.value = time;
+              opt.textContent = to12Hour(time);
+              timeSelect.appendChild(opt);
+            }
+          }
+          timeSelect.value = '09:00';
+
+          // Update end time when start time or duration changes
+          const endTimeInput = addEventModal.modal.querySelector('input[name="endTime"]');
+          const durSelect = addEventModal.modal.querySelector('select[name="duration"]');
+          
+          const updateEndTime = () => {
+            const start = timeSelect.value;
+            const durMins = 60; // default to 1 hour
+            if (start) {
+              const [h, m] = start.split(':').map(Number);
+              const totalMins = h * 60 + m + durMins;
+              const endH = Math.floor(totalMins / 60) % 24;
+              const endM = totalMins % 60;
+              const endTime24 = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
+              endTimeInput.value = to12Hour(endTime24);
+            }
+          };
+
+          timeSelect.addEventListener('change', updateEndTime);
+          updateEndTime();
+        }
+        addEventModal.show();
+        const titleInput = addEventModal.modal.querySelector('input[name="title"]');
+        if (titleInput) titleInput.focus();
+      }
     });
     addEventCard.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        if (addEventBtn) addEventBtn.click();
+        addEventCard.click();
       }
     });
     calendar.appendChild(addEventCard);
@@ -241,99 +278,62 @@
   }
 
   // Add Event button handler
-  if (addEventBtn && eventModal && eventForm) {
-    addEventBtn.addEventListener('click', () => {
+  addEventModal = window.createAddEventModal({
+    timeFormat: 'select',
+    prefilledDate: dateISO,
+    onSubmit: (formData) => {
       if (!currentTrip) return;
 
-      // Pre-fill date with current day
-      const dateInput = $('#ev-date');
-      if (dateInput) dateInput.value = dateISO;
-
-      // Populate time selector
-      const startSelect = $('#ev-start');
-      if (startSelect) {
-        startSelect.innerHTML = '';
-        for (let h = 0; h < 24; h++) {
-          for (let m of [0, 30]) {
-            const time = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-            const opt = document.createElement('option');
-            opt.value = time;
-            opt.textContent = time;
-            startSelect.appendChild(opt);
-          }
-        }
-        startSelect.value = '09:00';
-      }
-
-      // Update end time based on duration
-      const updateEndTime = () => {
-        const start = $('#ev-start').value;
-        const durMins = parseInt($('#ev-dur').value) || 60;
-        if (start) {
-          const [h, m] = start.split(':').map(Number);
-          const totalMins = h * 60 + m + durMins;
-          const endH = Math.floor(totalMins / 60) % 24;
-          const endM = totalMins % 60;
-          const endTime = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
-          const endInput = $('#ev-end');
-          if (endInput) endInput.value = endTime;
-        }
-      };
-
-      if (startSelect) startSelect.addEventListener('change', updateEndTime);
-      const durSelect = $('#ev-dur');
-      if (durSelect) durSelect.addEventListener('change', updateEndTime);
-      updateEndTime();
-
-      eventModal.classList.remove('hidden');
-      const titleInput = $('#ev-title');
-      if (titleInput) titleInput.focus();
-    });
-
-    const cancelBtn = $('#ev-cancel');
-    if (cancelBtn) {
-      cancelBtn.addEventListener('click', () => {
-        eventModal.classList.add('hidden');
-        eventForm.reset();
-      });
-    }
-
-    eventForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!currentTrip) return;
-
-      const title = $('#ev-title').value.trim();
-      const time = $('#ev-start').value;
-      const durMins = parseInt($('#ev-dur').value) || 60;
-      const duration = (durMins / 60).toFixed(1);
-      const location = $('#ev-location').value.trim();
-      const cost = parseFloat($('#ev-cost').value) || 0;
-      const notes = $('#ev-notes').value.trim();
+      const title = formData.title;
+      const time = formData.time;
+      const endTime = formData.endTime;
+      const location = formData.location;
+      const cost = formData.price;
+      const notes = formData.description;
 
       if (!title) {
         alert('Please enter an event title.');
         return;
       }
 
+      if (!time) {
+        alert('Please enter a start time.');
+        return;
+      }
+
+      if (!endTime) {
+        alert('Please enter an end time.');
+        return;
+      }
+
+      // Calculate duration from start and end time
+      const [startH, startM] = time.split(':').map(Number);
+      const [endH, endM] = endTime.split(':').map(Number);
+      const startTotalMins = startH * 60 + startM;
+      const endTotalMins = endH * 60 + endM;
+      const durationMins = endTotalMins - startTotalMins;
+      const duration = (durationMins / 60).toFixed(1);
+
       const newEvent = {
-        id: `event-${Date.now()}-${Math.random().toString(36).substr(2,9)}`,
+        id: `local-${Date.now()}`,
         title,
         date: dateISO,
         time,
-        duration,
+        duration: String(duration),
         location: location || currentTrip.title,
-        price: cost,
-        description: notes,
-        custom: true
+        category: '',
+        price: parseFloat(cost) || 0,
+        description: notes
       };
 
-      currentEvents.push(newEvent);
+      currentEvents.unshift(newEvent);
       saveEventsToStorage(currentTrip.id, currentEvents);
 
-      eventModal.classList.add('hidden');
-      eventForm.reset();
       renderDayEvents();
-    });
-  }
+    },
+    onCancel: () => {
+      // modal hides automatically
+    }
+  });
 
 })();

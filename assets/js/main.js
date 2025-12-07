@@ -92,3 +92,130 @@ document.addEventListener('DOMContentLoaded', function () {
     goBackOrHome();
   });
 })();
+
+// Reusable Add Event Modal Factory
+window.createAddEventModal = function(options = {}) {
+  const {
+    onSubmit = null,
+    onCancel = null,
+    prefilledDate = null,
+    timeFormat = 'select' // 'select' for daily view, 'time-input' for weekly view
+  } = options;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'qa-overlay';
+  overlay.style.display = 'none';
+
+  const modal = document.createElement('div');
+  modal.className = 'qa-modal evd-modal';
+  
+  modal.innerHTML = `
+    <div class="evd-header qa-header">
+      <h2>Add Event</h2>
+    </div>
+    <div class="evd-body qa-body">
+      <div class="evd-field">
+        <svg class="evd-label" title="Title" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+        <div>
+          <input class="evd-input qa-input" type="text" name="title" placeholder="Event title" aria-label="Title">
+          <span class="evd-error qa-title-error"></span>
+        </div>
+      </div>
+      <div class="evd-field">
+        <svg class="evd-label" title="Date" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        <div>
+          <input class="evd-input qa-input" type="date" name="date" aria-label="Date">
+          <span class="evd-error qa-date-error"></span>
+        </div>
+      </div>
+      <div class="evd-field evd-time-row">
+        <svg class="evd-label" title="Time" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <div>
+          <div class="evd-time-inputs qa-time-container">
+            <!-- Time inputs will be populated based on timeFormat -->
+          </div>
+          <div class="evd-time-inputs">
+            <span class="evd-error qa-time-error"></span>
+            <span class="evd-time-separator" style="visibility:hidden">–</span>
+            <span class="evd-error qa-endtime-error"></span>
+          </div>
+        </div>
+      </div>
+      <div class="evd-field">
+        <svg class="evd-label" title="Location" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        <div>
+          <input class="evd-input qa-input" type="text" name="location" placeholder="Event location" aria-label="Location">
+        </div>
+      </div>
+      <div class="evd-field">
+        <svg class="evd-label" title="Price" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        <div>
+          <input class="evd-input qa-input" type="number" name="price" placeholder="0 for free" min="0" step="0.01" aria-label="Price">
+          <span class="evd-error qa-price-error"></span>
+        </div>
+      </div>
+      <div class="evd-description-field">
+        <svg class="evd-label" title="Description" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        <div>
+          <textarea class="evd-input qa-input" name="description" placeholder="Event details" rows="3" aria-label="Description"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="evd-footer qa-footer">
+      <button type="button" class="btn qa-cancel">Cancel</button>
+      <button type="button" class="btn qa-add">Add Event</button>
+    </div>
+  `;
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  // Setup time inputs based on format
+  const timeContainer = modal.querySelector('.qa-time-container');
+  if (timeFormat === 'select') {
+    timeContainer.innerHTML = `
+      <select class="evd-input qa-input" name="time" required aria-label="Start Time"></select>
+      <span class="evd-time-separator">–</span>
+      <input class="evd-input qa-input" type="text" name="endTime" readonly placeholder="End" aria-label="End Time">
+    `;
+  } else {
+    timeContainer.innerHTML = `
+      <input class="evd-input qa-input" type="time" name="time" aria-label="Start Time" placeholder="Start">
+      <span class="evd-time-separator">–</span>
+      <input class="evd-input qa-input" type="time" name="endTime" aria-label="End Time" placeholder="End">
+    `;
+  }
+
+  const dateInput = modal.querySelector('input[name="date"]');
+  if (prefilledDate) dateInput.value = prefilledDate;
+
+  const cancelBtn = modal.querySelector('.qa-cancel');
+  const addBtn = modal.querySelector('.qa-add');
+
+  cancelBtn.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    if (onCancel) onCancel();
+  });
+
+  addBtn.addEventListener('click', () => {
+    const formData = {
+      title: modal.querySelector('input[name="title"]').value.trim(),
+      date: dateInput.value,
+      time: modal.querySelector('input[name="time"]') ? modal.querySelector('input[name="time"]').value : modal.querySelector('select[name="time"]').value,
+      endTime: modal.querySelector('input[name="endTime"]').value,
+      location: modal.querySelector('input[name="location"]').value.trim(),
+      price: modal.querySelector('input[name="price"]').value,
+      description: modal.querySelector('textarea[name="description"]').value.trim()
+    };
+
+    if (onSubmit) onSubmit(formData);
+    overlay.style.display = 'none';
+  });
+
+  return {
+    show: () => { overlay.style.display = 'block'; },
+    hide: () => { overlay.style.display = 'none'; },
+    modal,
+    overlay
+  };
+};
