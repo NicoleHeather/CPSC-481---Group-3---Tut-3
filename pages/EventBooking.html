@@ -27,42 +27,7 @@
 
             <div class="image-container">
                 <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80"
-                    alt="Event venue" class="event-image" id="page-image" />
-            </div>
-
-            <div style="display:flex; flex-direction:row">
-                <label for="page-date" style="font-weight:bold">Date: </label>
-                <div id="page-date" style="padding-bottom: 10px; padding-left:5px">
-                    Date:
-                </div>
-            </div>
-
-            <div style="display:flex; flex-direction:row">
-                <label for="page-time" style="font-weight:bold">Time: </label>
-                <div id="page-time" style="padding-bottom: 10px; padding-left:5px">
-                    Time:
-                </div>
-            </div>
-
-            <div style="display:flex; flex-direction:row">
-                <label for="page-duration" style="font-weight:bold">Duration: </label>
-                <div id="page-duration" style="padding-bottom: 10px; padding-left:5px">
-                    Duration:
-                </div>
-            </div>
-
-            <div style="display:flex; flex-direction:row">
-                <label for="page-location" style="font-weight:bold">Location: </label>
-                <div id="page-location" style="padding-bottom: 10px; padding-left:5px">
-                    Location:
-                </div>
-            </div>
-
-            <div style="display:flex; flex-direction:row; padding-bottom:10px">
-                <label for="page-cost" style="font-weight:bold">Cost: </label>
-                <div id="page-cost" style="padding-left:5px; padding-bottom: 2px;">
-                    Cost:
-                </div>
+                    alt="Event venue" class="event-image" id="page-image"/>
             </div>
 
             <div class="event-details">
@@ -117,14 +82,14 @@
     <div class="modal" id="save-modal">
         <div id="save-success-popup">
             <div id="save-success-container">
-                <img style="width:70px; height:70px;" src="../assets/img/Checkmark.png" alt="Success">
+                <img style="width:30%; height:30%;" src="../assets/img/Checkmark.png" alt="Success">
                 <p id="save-success-message">Event saved successfully!</p>
                 <button class="btn" id="save-success-ok">OK</button>
             </div>
         </div>
         <div id="unsave-success-popup">
             <div id="unsave-success-container">
-                <img style="width:70px; height:70px;" src="../assets/img/Checkmark.png" alt="Success">
+                <img style="width:30%; height:30%;" src="../assets/img/Checkmark.png" alt="Success">
                 <p id="unsave-success-message">Event removed from saved!</p>
                 <button class="btn" id="unsave-success-ok">OK</button>
             </div>
@@ -141,11 +106,19 @@
     const eventId = urlParams.get('id');
     const source = urlParams.get('source') || 'explore';
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const eventId = parseInt(urlParams.get('id'));
-        const source = urlParams.get('source') || 'explore';
+    const STORAGE_KEY = 'user_saved_events';
+    
+    const savedEventsFromStorage = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    console.log('Events in localStorage:', savedEventsFromStorage);
+    console.log('Is event in localStorage?', savedEventsFromStorage.some(e => e.id === eventId));
 
-        const STORAGE_KEY = 'user_saved_events';
+    // Initialize when page loads - SINGLE event listener
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM Content Loaded');
+        loadEventDetails();
+        setupSaveButton();
+        setupPopupListeners();
+    });
 
     
     function loadEventDetails() {
@@ -184,27 +157,18 @@
                     if (event) {
                         console.log('✅ Found in saved array:', event.title, event);
                     }
-
-                    if (!event) {
-                        event = data.saved.find(e => e.id === eventId);
-                        if (event) {
-                            console.log('✅ Found in saved array:', event.title);
-                        }
-                    }
-
-                    if (!event) {
-                        console.error('❌ Event not found in JSON file:', eventId);
-                        console.log('Explore array IDs:', data.explore.map(e => e.id));
-                        console.log('Saved array IDs:', data.saved.map(e => e.id));
-
-                        const lastChance = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]').find(e => e.id === eventId);
-                        if (lastChance) {
-                            console.log('Found in localStorage on second check:', lastChance.title);
-                            window.currentEvent = lastChance;
-                            updatePage();
-                            return;
-                        }
-
+                }
+                
+                if (!event) {
+                    console.error('❌ Event not found in JSON file:', eventId);
+                    console.log('Explore array IDs:', data.explore.map(e => e.id));
+                    console.log('Saved array IDs:', data.saved.map(e => e.id));
+                    
+                    const lastChance = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]').find(e => e.id === eventId);
+                    if (lastChance) {
+                        console.log('Found in localStorage on second check:', lastChance.title);
+                        window.currentEvent = lastChance;
+                        updatePage();
                         return;
                     }
                     
@@ -313,100 +277,70 @@
         updateSaveButton();
     }
 
-        function updatePage() {
-            if (!window.currentEvent) {
-                console.error('No current event to update page');
-                return;
-            }
-
-            console.log('Updating page for:', window.currentEvent.title);
-
-            document.getElementById('page-title').textContent = window.currentEvent.title;
-            document.getElementById('page-image').src = window.currentEvent.img;
-            document.getElementById('booking-request-btn').href =
-                `BookingRequest.html?id=${window.currentEvent.id}&title=${encodeURIComponent(window.currentEvent.title)}&date=${window.currentEvent.date}&time=${window.currentEvent.time}`;
-
-            // Update description if it exists
-            const descriptionEl = document.getElementById('page-description');
-            if (descriptionEl && window.currentEvent.description) {
-                descriptionEl.innerHTML = `<p>${window.currentEvent.description}</p>`;
-            }
-
-            updateSaveButton();
-        }
-
-        // Setup save button event listener
-        function setupSaveButton() {
-            const saveBtn = document.getElementById('save-btn');
-            if (saveBtn) {
-                saveBtn.onclick = function () {
-                    console.log('Save button clicked');
-                    if (window.currentEvent) {
-                        const savedEvents = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-                        const isSaved = savedEvents.some(e => e.id === window.currentEvent.id);
-
-                        console.log('Current saved state:', isSaved ? 'SAVED' : 'NOT SAVED');
-
-                        if (isSaved) {
-                            unsaveEvent(window.currentEvent);
-                        } else {
-                            saveEvent(window.currentEvent);
-                        }
+    // Setup save button event listener
+    function setupSaveButton() {
+        const saveBtn = document.getElementById('save-btn');
+        if (saveBtn) {
+            saveBtn.onclick = function() {
+                console.log('Save button clicked');
+                if (window.currentEvent) {
+                    const savedEvents = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                    const isSaved = savedEvents.some(e => e.id === window.currentEvent.id);
+                    
+                    console.log('Current saved state:', isSaved ? 'SAVED' : 'NOT SAVED');
+                    
+                    if (isSaved) {
+                        unsaveEvent(window.currentEvent);
                     } else {
-                        console.error('No current event when save button clicked');
+                        saveEvent(window.currentEvent);
                     }
-                };
-            }
+                } else {
+                    console.error('No current event when save button clicked');
+                }
+            };
         }
+    }
 
-        function setupPopupListeners() {
-            // Save popup OK button
-            const saveOkBtn = document.getElementById('save-success-ok');
-            if (saveOkBtn) {
-                saveOkBtn.onclick = function () {
-                    closeSavePopup();
-                };
-            }
-
-            // Unsave popup OK button
-            const unsaveOkBtn = document.getElementById('unsave-success-ok');
-            if (unsaveOkBtn) {
-                unsaveOkBtn.onclick = function () {
-                    closeSavePopup();
-                    // If we came from saved page, go back
-                    if (source === 'saved') {
-                        setTimeout(() => {
-                            window.location.href = '../pages/SavedEvents.html';
-                        }, 300);
-                    }
-                };
-            }
-
-            // Modal close when clicking outside
-            const modal = document.getElementById('save-modal');
-            if (modal) {
-                modal.addEventListener('click', function (e) {
-                    if (e.target === modal) {
-                        closeSavePopup();
-                    }
-                });
-            }
-
-            // Escape key to close modal
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
+    function setupPopupListeners() {
+        // Save popup OK button
+        const saveOkBtn = document.getElementById('save-success-ok');
+        if (saveOkBtn) {
+            saveOkBtn.onclick = function() {
+                closeSavePopup();
+            };
+        }
+        
+        // Unsave popup OK button
+        const unsaveOkBtn = document.getElementById('unsave-success-ok');
+        if (unsaveOkBtn) {
+            unsaveOkBtn.onclick = function() {
+                closeSavePopup();
+                // If we came from saved page, go back
+                if (source === 'saved') {
+                    setTimeout(() => {
+                        window.location.href = '../pages/SavedEvents.html';
+                    }, 300);
+                }
+            };
+        }
+        
+        // Modal close when clicking outside
+        const modal = document.getElementById('save-modal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
                     closeSavePopup();
                 }
             });
         }
-
-        // Update save button appearance
-        function updateSaveButton() {
-            const saveBtn = document.getElementById('save-btn');
-            if (!saveBtn) {
-                console.error('Save button not found');
-                return;
+        
+        // Escape key to close modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeSavePopup();
             }
+        });
+    }
 
     // Update save button appearance
     function updateSaveButton() {
@@ -508,58 +442,38 @@
         savePopup.style.display = 'block';
         unsavePopup.style.display = 'none';
         
-        // Auto-close after 5 seconds
+        // Auto-close after 3 seconds
         setTimeout(() => {
             if (modal.style.display === 'flex') {
                 closeSavePopup();
             }
-        }, 5000);
+        }, 3000);
     }
 
-            const savedEvents = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-            const isSaved = savedEvents.some(e => e.id === window.currentEvent.id);
-
-            console.log('updateSaveButton - Is saved?', isSaved, 'for event:', window.currentEvent.id);
-
-            if (isSaved) {
-                saveBtn.textContent = '✓ Saved to History';
-                saveBtn.style.backgroundColor = 'var(--color-primary)';
-                saveBtn.style.color = 'white';
-            } else {
-                saveBtn.textContent = 'Save to History';
-                saveBtn.style.backgroundColor = 'var(--color-accent)';
-                saveBtn.style.color = 'white';
-            }
+    function showUnsavePopup(eventTitle = '') {
+        console.log('Showing unsave popup');
+        const modal = document.getElementById('save-modal');
+        const savePopup = document.getElementById('save-success-popup');
+        const unsavePopup = document.getElementById('unsave-success-popup');
+        const message = document.getElementById('unsave-success-message');
+        
+        if (!modal || !savePopup || !unsavePopup || !message) {
+            console.error('Popup elements not found');
+            alert(`"${eventTitle}" removed from saved!`);
+            return;
         }
-
-        // Save event function
-        function saveEvent(event) {
-            console.log('Saving event:', event.title, 'ID:', event.id);
-
-            let savedEvents = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-            // Check if already saved
-            if (!savedEvents.some(e => e.id === event.id)) {
-                savedEvents.push(event);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(savedEvents));
-
-                console.log('Event saved to localStorage. Total saved:', savedEvents.length);
-
-                // Show popup notification
-                showSavePopup(event.title);
-
-                // Update button
-                updateSaveButton();
-            } else {
-                console.log('Event already saved');
-            }
+        
+        if (eventTitle) {
+            message.textContent = `"${eventTitle}" removed from saved!`;
+        } else {
+            message.textContent = 'Event removed from saved!';
         }
         
         modal.style.display = 'flex';
         savePopup.style.display = 'none';
         unsavePopup.style.display = 'block';
         
-        // Auto-close after 5 seconds
+        // Auto-close after 3 seconds
         setTimeout(() => {
             if (modal.style.display === 'flex') {
                 closeSavePopup();
@@ -570,56 +484,19 @@
                     }, 300);
                 }
             }
-        }, 5000);
+        }, 3000);
     }
 
-        function showUnsavePopup(eventTitle = '') {
-            console.log('Showing unsave popup');
-            const modal = document.getElementById('save-modal');
-            const savePopup = document.getElementById('save-success-popup');
-            const unsavePopup = document.getElementById('unsave-success-popup');
-            const message = document.getElementById('unsave-success-message');
-
-            if (!modal || !savePopup || !unsavePopup || !message) {
-                console.error('Popup elements not found');
-                alert(`"${eventTitle}" removed from saved!`);
-                return;
-            }
-
-            if (eventTitle) {
-                message.textContent = `"${eventTitle}" removed from saved!`;
-            } else {
-                message.textContent = 'Event removed from saved!';
-            }
-
-            modal.style.display = 'flex';
-            savePopup.style.display = 'none';
-            unsavePopup.style.display = 'block';
-
-            // Auto-close after 3 seconds
-            setTimeout(() => {
-                if (modal.style.display === 'flex') {
-                    closeSavePopup();
-                    // If from saved page, go back
-                    if (source === 'saved') {
-                        setTimeout(() => {
-                            window.location.href = '../pages/SavedEvents.html';
-                        }, 300);
-                    }
-                }
-            }, 3000);
-        }
-
-        function closeSavePopup() {
-            console.log('Closing popup');
-            const modal = document.getElementById('save-modal');
-            const savePopup = document.getElementById('save-success-popup');
-            const unsavePopup = document.getElementById('unsave-success-popup');
-
-            if (modal) modal.style.display = 'none';
-            if (savePopup) savePopup.style.display = 'none';
-            if (unsavePopup) unsavePopup.style.display = 'none';
-        }
+    function closeSavePopup() {
+        console.log('Closing popup');
+        const modal = document.getElementById('save-modal');
+        const savePopup = document.getElementById('save-success-popup');
+        const unsavePopup = document.getElementById('unsave-success-popup');
+        
+        if (modal) modal.style.display = 'none';
+        if (savePopup) savePopup.style.display = 'none';
+        if (unsavePopup) unsavePopup.style.display = 'none';
+    }
     </script>
 </body>
 

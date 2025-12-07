@@ -211,8 +211,7 @@
 }
 
 #save-success-ok, #unsave-success-ok {
-    width: auto;
-    min-width: 160px;
+    width: 100%;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     font-weight: 400;
@@ -222,11 +221,11 @@
 @keyframes popupAppear {
     0% {
         opacity: 0;
-        transform: scale(0.8);
+        transform: translate(-50%, -50%) scale(0.8);
     }
     100% {
         opacity: 1;
-        transform: scale(1);
+        transform: translate(-50%, -50%) scale(1);
     }
 }
 
