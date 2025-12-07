@@ -1,7 +1,7 @@
 {
   "explore": [
     {
-      "id": 1,
+      "id": "events-1",
       "title": "Jazz Night",
       "location": "Calgary",
       "category": "Music",
@@ -14,7 +14,7 @@
       "description": "An evening alive with soulful melodies, smooth rhythms, and the timeless charm of live jazz."
     },
     {
-      "id": 2,
+      "id": "events-2",
       "title": "Banff Guided Hike",
       "location": "Banff",
       "category": "Attraction",
@@ -27,7 +27,7 @@
       "description": "Join us for an unforgettable guided hiking experience through the stunning landscapes of Banff National Park, a UNESCO World Heritage Site. Our expert local guides will lead you through some of the most scenic trails in the Canadian Rockies, sharing their knowledge of the area's geology, ecology, and history."
     },
     {
-      "id": 3,
+      "id": "events-3",
       "title": "Sky Bistro Dinner",
       "location": "Banff",
       "category": "Restaurant",
@@ -40,7 +40,7 @@
       "description": "An elevated dining experience where gourmet flavors meet breathtaking views, creating an unforgettable evening above the city."
     },
     {
-      "id": 4,
+      "id": "events-4",
       "title": "Downtown Art Walk",
       "location": "Calgary",
       "category": "Attraction",
@@ -53,7 +53,7 @@
       "description": "A vibrant journey through city streets where galleries, murals, and local artists bring creativity to life."
     },
     {
-      "id": 5,
+      "id": "events-5",
       "title": "Chateau Weekend",
       "location": "Canmore",
       "category": "Hotel",
@@ -66,7 +66,7 @@
       "description": "A luxurious escape filled with fine wine, elegant surroundings, and timeless relaxation in a grand estate."
     },
     {
-      "id": 6,
+      "id": "events-6",
       "title": "Outdoor Cinema",
       "location": "Calgary",
       "category": "Attraction",
@@ -79,7 +79,7 @@
       "description": "An open-air movie night under the stars, blending film, fresh air, and community together."
     },
     {
-      "id": 7,
+      "id": "events-7",
       "title": "Rock Concert",
       "location": "Calgary",
       "category": "Music",
@@ -92,7 +92,7 @@
       "description": "An electrifying night of powerful riffs, thundering drums, and raw energy that shakes the crowd."
     },
     {
-      "id": 8,
+      "id": "events-8",
       "title": "Lakeside Brunch",
       "location": "Canmore",
       "category": "Restaurant",
@@ -107,48 +107,52 @@
   ],
   "saved": [
     {
-      "id": 101,
+      "id": "events-101",
       "title": "VIP Jazz Lounge",
       "location": "Calgary",
       "category": "Music",
       "date": "2025-06-15",
       "time": "21:00",
+      "duration": "3.5",
       "price": 150,
       "img": "https://images.unsplash.com/photo-1514525253440-b393452e8d26?auto=format&fit=crop&w=800&q=80",
       "custom": false,
       "description": "An exclusive haven of smooth rhythms, refined cocktails, and intimate ambiance for true jazz lovers."
     },
     {
-      "id": 102,
+      "id": "events-102",
       "title": "Romantic Dinner",
       "location": "Banff",
       "category": "Restaurant",
       "date": "2025-06-16",
       "time": "19:00",
+      "duration": "2",
       "price": 200,
       "img": "https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?auto=format&fit=crop&w=800&q=80",
       "custom": false,
       "description": "An intimate evening of fine cuisine, candlelight, and heartfelt connection shared in a warm, elegant setting."
     },
     {
-      "id": 103,
+      "id": "events-103",
       "title": "Family Museum Pass",
       "location": "Calgary",
       "category": "Attraction",
       "date": "2025-06-20",
       "time": "10:00",
+      "duration": "3",
       "price": 45,
       "img": "https://images.unsplash.com/photo-1566127444979-b3d2b654e3d7?auto=format&fit=crop&w=800&q=80",
       "custom": false,
       "description": "A shared ticket to discovery, offering families unlimited access to exhibits, history, and hands-on learning together."
     },
     {
-      "id": 104,
+      "id": "events-104",
       "title": "Mountain Resort",
       "location": "Canmore",
       "category": "Hotel",
       "date": "2025-07-05",
       "time": "14:00",
+      "duration": "2",
       "price": 400,
       "img": "https://images.unsplash.com/photo-1571896349842-6e5a513e610a?auto=format&fit=crop&w=800&q=80",
       "custom": false,

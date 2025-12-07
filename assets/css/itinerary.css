@@ -312,6 +312,28 @@
 .cdc-confirm { background: #c8102e; color: white; }
 .cdc-confirm:hover { background: #a80a24; }
 
+/* Event detail modal styles */
+.evd-overlay { position: fixed; inset: 0; background: rgba(2,6,10,0.45); display: none; align-items: center; justify-content: center; z-index: 1200; padding: 16px; }
+.evd-modal { background: var(--color-surface); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
+.evd-header { padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); }
+.evd-header h3 { margin: 0; font-size: 1.2rem; color: var(--color-text); font-weight: 700; }
+.evd-body { padding: 16px; }
+.evd-image-container { margin-bottom: 16px; }
+.evd-image { width: 100%; height: auto; border-radius: 8px; object-fit: cover; max-height: 250px; }
+.evd-field { margin-bottom: 12px; font-size: 0.95rem; line-height: 1.5; }
+.evd-label { font-weight: 600; color: var(--color-muted); display: inline-block; min-width: 80px; }
+.evd-title { color: var(--color-text); font-weight: 600; font-size: 1rem; }
+.evd-date, .evd-time, .evd-location, .evd-category, .evd-price { color: var(--color-text); }
+.evd-description-field { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.08); }
+.evd-description-field .evd-label { display: block; margin-bottom: 8px; font-size: 0.95rem; }
+.evd-description { margin: 0; color: var(--color-text); font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; }
+.evd-footer { padding: 12px 16px; display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid rgba(0,0,0,0.08); }
+.evd-footer .btn { flex: 0 0 auto; }
+.evd-close { background: rgba(0,0,0,0.08); color: var(--color-text); }
+.evd-close:hover { background: rgba(0,0,0,0.12); }
+.evd-edit { background: var(--color-primary); color: white; }
+.evd-edit:hover { background: #a00d25; }
+
 /* Edit Dates button keeps only positioning/spacing specifics; visuals come from .btn-accent-outline */
 .day-add {
   /* Compact circular add button: use inline-flex so the '+' centers

@@ -424,6 +424,147 @@
       m.querySelector('.cdc-confirm').focus(); 
     }
 
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Event Detail Modal
+    // ─────────────────────────────────────────────────────────────────────────────
+    let _eventDetailModal = null;
+    function ensureEventDetailModal(){
+      if(_eventDetailModal) return _eventDetailModal;
+      const overlay = document.createElement('div'); overlay.className='evd-overlay';
+      const modal = document.createElement('div'); modal.className='evd-modal';
+      modal.innerHTML = `
+        <div class="evd-header"><h3>Event Details</h3></div>
+        <div class="evd-body">
+          <div class="evd-image-container"></div>
+          <div class="evd-field"><span class="evd-label">Title:</span> <span class="evd-title"></span></div>
+          <div class="evd-field"><span class="evd-label">Date:</span> <span class="evd-date"></span></div>
+          <div class="evd-field"><span class="evd-label">Time:</span> <span class="evd-time"></span></div>
+          <div class="evd-field evd-location-field"><span class="evd-label">Location:</span> <span class="evd-location"></span></div>
+          <div class="evd-field evd-category-field"><span class="evd-label">Category:</span> <span class="evd-category"></span></div>
+          <div class="evd-field evd-price-field"><span class="evd-label">Price:</span> <span class="evd-price"></span></div>
+          <div class="evd-description-field">
+            <div class="evd-label">Description:</div>
+            <p class="evd-description"></p>
+          </div>
+        </div>
+        <div class="evd-footer">
+          <button type="button" class="btn evd-close">Close</button>
+          <button type="button" class="btn btn-primary evd-edit">Edit</button>
+          <button type="button" class="btn btn-danger evd-remove">Remove</button>
+        </div>
+      `;
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      const closeBtn = modal.querySelector('.evd-close');
+      const editBtn = modal.querySelector('.evd-edit');
+      const removeBtn = modal.querySelector('.evd-remove');
+
+      closeBtn.addEventListener('click', ()=>{ overlay.style.display='none'; });
+      overlay.addEventListener('click', (e)=>{ if(e.target === overlay) overlay.style.display='none'; });
+
+      editBtn.addEventListener('click', ()=>{
+        const eventId = overlay.dataset.eventId;
+        if(!eventId) return;
+        // TODO: Implement edit functionality
+        alert('Edit functionality coming soon!');
+      });
+
+      removeBtn.addEventListener('click', ()=>{
+        const eventId = overlay.dataset.eventId;
+        if(!eventId) return;
+        overlay.style.display='none';
+        const event = eventsForThisTrip.find(e => e.id === eventId);
+        if(event) showConfirmDeleteModal(event);
+      });
+
+      _eventDetailModal = overlay;
+      return overlay;
+    }
+
+    function showEventDetailModal(event){
+      const modal = ensureEventDetailModal();
+      modal.dataset.eventId = event.id;
+      
+      const titleEl = modal.querySelector('.evd-title');
+      const dateEl = modal.querySelector('.evd-date');
+      const timeEl = modal.querySelector('.evd-time');
+      const locationEl = modal.querySelector('.evd-location');
+      const categoryEl = modal.querySelector('.evd-category');
+      const priceEl = modal.querySelector('.evd-price');
+      const descriptionEl = modal.querySelector('.evd-description');
+      const imageContainer = modal.querySelector('.evd-image-container');
+      const locationField = modal.querySelector('.evd-location-field');
+      const categoryField = modal.querySelector('.evd-category-field');
+      const priceField = modal.querySelector('.evd-price-field');
+      const descriptionField = modal.querySelector('.evd-description-field');
+
+      titleEl.textContent = event.title || 'Untitled Event';
+      
+      // Format date
+      if(event.date){
+        const dateObj = parseISO(event.date);
+        dateEl.textContent = dateObj.toLocaleDateString(undefined, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+      } else {
+        dateEl.textContent = 'No date';
+      }
+      
+      // Format time with end time if duration exists
+      if(event.time){
+        let timeDisplay = to12Hour(event.time);
+        if(event.duration){
+          const endTime24 = calculateEndTime(event.time, event.duration);
+          timeDisplay += ` - ${to12Hour(endTime24)}`;
+        }
+        timeEl.textContent = timeDisplay;
+      } else {
+        timeEl.textContent = 'No time specified';
+      }
+      
+      // Location
+      if(event.location){
+        locationEl.textContent = event.location;
+        locationField.style.display = 'block';
+      } else {
+        locationField.style.display = 'none';
+      }
+      
+      // Category
+      if(event.category){
+        categoryEl.textContent = event.category;
+        categoryField.style.display = 'block';
+      } else {
+        categoryField.style.display = 'none';
+      }
+      
+      // Price
+      if(event.price !== undefined && event.price !== null){
+        priceEl.textContent = event.price === 0 ? 'Free' : `$${event.price}`;
+        priceField.style.display = 'block';
+      } else {
+        priceField.style.display = 'none';
+      }
+      
+      // Description
+      if(event.description){
+        descriptionEl.textContent = event.description;
+        descriptionField.style.display = 'block';
+      } else {
+        descriptionField.style.display = 'none';
+      }
+      
+      // Image
+      if(event.img){
+        imageContainer.innerHTML = `<img src="${event.img}" alt="${event.title}" class="evd-image">`;
+        imageContainer.style.display = 'block';
+      } else {
+        imageContainer.innerHTML = '';
+        imageContainer.style.display = 'none';
+      }
+      
+      modal.style.display = 'flex';
+    }
+
     // Compute the week that contains the trip.startDate. Week starts Monday.
     function startOfWeekMonday(d){
       const date = new Date(d);
@@ -611,6 +752,8 @@
             // Display time in 12-hour format
             const timeDisplay = to12Hour(ev.time);
             card.innerHTML = `<div class="event-time">${timeDisplay}</div><div class="event-title">${ev.title}</div>`;
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', ()=> showEventDetailModal(ev));
             inner.appendChild(card);
           });
           const hidden = todays.length - SHOW;
