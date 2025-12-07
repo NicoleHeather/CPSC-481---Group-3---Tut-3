@@ -11,18 +11,32 @@
 .day-event-card {
   background: var(--color-surface);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   border: 1px solid rgba(0,0,0,0.06);
-  padding: 16px;
+  padding: 20px;
   display: flex;
   gap: 16px;
   cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+  min-height: 44px;
+  position: relative;
+}
+
+.day-event-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--color-primary);
+  border-radius: 12px 0 0 12px;
 }
 
 .day-event-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: rgba(255,127,39,0.02);
 }
 
 .day-event-card:active {
@@ -32,13 +46,17 @@
 /* Time column */
 .day-event-card__time {
   flex-shrink: 0;
-  width: 80px;
-  font-size: 0.9rem;
+  width: 65px;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--color-primary);
-  padding-top: 2px;
-  line-height: 1.6;
+  padding-left: 8px;
+  line-height: 1.4;
   white-space: pre-line;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 /* Content column */
@@ -46,19 +64,30 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  position: relative;
 }
 
 .day-event-card__title {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--color-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 60px;
+  word-break: break-word;
+}
+
+.day-event-card__icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
 }
 
 .day-event-card__location {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--color-muted);
 }
 
@@ -67,13 +96,25 @@
   font-size: 0.9rem;
   color: var(--color-text);
   line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .day-event-card__price {
+  position: absolute;
+  top: 0;
+  right: 0;
   margin: 0;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-accent);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: white;
+  background: var(--color-accent);
+  padding: 4px 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Old timeline styles (kept for compatibility but hidden by new layout) */
@@ -196,4 +237,40 @@
 .calendar .events-layer .event-block .event-title { display: block; font-weight: 700; }
 .calendar .events-layer .event-block .event-time  { display: block; margin-top: 2px; }
 
+/* Add Event Card */
+.day-event-card.add-event-card {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px dashed rgba(0, 0, 0, 0.15);
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  min-height: 22px;
+  padding: 12px 20px;
+}
+
+.day-event-card.add-event-card:hover {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.25);
+  transform: none;
+}
+
+.day-event-card.add-event-card::before {
+  display: none;
+}
+
+.day-event-card.add-event-card .day-event-card__time {
+  display: none;
+}
+
+.day-event-card.add-event-card .day-event-card__content {
+  flex: 1;
+  text-align: center;
+  padding: 8px 0;
+}
+
+.day-event-card.add-event-card .day-event-card__title {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}
 

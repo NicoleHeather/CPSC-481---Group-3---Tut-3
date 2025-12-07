@@ -35,6 +35,15 @@
 
   function parseISO(d){ return new Date(d + 'T00:00:00'); }
 
+  // Convert 24-hour time to 12-hour format with AM/PM
+  function to12Hour(time24) {
+    if (!time24) return '';
+    const [hours, minutes] = time24.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours % 12 || 12;
+    return `${hours12}:${minutes.toString().padStart(2,'0')} ${period}`;
+  }
+
   const params = new URLSearchParams(location.search);
   const tripId = params.get("trip");
   const dateISO = params.get("date");
@@ -46,20 +55,14 @@
 
   const daySubtitle = $("#day-subtitle");
   const calendar = $("#calendar");
-  const backBtn = $("#back-to-week-btn");
+  const prevDayBtn = $("#prev-day");
+  const nextDayBtn = $("#next-day");
   const addEventBtn = $("#add-event-btn");
   const eventModal = $("#event-modal");
   const eventForm = $("#event-form");
 
   let currentTrip = null;
   let currentEvents = [];
-
-  // Update back button to return to weekly view with trip parameter
-  if (backBtn) {
-    backBtn.addEventListener('click', () => {
-      location.href = `./ItineraryWeek.html?trip=${encodeURIComponent(tripId)}`;
-    });
-  }
 
   (async () => {
     const trips = await loadTrips();
@@ -72,6 +75,25 @@
     }
 
     currentTrip = trip;
+
+    // Setup prev/next day navigation
+    if (prevDayBtn) {
+      prevDayBtn.addEventListener('click', () => {
+        const currentDate = parseISO(dateISO);
+        currentDate.setDate(currentDate.getDate() - 1);
+        const newDateISO = currentDate.toISOString().split('T')[0];
+        location.href = `./ItineraryDay.html?trip=${encodeURIComponent(tripId)}&date=${newDateISO}`;
+      });
+    }
+
+    if (nextDayBtn) {
+      nextDayBtn.addEventListener('click', () => {
+        const currentDate = parseISO(dateISO);
+        currentDate.setDate(currentDate.getDate() + 1);
+        const newDateISO = currentDate.toISOString().split('T')[0];
+        location.href = `./ItineraryDay.html?trip=${encodeURIComponent(tripId)}&date=${newDateISO}`;
+      });
+    }
 
     // Load events: prefer localStorage, fallback to per-trip seed, then deterministic generation
     let eventsForThisTrip = [];
@@ -101,10 +123,17 @@
   function renderDayEvents() {
     if (!currentTrip || !currentEvents) return;
 
-    // Update subtitle with formatted date only
+    // Update subtitle with formatted date and day counter
     const dateObj = parseISO(dateISO);
     const formatted = dateObj.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-    daySubtitle.textContent = formatted;
+    
+    // Calculate which day of the trip this is
+    const tripStartDate = parseISO(currentTrip.startDate);
+    const tripEndDate = parseISO(currentTrip.endDate);
+    const totalDays = Math.floor((tripEndDate - tripStartDate) / (1000 * 60 * 60 * 24)) + 1;
+    const currentDayNumber = Math.floor((dateObj - tripStartDate) / (1000 * 60 * 60 * 24)) + 1;
+    
+    daySubtitle.textContent = `${formatted} · Viewing Day ${currentDayNumber} of ${totalDays}`;
 
     // Filter events for this specific date
     const dayEvents = currentEvents.filter(ev => ev.date === dateISO);
@@ -125,6 +154,27 @@
     calendar.innerHTML = '';
     calendar.className = 'day-events-list';
 
+    // Add the "Add Event" card as the first card
+    const addEventCard = document.createElement('article');
+    addEventCard.className = 'day-event-card add-event-card';
+    addEventCard.setAttribute('role', 'button');
+    addEventCard.setAttribute('tabindex', '0');
+    addEventCard.innerHTML = `
+      <div class="day-event-card__content">
+        <h3 class="day-event-card__title">+ Add Event</h3>
+      </div>
+    `;
+    addEventCard.addEventListener('click', () => {
+      if (addEventBtn) addEventBtn.click();
+    });
+    addEventCard.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (addEventBtn) addEventBtn.click();
+      }
+    });
+    calendar.appendChild(addEventCard);
+
     dayEvents.forEach(ev => {
       const card = document.createElement('article');
       card.className = 'day-event-card';
@@ -134,24 +184,44 @@
       const time = ev.time || '';
       const duration = ev.duration ? parseFloat(ev.duration) : 0;
       
-      // Calculate end time
-      let timeDisplay = time;
+      // Calculate end time and convert to 12-hour format
+      let timeDisplay = to12Hour(time);
       if (time && duration) {
         const [h, m] = time.split(':').map(Number);
         const totalMins = h * 60 + m + (duration * 60);
         const endH = Math.floor(totalMins / 60) % 24;
         const endM = totalMins % 60;
-        const endTime = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
-        timeDisplay = `${time}\n–\n${endTime}`;
+        const endTime24 = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
+        const endTime12 = to12Hour(endTime24);
+        timeDisplay = `${to12Hour(time)}\n–\n${endTime12}`;
       }
+
+      // Simple category icon mapping
+      const getIcon = (title, category) => {
+        const t = (title || '').toLowerCase();
+        if (t.includes('yoga') || t.includes('fitness')) return '🧘';
+        if (t.includes('museum') || t.includes('gallery') || t.includes('art')) return '🏛️';
+        if (t.includes('food') || t.includes('lunch') || t.includes('dinner') || t.includes('breakfast')) return '🍽️';
+        if (t.includes('hike') || t.includes('walk') || t.includes('trail')) return '🥾';
+        if (t.includes('coffee') || t.includes('cafe')) return '☕';
+        if (t.includes('concert') || t.includes('music')) return '🎵';
+        if (t.includes('park') || t.includes('garden')) return '🌳';
+        if (t.includes('cycling') || t.includes('bike')) return '🚴';
+        if (t.includes('jazz') || t.includes('show')) return '🎭';
+        return '📌';
+      };
+
+      const icon = getIcon(ev.title, ev.category);
 
       card.innerHTML = `
         <div class="day-event-card__time">${timeDisplay}</div>
         <div class="day-event-card__content">
-          <h3 class="day-event-card__title">${ev.title || 'Untitled Event'}</h3>
-          ${ev.location ? `<p class="day-event-card__location">📍 ${ev.location}</p>` : ''}
+          <h3 class="day-event-card__title">
+            ${ev.title || 'Untitled Event'}
+          </h3>
+          ${ev.location ? `<p class="day-event-card__location">${ev.location}</p>` : ''}
           ${ev.description ? `<p class="day-event-card__description">${ev.description}</p>` : ''}
-          ${ev.price ? `<p class="day-event-card__price">$${ev.price}</p>` : ''}
+          ${ev.price ? `<div class="day-event-card__price">$${ev.price}</div>` : ''}
         </div>
       `;
 
