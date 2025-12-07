@@ -387,7 +387,7 @@
 .evd-mode-edit .evd-description-input { display: block !important; }
 .evd-cancel { background: rgba(0,0,0,0.08); color: var(--color-text); }
 .evd-cancel:hover { background: rgba(0,0,0,0.12); }
-.evd-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 16px; border-top: 1px solid rgba(0,0,0,0.08); }
+.evd-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 16px; }
 .evd-error { display: none; color: #c1121f; font-size: 0.8rem; margin-top: 3px; font-weight: 500; }
 .evd-mode-edit .evd-error { display: block; }
 .qa-modal .evd-error { display: block; }
