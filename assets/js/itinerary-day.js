@@ -1,140 +1,269 @@
 // ======================================================================
-// itinerary-day.js (FINAL — Sequential Fill)
+// itinerary-day.js — Synced with weekly view, card-based layout
 // ======================================================================
 (function () {
   const $ = (sel, node = document) => node.querySelector(sel);
 
   async function loadTrips() {
     const base = window.location.pathname.includes("/pages/") ? ".." : ".";
-    return (await fetch(`${base}/assets/data/trips.json`).then(r => r.json())).trips || [];
+    // Apply local edits from Itineraries page
+    const KEY_EXTRAS = 'itineraries.extras';
+    const KEY_DELETED = 'itineraries.deleted';
+    const KEY_OVERRIDES = 'itineraries.overrides';
+    const loadJSON = (key)=>{ try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } };
+
+    const baseTrips = (await fetch(`${base}/assets/data/trips.json`).then(r=>r.json())).trips || [];
+    const extras = loadJSON(KEY_EXTRAS) || [];
+    const deleted = new Set((loadJSON(KEY_DELETED) || []));
+    const overrides = loadJSON(KEY_OVERRIDES) || {};
+
+    let merged = baseTrips.concat(extras.map(t=>Object.assign({isExtra:true}, t)));
+    merged = merged.filter(t => !deleted.has(t.id));
+    merged = merged.map(t => overrides[t.id] ? Object.assign({}, t, overrides[t.id]) : t);
+
+    return merged;
   }
 
-  async function loadEvents(tripId) {
+  async function loadEvents() {
     const base = window.location.pathname.includes("/pages/") ? ".." : ".";
-    // Prefer localStorage (per-trip), then per-trip JSON file, then shared events.json
-    try {
-      const storageKey = `events-${tripId}`;
-      const raw = localStorage.getItem(storageKey);
-      if (raw) return JSON.parse(raw);
-    } catch(e){ /* ignore */ }
-    // Try per-trip file
-    try {
-      const resp = await fetch(`${base}/assets/data/events-${encodeURIComponent(tripId)}.json`);
-      if (resp && resp.ok){ const b = await resp.json(); if (b && Array.isArray(b.explore) && b.explore.length) return b.explore.slice(); }
-    } catch(e){ /* ignore */ }
-    // Fallback to shared pool
-    try { return (await fetch(`${base}/assets/data/events.json`).then(r => r.json())).explore || []; } catch(e){ return []; }
+    try { return (await fetch(`${base}/assets/data/events.json`).then(r=>r.json())).explore || []; } catch(e){ return []; }
   }
 
-  function parse(d) { return new Date(d + "T00:00:00"); }
+  function storageKey(tid){ return `events-${tid}`; }
+  function loadSavedEvents(tid){ try{ const raw = localStorage.getItem(storageKey(tid)); return raw ? JSON.parse(raw) : null; } catch(e){ return null; } }
+  function saveEventsToStorage(tid, events){ try{ localStorage.setItem(storageKey(tid), JSON.stringify(events)); } catch(e){ /* ignore */ } }
 
-  function eachDate(start, end) {
-    const arr = [];
-    let d = parse(start);
-    const last = parse(end);
-    while (d <= last) {
-      arr.push(d.toISOString().slice(0, 10));
-      d.setDate(d.getDate() + 1);
-    }
-    return arr;
-  }
-
-  // Sequential Fill
-  function mapEvents(trip, events) {
-    const days = eachDate(trip.startDate, trip.endDate).map(date => ({
-      date,
-      activities: []
-    }));
-
-    let index = 0;
-    const PER_DAY = 2;
-
-    for (let i = 0; i < days.length; i++) {
-      for (let j = 0; j < PER_DAY; j++) {
-        if (index >= events.length) break;
-        days[i].activities.push(events[index]);
-        index++;
-      }
-    }
-
-    return days;
-  }
+  function parseISO(d){ return new Date(d + 'T00:00:00'); }
 
   const params = new URLSearchParams(location.search);
   const tripId = params.get("trip");
   const dateISO = params.get("date");
 
-  if (!tripId || !dateISO) return;
+  if (!tripId || !dateISO) {
+    document.body.innerHTML = '<main class="container"><p>Missing trip or date parameter.</p></main>';
+    return;
+  }
 
+  const daySubtitle = $("#day-subtitle");
   const calendar = $("#calendar");
-  const overlay = document.createElement("div");
-  overlay.className = "events-layer";
-  calendar.appendChild(overlay);
+  const backBtn = $("#back-to-week-btn");
+  const addEventBtn = $("#add-event-btn");
+  const eventModal = $("#event-modal");
+  const eventForm = $("#event-form");
 
-  function idx(t) {
-    const [h, m] = t.split(":").map(Number);
-    return h * 2 + (m >= 30 ? 1 : 0);
-  }
+  let currentTrip = null;
+  let currentEvents = [];
 
-  function px(i) {
-    const slot = parseFloat(getComputedStyle(calendar).getPropertyValue("--slot-height")) || 42;
-    return i * slot;
-  }
-
-  function addM(t, mins) {
-    const [h, m] = t.split(":").map(Number);
-    const total = h * 60 + m + mins;
-    return `${String(Math.floor(total / 60)).padStart(2,"0")}:${String(total % 60).padStart(2,"0")}`;
-  }
-
-  for (let i = 0; i < 48; i++) {
-    const h = Math.floor(i / 2);
-    const m = i % 2 ? "30" : "00";
-    const time = `${String(h).padStart(2, "0")}:${m}`;
-    const t = document.createElement("div");
-    t.className = "time-cell";
-    t.textContent = time;
-    const slot = document.createElement("div");
-    slot.className = "slot-cell";
-    calendar.appendChild(t);
-    calendar.appendChild(slot);
+  // Update back button to return to weekly view with trip parameter
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      location.href = `./ItineraryWeek.html?trip=${encodeURIComponent(tripId)}`;
+    });
   }
 
   (async () => {
     const trips = await loadTrips();
-    const events = await loadEvents(tripId);
-
+    const allEvents = await loadEvents();
     const trip = trips.find(t => t.id === tripId);
-    if (!trip) return;
 
-    const days = mapEvents(trip, events);
-    const day = days.find(d => d.date === dateISO);
-    if (!day) return;
+    if (!trip) {
+      calendar.innerHTML = '<p>Trip not found.</p>';
+      return;
+    }
 
-    $("#day-title").textContent = trip.title;
-    $("#day-subtitle").textContent = dateISO;
+    currentTrip = trip;
 
-    day.activities.forEach(ev => {
-      const startIdx = idx(ev.time);
-      const dur = Number(ev.duration) * 60;
-      const endIdx = startIdx + Math.ceil(dur / 30);
+    // Load events: prefer localStorage, fallback to per-trip seed, then deterministic generation
+    let eventsForThisTrip = [];
+    const saved = loadSavedEvents(trip.id);
 
-      const block = document.createElement("div");
-      block.className = "event-block";
-      block.style.top = px(startIdx) + "px";
-      block.style.height = (px(endIdx) - px(startIdx) - 4) + "px";
+    if (Array.isArray(saved) && saved.length) {
+      eventsForThisTrip = saved;
+    } else {
+      // Try per-trip seed file
+      const base = window.location.pathname.includes("/pages/") ? ".." : ".";
+      try {
+        const resp = await fetch(`${base}/assets/data/events-${encodeURIComponent(trip.id)}.json`);
+        if (resp && resp.ok) {
+          const body = await resp.json();
+          if (body && Array.isArray(body.explore) && body.explore.length) {
+            eventsForThisTrip = body.explore.slice();
+          }
+        }
+      } catch(e) { /* ignore */ }
+    }
 
-      block.innerHTML = `
-        <span class="event-title">${ev.title}</span>
-        <span class="event-time">${ev.time} – ${addM(ev.time, dur)}</span>
+    currentEvents = eventsForThisTrip;
+
+    renderDayEvents();
+  })();
+
+  function renderDayEvents() {
+    if (!currentTrip || !currentEvents) return;
+
+    // Update subtitle with formatted date only
+    const dateObj = parseISO(dateISO);
+    const formatted = dateObj.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    daySubtitle.textContent = formatted;
+
+    // Filter events for this specific date
+    const dayEvents = currentEvents.filter(ev => ev.date === dateISO);
+
+    if (!dayEvents.length) {
+      calendar.innerHTML = '<p style="color:var(--color-muted);font-style:italic;padding:20px 0;">No events scheduled for this day.</p>';
+      return;
+    }
+
+    // Sort by time
+    dayEvents.sort((a, b) => {
+      const tA = a.time || '00:00';
+      const tB = b.time || '00:00';
+      return tA.localeCompare(tB);
+    });
+
+    // Render event cards
+    calendar.innerHTML = '';
+    calendar.className = 'day-events-list';
+
+    dayEvents.forEach(ev => {
+      const card = document.createElement('article');
+      card.className = 'day-event-card';
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+
+      const time = ev.time || '';
+      const duration = ev.duration ? parseFloat(ev.duration) : 0;
+      
+      // Calculate end time
+      let timeDisplay = time;
+      if (time && duration) {
+        const [h, m] = time.split(':').map(Number);
+        const totalMins = h * 60 + m + (duration * 60);
+        const endH = Math.floor(totalMins / 60) % 24;
+        const endM = totalMins % 60;
+        const endTime = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
+        timeDisplay = `${time}\n–\n${endTime}`;
+      }
+
+      card.innerHTML = `
+        <div class="day-event-card__time">${timeDisplay}</div>
+        <div class="day-event-card__content">
+          <h3 class="day-event-card__title">${ev.title || 'Untitled Event'}</h3>
+          ${ev.location ? `<p class="day-event-card__location">📍 ${ev.location}</p>` : ''}
+          ${ev.description ? `<p class="day-event-card__description">${ev.description}</p>` : ''}
+          ${ev.price ? `<p class="day-event-card__price">$${ev.price}</p>` : ''}
+        </div>
       `;
 
-      block.addEventListener("click", () => {
-        location.href = `./EventInfo.html?id=${ev.id}&trip=${tripId}`;
+      card.addEventListener('click', () => {
+        location.href = `./EventInfo.html?id=${encodeURIComponent(ev.id)}&trip=${encodeURIComponent(tripId)}`;
       });
 
-      overlay.appendChild(block);
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          location.href = `./EventInfo.html?id=${encodeURIComponent(ev.id)}&trip=${encodeURIComponent(tripId)}`;
+        }
+      });
+
+      calendar.appendChild(card);
     });
-  })();
+  }
+
+  // Add Event button handler
+  if (addEventBtn && eventModal && eventForm) {
+    addEventBtn.addEventListener('click', () => {
+      if (!currentTrip) return;
+
+      // Pre-fill date with current day
+      const dateInput = $('#ev-date');
+      if (dateInput) dateInput.value = dateISO;
+
+      // Populate time selector
+      const startSelect = $('#ev-start');
+      if (startSelect) {
+        startSelect.innerHTML = '';
+        for (let h = 0; h < 24; h++) {
+          for (let m of [0, 30]) {
+            const time = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+            const opt = document.createElement('option');
+            opt.value = time;
+            opt.textContent = time;
+            startSelect.appendChild(opt);
+          }
+        }
+        startSelect.value = '09:00';
+      }
+
+      // Update end time based on duration
+      const updateEndTime = () => {
+        const start = $('#ev-start').value;
+        const durMins = parseInt($('#ev-dur').value) || 60;
+        if (start) {
+          const [h, m] = start.split(':').map(Number);
+          const totalMins = h * 60 + m + durMins;
+          const endH = Math.floor(totalMins / 60) % 24;
+          const endM = totalMins % 60;
+          const endTime = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
+          const endInput = $('#ev-end');
+          if (endInput) endInput.value = endTime;
+        }
+      };
+
+      if (startSelect) startSelect.addEventListener('change', updateEndTime);
+      const durSelect = $('#ev-dur');
+      if (durSelect) durSelect.addEventListener('change', updateEndTime);
+      updateEndTime();
+
+      eventModal.classList.remove('hidden');
+      const titleInput = $('#ev-title');
+      if (titleInput) titleInput.focus();
+    });
+
+    const cancelBtn = $('#ev-cancel');
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => {
+        eventModal.classList.add('hidden');
+        eventForm.reset();
+      });
+    }
+
+    eventForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!currentTrip) return;
+
+      const title = $('#ev-title').value.trim();
+      const time = $('#ev-start').value;
+      const durMins = parseInt($('#ev-dur').value) || 60;
+      const duration = (durMins / 60).toFixed(1);
+      const location = $('#ev-location').value.trim();
+      const cost = parseFloat($('#ev-cost').value) || 0;
+      const notes = $('#ev-notes').value.trim();
+
+      if (!title) {
+        alert('Please enter an event title.');
+        return;
+      }
+
+      const newEvent = {
+        id: `event-${Date.now()}-${Math.random().toString(36).substr(2,9)}`,
+        title,
+        date: dateISO,
+        time,
+        duration,
+        location: location || currentTrip.title,
+        price: cost,
+        description: notes,
+        custom: true
+      };
+
+      currentEvents.push(newEvent);
+      saveEventsToStorage(currentTrip.id, currentEvents);
+
+      eventModal.classList.add('hidden');
+      eventForm.reset();
+      renderDayEvents();
+    });
+  }
 
 })();

@@ -1,4 +1,82 @@
-/* Container for the day grid */
+/* Day events list - card layout */
+.day-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+  margin-top: 16px;
+}
+
+/* Individual event card */
+.day-event-card {
+  background: var(--color-surface);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.day-event-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+.day-event-card:active {
+  transform: translateY(0);
+}
+
+/* Time column */
+.day-event-card__time {
+  flex-shrink: 0;
+  width: 80px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  padding-top: 2px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+/* Content column */
+.day-event-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.day-event-card__title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.day-event-card__location {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.day-event-card__description {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.day-event-card__price {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+/* Old timeline styles (kept for compatibility but hidden by new layout) */
 .calendar {
   --slot-height: 42px;  /* height of each 30-min row */
   position: relative;

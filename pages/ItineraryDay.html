@@ -11,20 +11,22 @@
   <!-- New, day-view specific styles -->
   <link rel="stylesheet" href="../assets/css/itinerary-day.css">
 </head>
-<body>
+<body class="no-header-gap">
   <!-- header partial injected by include.js -->
 
   <main class="container">
-    <h1 id="day-title">Itinerary (Day)</h1>
-    <p id="day-subtitle" class="page-header page-header--accent" style="margin-top:8px;"></p>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;padding-top:8px;padding-bottom:8px;">
+      <h2 style="margin:0">Daily View</h2>
+    </div>
+    <p id="day-subtitle" class="page-header page-header--accent" style="margin-top:0;margin-bottom:12px;"></p>
 
     <div class="day-toolbar" style="display:flex; gap:10px; align-items:center; margin:12px 0;">
-      <a class="btn btn-secondary" href="./ItineraryWeek.html">← Week</a>
+      <button id="back-to-week-btn" class="btn" type="button">← Week</button>
       <button id="add-event-btn" class="btn" type="button" style="margin-left:auto;">+ Add Event</button>
     </div>
 
-    <!-- Timeline container -->
-    <section id="calendar" class="calendar" aria-label="Daily schedule"></section>
+    <!-- Events list container -->
+    <section id="calendar" aria-label="Daily schedule"></section>
   </main>
 
   <!-- Add / Edit Event Modal -->
