@@ -25,7 +25,7 @@
   border: 1px solid lightgrey;
 }
 
-.city-input, .province-input, .specialty-input {
+#city-input, #province-input, #specialty-input {
   text-align: center;
   margin-left: 15%;
   margin-top: 15px;
@@ -43,6 +43,16 @@
   padding: 12px 24px;
   border: none;
   cursor: pointer;
+}
+
+#call-contact-btn {
+  display: "none";
+  width: 25%;
+}
+
+#edit-contact {
+  display: "none";
+  width: 35%; 
 }
 
 #search-input-container {
@@ -73,6 +83,7 @@
   border-radius: 10px;
   box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   padding: 1rem;
+  display: none;
 }
 
 .select-btn {
@@ -90,4 +101,60 @@
   border-radius: 10px;
   color: white;
   text-align: center;
+}
+
+#missing-contact-modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 9999; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#no-search-modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 9999; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#missing-contact-message {
+  font-size: large;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+  z-index: 1;
+  width: 90%;
+  height: 40%;
+}
+
+#no-search-message {
+  font-size: large;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+  z-index: 1;
+  width: 90%;
+  height: 40%;
 }
