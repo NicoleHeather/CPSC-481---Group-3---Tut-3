@@ -1,102 +1,77 @@
-.event {
-    border-radius: 0.5rem;
-    box-shadow: 0 5px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    padding: 1rem;
-    background-color: #f9fafb;
+.event-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 16px;
 }
 
-#event-remove-btn, #event-edit-btn, #event-share-btn {
-    margin-top: 10%;
-    width: 100px;
-    height: 50px;
-    font-size: small;
-    font-weight: bold;
+.event-header {
+  text-align: left;
+  margin-bottom: 24px;
 }
 
-#event-share-btn {
-    text-align: center;
-    align-content: center;
+.event-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text);
 }
 
-.event-options {
-    text-align: center;
+.event-details {
+  background: var(--color-surface);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-#event-date, #event-time, #event-location, #event-cost {
-    margin-top: 1%;
+.event-detail-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
 }
 
-#title, #date, #time, #location, #cost, #description {
-    color: black;
-    border: grey solid, 1px;
+.event-detail-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-muted);
 }
 
-#title, #date, #time, #location, #cost {
-    padding: 1px;
-    text-align: center;
-    font-size: 1rem;
-    width: 60%;
-    border-radius: 10px;
+.event-detail-value {
+  font-size: 16px;
+  color: var(--color-text);
+  line-height: 1.5;
 }
 
-#event-description {
-    margin-top: 1%;
+.event-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
 }
 
-#editPopupForm {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    z-index: 1;
-    width: 70%;
-    height: 90%;
-    text-align: start;
+.event-actions .btn {
+  width: 100%;
+  font-weight: 400;
+  text-align: center;
 }
 
-#description {
-    width: 90%;
-    height: 200px;
-    border-radius: 10px;
-    text-align: start;
-    font-family: Verdana;
-}
+@media (max-width: 500px) {
+  .event-actions {
+    flex-direction: column;
+  }
 
-#cancel-edit, #save-edit {
-    width: 40%;
-    height: 80px;
-    font-size: larger;
-}
+  .event-actions .btn {
+    width: 100%;
+  }
 
-#cancel-edit {
-    margin-left: 17%;
-}
-
-#edit-buttons {
-    display: inline;
-    text-align: center;
-    align-items: center;
-    border-radius: 20px;
-}
-
-#removePopupForm {
-    font-weight: bold;
-    font-size: large;
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border-radius: 20px;
-    z-index: 1;
-    width: 90%;
-    height: 40%;
+  .event-header h1 {
+    font-size: 24px;
+  }
 }
 
 #cancel-remove, #yes-remove {

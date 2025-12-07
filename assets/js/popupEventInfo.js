@@ -1,165 +1,175 @@
-// script.js
-const editButton = document.getElementById('event-edit-btn');
-const editPopupForm = document.getElementById('editPopupForm');
-const removeButton = document.getElementById('event-remove-btn');
-const cancelRemoveButton = document.getElementById('cancel-remove');
-const confirmRemoveButton = document.getElementById('yes-remove');
+(function() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const eventId = urlParams.get('id');
+  const tripId = urlParams.get('trip');
 
-const cancelEditButton = document.getElementById('ev-cancel');
-const removePopupForm = document.getElementById('removePopupForm');
-const background = document.getElementById('whole-page');
-const shareButton = document.getElementById('event-share-btn');
-const modal = document.querySelector('.modal');
-const modal2 = document.querySelector('.modal-2');
+  let currentEvent = null;
+  let allEvents = [];
 
-const startTimeOptions = document.getElementById('start-time-options');
-const editForm = document.getElementById('event-form');
-const saveButton = document.getElementById('save-btn')
+  // Helper function
+  function to12Hour(time24) {
+    if (!time24) return '';
+    const [hours, minutes] = time24.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours % 12 || 12;
+    return `${hours12}:${minutes.toString().padStart(2,'0')} ${period}`;
+  }
 
-//Stored event info
-const currentTitle = document.querySelector('#event-title-stored');
-const currentDate = document.querySelector('#current-date');
-const currentStart = document.querySelector('#current-start');
-const currentEnd = document.querySelector('#current-end');
-const currentLocation = document.querySelector('#current-location');
-const currentCost = document.querySelector('#current-cost')
-const currentDescription = document.querySelector('#current-description');
-const currentImage = document.querySelector('#current-img');
+  // Load event data
+  async function loadEventData() {
+    const base = window.location.pathname.includes("/pages/") ? ".." : ".";
+    
+    // Try to load from localStorage first (saved events)
+    const storageKey = `events-${tripId}`;
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        allEvents = JSON.parse(saved);
+        currentEvent = allEvents.find(e => e.id === eventId);
+        if (currentEvent) {
+          renderEventInfo();
+          return;
+        }
+      }
+    } catch (e) { /* ignore */ }
 
-//Input from form
-const titleInput = document.getElementById('ev-title');
-const dateInput = document.getElementById('ev-date');
-const startInput = document.getElementById('ev-start');
-const durationInput = document.getElementById('ev-dur');
-const endInput = document.getElementById('ev-end');
-const locationInput = document.getElementById('ev-location');
-const costInput = document.getElementById('ev-cost');
-const descriptionInput = document.getElementById('ev-notes');
-
-let currentDuration;
-let customEvent = true;
-//let tmpEventId = 1;
-let currentEvent;
-let intineraryInfo = [];
-let arrTimeOptions = ["0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", 
-                      "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00",
-                      "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", 
-                      "21:00", "22:00", "23:00"]
-
-let arrDurationOptions = ["30", "1", "1.5", "2", "2.5", "3",
-                            "3.5", "4", "4.5", ];
-
-window.onload = function () {
-
-    //Uncomment on itinerary-day changes.
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-
-    const eventId = urlParams.get('id');
-    const tripId = urlParams.get('trip');
-    console.log(tripId);
-    console.log('Event ID:', eventId);
-
+    // Fall back to per-trip JSON file
     let file;
-
-    if (tripId == "trip-calgary-2026") {
-        file = "../assets/data/events-trip-calgary-2026.json";
-    }
-    else {
-        file = "../assets/data/events-trip-banff-2026.json";
+    if (tripId === "trip-calgary-2026") {
+      file = `${base}/assets/data/events-trip-calgary-2026.json`;
+    } else {
+      file = `${base}/assets/data/events-trip-banff-2026.json`;
     }
 
+    try {
+      const response = await fetch(file);
+      const data = await response.json();
+      allEvents = data.explore || [];
+      currentEvent = allEvents.find(e => e.id === eventId);
+      renderEventInfo();
+    } catch (e) {
+      console.error('Failed to load event:', e);
+    }
+  }
 
-    //Replace with whatever json data from the itinerary screen.
-    fetch(file)
-        .then(response => response.json())
-        .then(response => {
-            intineraryInfo = response.explore;
+  function renderEventInfo() {
+    if (!currentEvent) return;
 
-            console.log(intineraryInfo);
-            console.log(intineraryInfo[0]);
+    document.getElementById('event-title-stored').textContent = currentEvent.title || 'Untitled Event';
+    document.getElementById('current-date').textContent = currentEvent.date || '';
+    
+    const startTime = currentEvent.time || '';
+    const duration = currentEvent.duration ? parseFloat(currentEvent.duration) : 0;
+    
+    document.getElementById('current-start').textContent = to12Hour(startTime);
+    
+    if (startTime && duration) {
+      const [h, m] = startTime.split(':').map(Number);
+      const totalMins = h * 60 + m + (duration * 60);
+      const endH = Math.floor(totalMins / 60) % 24;
+      const endM = totalMins % 60;
+      const endTime24 = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
+      document.getElementById('current-end').textContent = to12Hour(endTime24);
+    } else {
+      document.getElementById('current-end').textContent = '';
+    }
 
-            /*for (let i = 0; i < intineraryInfo.length; i ++)
-            {
-                let tmp = intineraryInfo[i];
+    document.getElementById('current-location').textContent = currentEvent.location || '';
+    document.getElementById('current-cost').textContent = currentEvent.price ? `$${parseFloat(currentEvent.price).toFixed(2)}` : '$0.00';
+    document.getElementById('current-description').textContent = currentEvent.description || currentEvent.notes || '';
+  }
 
-                if (tmp.id == eventId){
-                    currentEvent = tmp;
-                    break;
-                }
+  // Setup edit button
+  document.getElementById('event-edit-btn').addEventListener('click', () => {
+    if (!currentEvent) return;
+
+    const editModal = window.createAddEventModal({
+      prefilledDate: currentEvent.date,
+      onSubmit: (formData) => {
+        // Update event object
+        currentEvent.title = formData.title;
+        currentEvent.date = formData.date;
+        currentEvent.time = formData.time;
+        currentEvent.duration = ((new Date(`2000-01-01T${formData.endTime}`) - new Date(`2000-01-01T${formData.time}`)) / (1000 * 60 * 60)).toFixed(1);
+        currentEvent.location = formData.location;
+        currentEvent.price = parseFloat(formData.price) || 0;
+        currentEvent.description = formData.description;
+
+        // Save to localStorage
+        const storageKey = `events-${tripId}`;
+        try {
+          const saved = localStorage.getItem(storageKey);
+          if (saved) {
+            const events = JSON.parse(saved);
+            const idx = events.findIndex(e => e.id === currentEvent.id);
+            if (idx >= 0) {
+              events[idx] = currentEvent;
+              localStorage.setItem(storageKey, JSON.stringify(events));
             }
-                */
+          }
+        } catch (e) { /* ignore */ }
 
-            currentEvent = intineraryInfo.find(t => t.id === eventId);
+        renderEventInfo();
+      },
+      onCancel: () => {
+        // modal hides automatically
+      }
+    });
 
-            console.log(currentEvent);
-            customEvent = currentEvent.custom;
-            console.log(currentEvent.custom);
+    // Populate modal with current event data
+    editModal.modal.querySelector('input[name="title"]').value = currentEvent.title || '';
+    editModal.modal.querySelector('input[name="date"]').value = currentEvent.date || '';
+    editModal.modal.querySelector('input[name="time"]').value = currentEvent.time || '';
+    editModal.modal.querySelector('input[name="location"]').value = currentEvent.location || '';
+    editModal.modal.querySelector('input[name="price"]').value = currentEvent.price || '0';
+    editModal.modal.querySelector('textarea[name="description"]').value = currentEvent.description || currentEvent.notes || '';
 
-            currentTitle.innerHTML = currentEvent.title;
-            currentDate.innerHTML = currentEvent.date;
-            currentStart.innerHTML = currentEvent.time;
+    // Calculate and set end time
+    if (currentEvent.time && currentEvent.duration) {
+      const [h, m] = currentEvent.time.split(':').map(Number);
+      const totalMins = h * 60 + m + (parseFloat(currentEvent.duration) * 60);
+      const endH = Math.floor(totalMins / 60) % 24;
+      const endM = totalMins % 60;
+      const endTime = `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`;
+      editModal.modal.querySelector('input[name="endTime"]').value = endTime;
+    }
 
-            currentDuration = currentEvent.duration;
+    editModal.show();
+    editModal.modal.querySelector('input[name="title"]').focus();
+  });
 
-            currentLocation.innerHTML = currentEvent.location;
-            currentCost.innerHTML = currentEvent.price;
-            currentDescription.innerHTML = currentEvent.description;
+  // Setup remove button
+  document.getElementById('event-remove-btn').addEventListener('click', () => {
+    if (!confirm(`Are you sure you want to remove "${currentEvent.title}"?`)) return;
 
-            if (currentEvent.img == "") {
-                currentImage.src = "../assets/img/full-logo-v2.png";
-            }
-            else {
-                currentImage.src = currentEvent.img;   
-            }
+    // Remove from localStorage
+    const storageKey = `events-${tripId}`;
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const events = JSON.parse(saved);
+        const filtered = events.filter(e => e.id !== currentEvent.id);
+        localStorage.setItem(storageKey, JSON.stringify(filtered));
+      }
+    } catch (e) { /* ignore */ }
 
-            console.log(currentStart.innerHTML)
+    // Redirect back to itinerary
+    if (currentEvent.date) {
+      window.location.href = `./ItineraryDay.html?trip=${encodeURIComponent(tripId)}&date=${encodeURIComponent(currentEvent.date)}`;
+    } else {
+      window.location.href = './Itineraries.html';
+    }
+  });
 
-            let tmpStart;
+  // Setup share button
+  document.getElementById('event-share-btn').addEventListener('click', () => {
+    window.location.href = './Share.html';
+  });
 
-            for (let i = 0; i < arrTimeOptions.length; i ++) {
-
-                if (arrTimeOptions[i] == currentStart.textContent){
-                    startInput.selectedIndex = i;
-                    let tmp = arrTimeOptions[i].split(":");
-                    console.log(tmp[1]);
-                    tmpStart = tmp[0];
-                    console.log(tmpStart);
-                    console.log(tmp);
-                }
-            }
-
-            for (let j = 0; j < arrDurationOptions.length; j++){
-
-                if (arrDurationOptions[j] == currentEvent.duration){
-                    durationInput.selectedIndex = j;
-                    let tmpEnd = Number(tmpStart) + Number(arrDurationOptions[j]);
-                    tmpEnd = String(tmpEnd) + ":00";
-                    endInput.value = tmpEnd;
-                    currentEnd.innerHTML = tmpEnd;
-                    //console.log(tmpEnd);
-                }
-            }
-
-            if (currentEnd.textContent.length > 5) {
-                let tmp3 = currentEnd.textContent.split(".");
-                let tmp4 = tmp3[0];
-                console.log(tmp4);
-                currentEnd.textContent = tmp4 + ":30";
-            }
-        })
-};
-
-//Remove event not working.
-removeButton.addEventListener('click', function () {
-    removePopupForm.style.display = 'block';
-    modal2.style.display = 'block';
-});
-
-cancelRemoveButton.addEventListener('click', function () {
-    removePopupForm.style.display = "none";
-    modal2.style.display = "none";
-});
+  // Load and render on page load
+  loadEventData();
+})();
 
 confirmRemoveButton.addEventListener('click', function () {
     removePopupForm.style.display = "none";
