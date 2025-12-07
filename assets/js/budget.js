@@ -123,7 +123,15 @@
     window.scrollTo(0, 0);
   }
 
-  backBtn.addEventListener("click", showTrips);
+  backBtn.addEventListener("click", () => {
+    // If we came from a direct link, go back to Itineraries page
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('trip')) {
+      location.href = '../pages/Itineraries.html';
+    } else {
+      showTrips();
+    }
+  });
 
   // ----------------------------
   // Add Expense Modal (non-persistent)
@@ -256,6 +264,24 @@
   // ----------------------------
   // INIT
   // ----------------------------
-  renderTripList();
-  showTrips();
+  (async function init() {
+    const trips = await loadTrips();
+    
+    // Check for ?trip=<id> parameter
+    const params = new URLSearchParams(window.location.search);
+    const tripId = params.get('trip');
+    
+    if (tripId) {
+      const trip = trips.find(t => t.id === tripId);
+      if (trip) {
+        // Skip list view; show budget directly
+        showBudget(trip);
+        return;
+      }
+    }
+    
+    // Default: show trip list
+    renderTripList();
+    showTrips();
+  })();
 })();

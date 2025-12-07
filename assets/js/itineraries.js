@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
         tab.addEventListener('click', (ev) => {
           ev.stopPropagation();
           ev.preventDefault();
-          console.log('Manage Budget clicked for', tab.dataset.tripId);
+          location.href = `../pages/Budget.html?trip=${encodeURIComponent(trip.id)}`;
         });
 
         wrapper.appendChild(actions);
