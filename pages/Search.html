@@ -311,12 +311,26 @@
 	<script src="../assets/js/main.js"></script>
 	
 	<script>
+
 		let searchEventsData = [];
 
 		const eventsGrid = document.getElementById('eventsGrid');
 		const searchInput = document.getElementById('searchInput');
 		const presetAndSortSelect = document.getElementById('presetAndSortSelect');
 		let selectedSortMode = null; // 'name' | 'priceAsc' | 'priceDesc' | null
+		let shortcut;
+		let shortcutApplied = 0
+
+		window.onload = function () {
+			const queryString = window.location.search;
+    		const urlParams = new URLSearchParams(queryString);
+    		console.log(urlParams);
+
+			if (urlParams.length != 0){
+			    shortcut = urlParams.get('shortcut');
+    			console.log(shortcut);
+			}
+		};
 
 		// Fetch Data
 		fetch('../assets/data/events.json')
@@ -452,6 +466,12 @@
 		// Filter & Sort Logic
 		function getFilteredAndSortedEvents() {
 			const searchText = searchInput.value.toLowerCase();
+
+			if (shortcut && shortcutApplied != 1) {
+				document.querySelector('input[name="category"][value="' + shortcut + '"]').checked = true;
+				shortcutApplied++;
+			}
+
 			const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
 			const selectedLocations = Array.from(document.querySelectorAll('input[name="location"]:checked')).map(cb => cb.value);
 			const filterStartDate = document.getElementById('filterStartDate').value;

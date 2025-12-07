@@ -41,26 +41,26 @@
           </div>
 
           <div class="shortcut-grid" role="group" aria-label="Shortcuts">
-            <button class="shortcut" aria-label="Restaurants">
+            <a class="shortcut" aria-label="Restaurants" id="resturant-shortcut">
               <!-- Use Material Symbol for consistent, crisp iconography -->
               <span class="material-symbols-outlined" aria-hidden="true">restaurant</span>
               <span class="shortcut-label">Restaurants</span>
-            </button>
+            </a>
 
-            <button class="shortcut" aria-label="Attractions">
+            <a class="shortcut" aria-label="Attractions" href="Search.html" id="attractions-shortcut">
               <span class="material-symbols-outlined" aria-hidden="true">star</span>
               <span class="shortcut-label">Attractions</span>
-            </button>
+            </a>
 
-            <button class="shortcut" aria-label="Hotels">
+            <a class="shortcut" aria-label="Hotels" href="Search.html" id="hotel-shortcut">
               <span class="material-symbols-outlined" aria-hidden="true">hotel</span>
               <span class="shortcut-label">Hotels</span>
-            </button>
+            </a>
 
-            <button class="shortcut" aria-label="Music">
+            <a class="shortcut" aria-label="Music" href="Search.html" id="music-shortcut">
               <span class="material-symbols-outlined" aria-hidden="true">music_note</span>
               <span class="shortcut-label">Music</span>
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -73,5 +73,28 @@
   <script src="../assets/js/main.js"></script>
   <script src="../assets/js/fab-panel.js"></script>
   <script src="../assets/js/home.js"></script>
+  <script>
+
+    const shortcutR = document.getElementById("resturant-shortcut");
+    const shortcutA = document.getElementById("attractions-shortcut");
+    const shortcutH = document.getElementById("hotel-shortcut");
+    const shortcutM = document.getElementById("music-shortcut");
+
+    shortcutR.addEventListener('click', function () {
+      shortcutR.href = `Search.html?shortcut=${"Restaurant"}`;
+    });
+
+    shortcutA.addEventListener('click', function () {
+      shortcutA.href = `Search.html?shortcut=${"Attraction"}`;
+    });
+
+    shortcutH.addEventListener('click', function () {
+      shortcutH.href = `Search.html?shortcut=${"Hotel"}`;
+    });
+
+    shortcutM.addEventListener('click', function () {
+      shortcutM.href = `Search.html?shortcut=${"Music"}`;
+    });
+  </script>
 </body>
 </html>
