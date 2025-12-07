@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Event Info - Prototype</title>
+	<link rel="stylesheet" href="../assets/css/variables.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/itinerary.css">
+	<link rel="stylesheet" href="../assets/css/eventInfo.css">
+</head>
+<body class="no-header-gap">
+	<!-- header partial will be injected here -->
+
+	<main class="container">
+		<!-- Event Info Container -->
+		<div class="event-container">
+			<div class="event-header">
+				<h1 id="event-title-stored">Event Title</h1>
+			</div>
+
+			<div class="event-details">
+				<div class="event-detail-row">
+					<svg class="event-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+						<line x1="16" y1="2" x2="16" y2="6"></line>
+						<line x1="8" y1="2" x2="8" y2="6"></line>
+						<line x1="3" y1="10" x2="21" y2="10"></line>
+					</svg>
+					<span class="event-detail-value" id="current-date">January 17th, 2025</span>
+				</div>
+
+				<div class="event-detail-row">
+					<svg class="event-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<circle cx="12" cy="12" r="9"></circle>
+						<polyline points="12 6 12 12 16 14"></polyline>
+					</svg>
+					<span class="event-detail-value"><span id="current-start">6:00 PM</span> – <span id="current-end">8:00 PM</span></span>
+				</div>
+
+				<div class="event-detail-row">
+					<svg class="event-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+						<circle cx="12" cy="10" r="3"></circle>
+					</svg>
+					<span class="event-detail-value" id="current-location">184 Road St.</span>
+				</div>
+
+				<div class="event-detail-row">
+					<svg class="event-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<line x1="12" y1="1" x2="12" y2="23"></line>
+						<path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+					</svg>
+					<span class="event-detail-value" id="current-cost">$120.00</span>
+				</div>
+
+				<div class="event-detail-row full-width">
+					<svg class="event-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+					</svg>
+					<span class="event-detail-value" id="current-description">Restaurant reservation at Chili's for 4 people. Note to self: remember to bring John's birthday gift.</span>
+				</div>
+			</div>
+
+			<div class="event-actions">
+				<button class="btn" id="event-edit-btn">Edit</button>
+				<button class="btn" id="event-remove-btn">Remove</button>
+				<button class="btn" id="event-share-btn">Share</button>
+			</div>
+		</div>
+	</main>
+
+	<!-- footer partial will be injected here -->
+
+	<script src="../assets/js/include.js"></script>
+	<script src="../assets/js/main.js"></script>
+	<script src="../assets/js/popupEventInfo.js"></script>
+</body>
+</html>

@@ -1,3 +1,5 @@
+/* Budget page h1 uses inline styles to match Itineraries spacing and underline */
+
 /* ===== Trip list cards ===== */
 .budget-trips { margin-top: var(--spacing-lg); }
 

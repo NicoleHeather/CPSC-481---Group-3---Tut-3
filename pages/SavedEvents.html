@@ -437,14 +437,15 @@
 							<h4 class="event-card__title">${event.title}</h4>
 							<p class="event-card__subtitle">${event.location} • ${dateDisplay}, ${timeRange}</p>
 						</div>
-						<div class="event-card__footer">
-							<div class="price-badge">${priceDisplay}</div>
-						</div>
-						<button class="save-star saved" onclick="toggleSaveStar(event, ${event.id})" title="Remove from saved">
-							★
-						</button>
+						<div class="price-badge">${priceDisplay}</div>
+						<button class="favorite-heart saved" title="Remove from saved">❤</button>
 					</div>
 				`;
+				const heartBtn = card.querySelector('.favorite-heart');
+				heartBtn.addEventListener('click', (ev) => {
+					ev.stopPropagation();
+					toggleSaveStar(ev, event.id); // reuse removal logic
+				});
 				savedSection.appendChild(card);
 			});
 		}

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Itineraries - Prototype</title>
+
+  <!-- Global + shared styles -->
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/itinerary.css">
+</head>
+
+<body class="no-header-gap">
+
+  <main class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;padding-top:8px;padding-bottom:8px;">
+      <h2 style="margin:0">Trip Itineraries</h2>
+      <div>
+        <button id="add-trip-btn" class="btn" type="button" aria-label="Add itinerary">+ Add Itinerary</button>
+      </div>
+    </div>
+
+    <section id="itineraries-grid" class="cards-grid" aria-label="Available itineraries">
+      <!-- Cards rendered here -->
+    </section>
+
+    <!-- Modal and toast containers (populated by JS) -->
+    <div id="modals" aria-hidden="true"></div>
+    <div id="toast-container" aria-live="polite" style="position:fixed;right:16px;bottom:16px;z-index:1400"></div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="../assets/js/include.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/itineraries.js"></script>
+</body>
+</html>
