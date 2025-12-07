@@ -1,10 +1,18 @@
 .booking-request_container {
     max-width: 48rem;
-    margin: 2rem auto;
+    margin: 0 auto 2rem;
     background-color: white;
     border-radius: 0.5rem;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-    padding: 2rem;
+    padding: 0.75rem 2rem;
+}
+
+.page-explore-title {
+    max-width: 48rem;
+    margin: 0 auto 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
 }
 
 .booking-request_header {
@@ -25,23 +33,86 @@
     color: #111827;
 }
 
-.event-header {
-    font-size: 1.5rem;
-    font-weight: 600;
+.event-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-top: 0;
     margin-bottom: 1rem;
     color: #1f2937;
 }
 
+.event-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.heart-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.heart-btn:hover {
+    transform: scale(1.1);
+}
+
+.heart-icon {
+    width: 28px;
+    height: 28px;
+    color: #6b7280;
+    transition: all 0.3s ease;
+}
+
 .image-container {
-    margin-bottom: 1.5rem;
+    margin: 0 0 1.5rem 0;
+    overflow: hidden;
+    border-radius: 0.375rem;
 }
 
 .event-image {
     width: 100%;
-    height: 20rem;
+    height: 250px;
     object-fit: cover;
-    border-radius: 0.5rem;
     display: block;
+}
+
+.event-details {
+    margin-bottom: 2rem;
+}
+
+.event-detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.event-detail-row.full-width {
+    align-items: flex-start;
+}
+
+.event-detail-icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    flex-shrink: 0;
+    color: #6b7280;
+    margin-top: 0.125rem;
+}
+
+.event-detail-value {
+    color: #374151;
+    line-height: 1.5;
+    font-size: 1rem;
 }
 
 .description {
@@ -61,7 +132,8 @@
     border: none;
     cursor: pointer;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 400;
+    text-align: center;
 }
 
 .continue-button:hover {
@@ -96,34 +168,27 @@
 #save-modal {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.38);
     z-index: 9999;
+    grid: place-items / center;
+    padding: 16px;
     align-items: center;
     justify-content: center;
 }
 
 #save-success-popup, #unsave-success-popup {
-    font-size: large;
-    font-weight: bold;
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 420px;
+    background-color: var(--color-surface);
+    padding: 32px 24px;
     border: none;
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
     z-index: 10000;
-    width: 85%;
-    max-width: 350px;
-    height: auto;
-    min-height: 300px;
-    border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 #save-success-container, #unsave-success-container {
@@ -131,37 +196,25 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 25px;
-    height: 100%;
+    gap: 1.5rem;
     text-align: center;
 }
 
 #save-success-message, #unsave-success-message {
     text-align: center;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #333;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #374151;
     margin: 0;
     padding: 0 10px;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 #save-success-ok, #unsave-success-ok {
-    width: 85%;
-    padding: 15px;
+    width: 100%;
+    padding: 0.75rem 1.5rem;
     font-size: 1rem;
-    font-weight: 600;
-    background: var(--color-primary, #3498db);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.2s;
-    margin-top: 10px;
-}
-
-#save-success-ok:hover, #unsave-success-ok:hover {
-    background: var(--color-primary-dark, #2980b9);
+    font-weight: 400;
 }
 
 /* Animation for popup */

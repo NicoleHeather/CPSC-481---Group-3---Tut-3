@@ -78,6 +78,16 @@
       el.setAttribute('href', el.getAttribute('data-href'));
     });
 
+    // ensure Demo Reset script is loaded once so the header button appears on all pages
+    (function ensureDemoResetLoaded(){
+      if (document.querySelector('script[data-demo-reset]')) return;
+      const script = document.createElement('script');
+      script.src = `${base}/assets/js/demo-reset.js`;
+      script.async = false;
+      script.dataset.demoReset = 'true';
+      document.head.appendChild(script);
+    })();
+
     // load footer
     html = null;
     for (const p of footerPaths) {

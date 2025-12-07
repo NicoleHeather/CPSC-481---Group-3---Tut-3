@@ -14,78 +14,32 @@
   <link rel="stylesheet" href="../assets/css/itinerary.css">
 </head>
 
-<body>
+<body class="no-header-gap itinerary-fixed">
 
   <main class="container">
-    <h1>Itinerary (Week)</h1>
-
-    <!-- LIST of itineraries -->
-    <section id="itinerary-list" class="trip-list" aria-label="Itineraries"></section>
-
-    <!-- GOOD POPUP (iw-) -->
-    <div id="iw-budget-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="iw-budget-title">
-      <div class="modal__panel">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-          <h3 id="iw-budget-title" style="margin:0;">Trip Budget</h3>
-          <button id="iw-budget-close" class="btn btn-secondary" type="button" style="margin-left:auto;">Close</button>
-        </div>
-
-        <div class="budget-wrap">
-          <div class="donut">
-            <svg class="donut-svg" viewBox="0 0 200 200">
-              <circle class="donut-ring" cx="100" cy="100" r="80" />
-              <g id="iw-donut-slices"></g>
-              <g class="donut-center">
-                <text id="iw-donut-remaining-label" x="100" y="88" text-anchor="middle">Remaining:</text>
-                <text id="iw-donut-main" x="100" y="108" text-anchor="middle">$0</text>
-                <text id="iw-donut-sub"  x="100" y="130" text-anchor="middle">$0 total</text>
-              </g>
-            </svg>
-          </div>
-          <div class="legend" id="iw-donut-legend"></div>
-        </div>
-
-        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
-          <button id="iw-add-expense-btn" class="btn" type="button">+ Add Expense</button>
-        </div>
-      </div>
+    <div class="page-header-row">
+      <button id="prev-week" type="button" class="btn header-control left" aria-label="Previous week">Previous</button>
+      <h3 id="page-title">Weekly View</h3>
+      <button id="next-week" type="button" class="btn header-control right" aria-label="Next week">Next</button>
     </div>
+
+    <!-- Week range display (rendered by JS) -->
+    <div id="week-range" class="week-range" aria-hidden="true" style="margin-top:8px;"></div>
+
+    <!-- 8 vertical rectangles: first = trip header, next 7 = Mon..Sun -->
+    <section id="week-columns" class="week-columns" aria-label="Week columns">
+      <!-- columns rendered by JS -->
+    </section>
+
+    <div id="day-details" style="margin-top: 16px;"></div>
   </main>
 
-  <!-- EXPENSE POPUP -->
-  <div id="iw-expense-modal" class="modal hidden">
-    <div class="modal__panel">
-      <h3 style="margin:0 0 8px;">Add Expense</h3>
-      <form id="iw-expense-form">
-
-        <label class="field">
-          <span>Item name</span>
-          <input id="iw-exp-name" type="text" required>
-        </label>
-
-        <label class="field">
-          <span>Amount</span>
-          <input id="iw-exp-amount" type="number" min="0" step="0.01" required>
-        </label>
-
-        <label class="field">
-          <span>Category</span>
-          <select id="iw-exp-category"></select>
-        </label>
-
-        <div class="modal__actions">
-          <button type="button" id="iw-exp-cancel" class="btn btn-secondary">Cancel</button>
-          <button type="submit" class="btn">Add</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Scripts -->
+  <!-- Shared include + site JS (injects header/footer) -->
   <script src="../assets/js/include.js"></script>
   <script src="../assets/js/main.js"></script>
+
+  <!-- Page script -->
   <script src="../assets/js/itinerary-week.js"></script>
-  <script src="../assets/js/budget-popup.js"></script>
 
 </body>
 </html>
