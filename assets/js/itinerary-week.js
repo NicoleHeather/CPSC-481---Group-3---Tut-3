@@ -274,8 +274,7 @@
       const modal = document.createElement('div'); modal.className = 'qa-modal evd-modal';
       modal.innerHTML = `
         <div class="evd-header qa-header">
-          <button type="button" class="evd-close-icon" title="Close" aria-label="Close">✕</button>
-          <h3>Add Event</h3>
+          <h2>Add Event</h2>
         </div>
         <div class="evd-body qa-body">
           <div class="evd-field">
@@ -335,13 +334,12 @@
         </div>
         <div class="evd-footer qa-footer">
           <button type="button" class="btn qa-cancel">Cancel</button>
-          <button type="button" class="btn btn-primary qa-add">Add Event</button>
+          <button type="button" class="btn qa-add">Add Event</button>
         </div>
       `;
       overlay.appendChild(modal);
       document.body.appendChild(overlay);
 
-      const closeBtn = modal.querySelector('.evd-close-icon');
       const cancel = modal.querySelector('.qa-cancel');
       const addBtn = modal.querySelector('.qa-add');
       const titleInput = modal.querySelector('input[name="title"]');
@@ -412,7 +410,6 @@
         }
       });
 
-      closeBtn.addEventListener('click', ()=>{ overlay.style.display='none'; });
       cancel.addEventListener('click', ()=>{ overlay.style.display='none'; });
       
       addBtn.addEventListener('click', ()=>{
@@ -525,14 +522,14 @@
       const modal = document.createElement('div'); modal.className = 'cd-modal';
       modal.innerHTML = `
         <div class="cd-header">
-          <h3>Remove Event?</h3>
+          <h2>Remove Event?</h2>
         </div>
         <div class="cd-body">
           <p>Are you sure you want to remove "<span class="cd-event-title"></span>"?</p>
         </div>
         <div class="cd-footer">
           <button type="button" class="cd-cancel btn">Cancel</button>
-          <button type="button" class="cd-confirm btn btn-danger">Remove</button>
+          <button type="button" class="cd-confirm btn">Remove</button>
         </div>
       `;
       overlay.appendChild(modal);
@@ -584,7 +581,7 @@
           </div>
           <div class="cd-footer">
             ${cancelBtn}
-            <button type="button" class="cd-confirm btn btn-primary">${confirmText}</button>
+            <button type="button" class="cd-confirm btn">${confirmText}</button>
           </div>
         `;
         overlay.appendChild(modal);
@@ -727,8 +724,7 @@
       const modal = document.createElement('div'); modal.className='evd-modal';
       modal.innerHTML = `
         <div class="evd-header">
-          <button type="button" class="evd-close-icon" title="Close" aria-label="Close">✕</button>
-          <h3>Event Details</h3>
+          <h2>Event Details</h2>
           <div class="evd-header-actions">
             <button type="button" class="evd-edit-icon" title="Edit event" aria-label="Edit event">✎</button>
             <div class="evd-menu-container">
@@ -807,13 +803,12 @@
         </div>
         <div class="evd-footer">
           <button type="button" class="btn evd-cancel evd-edit-mode">Cancel</button>
-          <button type="button" class="btn btn-primary evd-save evd-edit-mode">Save</button>
+          <button type="button" class="btn evd-save evd-edit-mode">Save</button>
         </div>
       `;
       overlay.appendChild(modal);
       document.body.appendChild(overlay);
 
-      const closeBtn = modal.querySelector('.evd-close-icon');
       const editBtn = modal.querySelector('.evd-edit-icon');
       const removeBtn = modal.querySelector('.evd-remove-menu');
       const menuBtn = modal.querySelector('.evd-menu-btn');
@@ -1001,23 +996,8 @@
 
       modal._setMode = setEventDetailMode;
 
-      closeBtn.addEventListener('click', async ()=>{ 
-        if(modal.classList.contains('evd-mode-edit')) {
-          const confirmed = await showConfirmDialog(
-            'Discard Changes?',
-            'Do you want to discard these changes?',
-            'Discard',
-            'Keep Editing'
-          );
-          if(confirmed) {
-            overlay.style.display='none'; 
-            setEventDetailMode('view');
-          }
-        } else {
-          overlay.style.display='none'; 
-          setEventDetailMode('view');
-        }
-      });
+      // Header close icon removed; overlay click still closes. If reinstated, guard here.
+      // if(closeBtn){ ... }
       overlay.addEventListener('click', (e)=>{ if(e.target === overlay) { overlay.style.display='none'; setEventDetailMode('view'); } });
 
       editBtn.addEventListener('click', ()=>{
