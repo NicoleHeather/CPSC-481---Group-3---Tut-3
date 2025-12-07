@@ -429,14 +429,9 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(()=>{ try{ box.remove(); }catch(e){} }, 6000);
       }
 
-      // Share helper: attempt Web Share API, fallback to copy link prompt
+      // Share helper: navigate to Share.html with trip parameter
       function shareTrip(trip){
-        const url = `${location.origin}${location.pathname.replace(/\/pages\/.*$/,'')}/pages/ItineraryWeek.html?trip=${encodeURIComponent(trip.id)}`;
-        if(navigator.share){
-          navigator.share({ title: trip.title, text: trip.title, url }).catch(()=>{ prompt('Share link', url); });
-        } else {
-          try { navigator.clipboard.writeText(url).then(()=> alert('Link copied to clipboard')); } catch(e){ prompt('Share link (copy):', url); }
-        }
+        location.href = `../pages/Share.html?trip=${encodeURIComponent(trip.id)}`;
       }
     })
     .catch(err => {
