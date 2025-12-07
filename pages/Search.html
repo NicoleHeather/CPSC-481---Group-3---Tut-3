@@ -343,6 +343,31 @@
 				return;
 			}
 
+			// Helpers to manage saved favorites
+			const STORAGE_KEY = 'user_saved_events';
+			const getSaved = () => {
+				try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+			};
+			const isSaved = (id) => getSaved().some(e => e.id === id);
+			const saveEvent = (evt) => {
+				const saved = getSaved();
+				if (!saved.some(e => e.id === evt.id)) {
+					localStorage.setItem(STORAGE_KEY, JSON.stringify([...saved, evt]));
+				}
+			};
+			const removeEvent = (id) => {
+				const saved = getSaved().filter(e => e.id !== id);
+				localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+			};
+			const toggleFavorite = (evtObj, e) => {
+				e.stopPropagation();
+				if (isSaved(evtObj.id)) removeEvent(evtObj.id); else saveEvent(evtObj);
+				// Update heart visual
+				const btn = e.currentTarget;
+				btn.classList.toggle('saved', isSaved(evtObj.id));
+				btn.textContent = isSaved(evtObj.id) ? '❤' : '♡';
+			};
+
 			data.forEach(event => {
 				const card = document.createElement('article');
 				card.className = 'event-card';
@@ -388,8 +413,14 @@
 							<p class="event-card__subtitle">${event.location} • ${dateDisplay}, ${convertTo12Hour(event.time)}</p>
 						</div>
 						<div class="price-badge">${priceDisplay}</div>
+						<button class="favorite-heart ${isSaved(event.id) ? 'saved' : ''}" title="${isSaved(event.id) ? 'Saved' : 'Save'}">
+							${isSaved(event.id) ? '❤' : '♡'}
+						</button>
 					</div>
 				`;
+				// Attach handler after DOM set
+				const heartBtn = card.querySelector('.favorite-heart');
+				heartBtn.addEventListener('click', (ev) => toggleFavorite(event, ev));
 				eventsGrid.appendChild(card);
 			});
 		}
