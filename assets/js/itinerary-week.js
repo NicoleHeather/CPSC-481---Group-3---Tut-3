@@ -323,6 +323,53 @@
     }
     function showConfirmDeleteModal(eventId, eventTitle){ const m = ensureConfirmDeleteModal(); m.dataset.eventId = eventId; m.querySelector('.cd-event-title').textContent = eventTitle; m.style.display='flex'; m.querySelector('.cd-confirm').focus(); }
 
+    // Generic confirmation dialog
+    function showConfirmDialog(title, message, confirmText = 'Confirm', cancelText = 'Cancel') {
+      return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.className = 'cd-overlay';
+        overlay.style.display = 'flex';
+        
+        const modal = document.createElement('div');
+        modal.className = 'cd-modal';
+        modal.innerHTML = `
+          <div class="cd-header">
+            <h3>${title}</h3>
+          </div>
+          <div class="cd-body">
+            <p>${message}</p>
+          </div>
+          <div class="cd-footer">
+            <button type="button" class="cd-cancel btn">${cancelText}</button>
+            <button type="button" class="cd-confirm btn btn-primary">${confirmText}</button>
+          </div>
+        `;
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        
+        const cleanup = () => {
+          overlay.remove();
+        };
+        
+        modal.querySelector('.cd-cancel').addEventListener('click', () => {
+          cleanup();
+          resolve(false);
+        });
+        
+        modal.querySelector('.cd-confirm').addEventListener('click', () => {
+          cleanup();
+          resolve(true);
+        });
+        
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) {
+            cleanup();
+            resolve(false);
+          }
+        });
+      });
+    }
+
     // Edit dates modal: create once and reuse
     let _editDatesModal = null;
     let _editDatesCallback = null;
@@ -491,7 +538,6 @@
             <div>
               <span class="evd-price evd-view"></span>
               <div class="evd-input-wrapper evd-price-wrapper">
-                <span class="evd-input-prefix">$</span>
                 <input class="evd-input evd-price-input evd-edit-field" type="number" step="1" min="0" aria-label="Price" placeholder="0">
               </div>
               <span class="evd-error evd-price-error"></span>
@@ -560,7 +606,7 @@
       function clearFieldError(input, errorEl) {
         if(input && errorEl) {
           input.classList.remove('evd-invalid');
-          input.classList.add('evd-valid');
+          input.classList.remove('evd-valid');
           errorEl.textContent = '';
         }
       }
@@ -670,7 +716,23 @@
 
       modal._setMode = setEventDetailMode;
 
-      closeBtn.addEventListener('click', ()=>{ overlay.style.display='none'; setEventDetailMode('view'); });
+      closeBtn.addEventListener('click', async ()=>{ 
+        if(modal.classList.contains('evd-mode-edit')) {
+          const confirmed = await showConfirmDialog(
+            'Discard Changes?',
+            'Do you want to discard these changes?',
+            'Discard',
+            'Keep Editing'
+          );
+          if(confirmed) {
+            overlay.style.display='none'; 
+            setEventDetailMode('view');
+          }
+        } else {
+          overlay.style.display='none'; 
+          setEventDetailMode('view');
+        }
+      });
       overlay.addEventListener('click', (e)=>{ if(e.target === overlay) { overlay.style.display='none'; setEventDetailMode('view'); } });
 
       editBtn.addEventListener('click', ()=>{
@@ -692,20 +754,38 @@
         }
       });
 
-      cancelEditBtn.addEventListener('click', ()=>{
+      cancelEditBtn.addEventListener('click', async ()=>{
         try {
-          const eventId = overlay.dataset.eventId;
-          if(!eventId) return;
-          const ev = eventsForThisTrip.find(e => e.id === eventId);
-          if(ev) { setEventDetailMode('view'); showEventDetailModal(ev); }
+          const confirmed = await showConfirmDialog(
+            'Discard Changes?',
+            'Do you want to discard these changes?',
+            'Discard',
+            'Keep Editing'
+          );
+          if(confirmed) {
+            const eventId = overlay.dataset.eventId;
+            if(!eventId) return;
+            const ev = eventsForThisTrip.find(e => e.id === eventId);
+            if(ev) { setEventDetailMode('view'); showEventDetailModal(ev); }
+          }
         } catch(err) {
           console.error('Error in cancel button handler:', err);
           setEventDetailMode('view');
         }
       });
 
-      saveBtn.addEventListener('click', ()=>{
+      saveBtn.addEventListener('click', async ()=>{
         try {
+          const confirmed = await showConfirmDialog(
+            'Save Changes?',
+            'Are you sure you want to save these changes?',
+            'Save',
+            'Cancel'
+          );
+          if(!confirmed) {
+            return;
+          }
+          
           const eventId = overlay.dataset.eventId;
           if(!eventId) {
             console.warn('Save clicked but no eventId found');
@@ -896,7 +976,7 @@
         // Location
         if(event.location){
           if(locationEl) locationEl.textContent = event.location;
-          if(locationField) locationField.style.display = 'block';
+          if(locationField) locationField.style.display = 'flex';
         } else {
           if(locationField) locationField.style.display = 'none';
         }
@@ -904,15 +984,15 @@
         // Category
         if(event.category){
           if(categoryEl) categoryEl.textContent = event.category;
-          if(categoryField) categoryField.style.display = 'block';
+          if(categoryField) categoryField.style.display = 'flex';
         } else {
           if(categoryField) categoryField.style.display = 'none';
         }
         
         // Price
         if(event.price !== undefined && event.price !== null){
-          if(priceEl) priceEl.textContent = event.price === 0 ? 'Free' : `$${event.price}`;
-          if(priceField) priceField.style.display = 'block';
+          if(priceEl) priceEl.textContent = event.price === 0 ? 'Free' : String(event.price);
+          if(priceField) priceField.style.display = 'flex';
         } else {
           if(priceField) priceField.style.display = 'none';
         }
@@ -920,7 +1000,7 @@
         // Description
         if(event.description){
           if(descriptionEl) descriptionEl.textContent = event.description;
-          if(descriptionField) descriptionField.style.display = 'block';
+          if(descriptionField) descriptionField.style.display = 'flex';
         } else {
           if(descriptionField) descriptionField.style.display = 'none';
         }
