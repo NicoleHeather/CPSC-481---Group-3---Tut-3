@@ -220,6 +220,44 @@
     function loadSavedEvents(tid){ try{ const raw = localStorage.getItem(storageKey(tid)); return raw ? JSON.parse(raw) : null; } catch(e){ return null; } }
     function saveEventsToStorage(tid, events){ try{ localStorage.setItem(storageKey(tid), JSON.stringify(events)); } catch(e){ /* ignore */ } }
 
+    // Register a custom Demo Reset handler so the shared header button restores per-trip seed data
+    const weekDemoResetHandler = () => {
+        try {
+          localStorage.removeItem('itineraries.extras');
+          localStorage.removeItem('itineraries.deleted');
+          localStorage.removeItem('itineraries.overrides');
+          // clear any cached events across trips (events. or events- prefixes)
+          Object.keys(localStorage).forEach((key)=>{
+            if (key.startsWith('events.') || key.startsWith('events-')) {
+              localStorage.removeItem(key);
+            }
+          });
+        } catch(err) { console.warn('[week] demo reset: failed to clear itinerary state', err); }
+
+        if (perTripSeed && perTripSeed.length){
+          try{
+            saveEventsToStorage(trip.id, perTripSeed);
+            eventsForThisTrip.length = 0;
+            eventsForThisTrip.push(...perTripSeed);
+            // Also reset trip dates to original values
+            trip.startDate = perTripStartDate || trip.startDate;
+            trip.endDate = perTripEndDate || trip.endDate;
+            tripStart = new Date(trip.startDate + 'T00:00:00');
+            tripEnd = new Date(trip.endDate + 'T00:00:00');
+            weekStart = new Date(trip.startDate + 'T00:00:00');
+          }catch(err){ console.warn('[week] reset failed', err); alert('Reset failed - see console for details.'); return; }
+        }
+
+        // reload to ensure itinerary list pages also pick up cleared overrides
+        location.reload();
+    };
+
+    // store handler for global demo-reset script (in case it loads later) and register if available now
+    window.demoResetCustomHandler = weekDemoResetHandler;
+    if (typeof window.setDemoResetHandler === 'function') {
+      window.setDemoResetHandler(weekDemoResetHandler);
+    }
+
     // If user has saved events in localStorage, prefer those (local edits persist).
     // Otherwise persist the seeded/generated events so subsequent loads show
     // the same initial events and users can add/remove them locally.
@@ -1432,79 +1470,6 @@
           });
         }
       } catch(e) { /* ignore */ }
-
-      // Populate Demo Reset into the top site header (only on itinerary pages).
-      // The header partial is injected asynchronously by `include.js`, so try a
-      // few times before giving up to ensure the container exists.
-      (function attachDemoResetToHeader(attempt){
-        try { console.info('[week] attachDemoReset attempt', attempt||0); } catch(e){}
-        const demoContainer = document.getElementById('demo-reset-container');
-        const headerContainer = document.querySelector('.site-header .container');
-        const siteHeader = document.querySelector('.site-header');
-        // Prefer attaching to the `.site-header` element itself so the button
-        // reliably overlays the header area and isn't constrained by child boxes.
-        const targetContainer = siteHeader || headerContainer || demoContainer || document.body;
-
-        if (targetContainer) {
-          // make sure the container is positioned so our absolute button can align
-          try { targetContainer.style.position = targetContainer.style.position || 'relative'; } catch(e){}
-          try {
-            if (demoContainer) {
-              // If the placeholder was left hidden via inline style, force it visible
-              try {
-                const cs = getComputedStyle(demoContainer);
-                if (cs && cs.display === 'none') demoContainer.style.display = 'flex';
-                else demoContainer.style.display = demoContainer.style.display || '';
-              } catch(e) {
-                demoContainer.style.display = demoContainer.style.display || '';
-              }
-            }
-          } catch(e){}
-
-          if (!targetContainer.querySelector('.demo-reset-btn-top')) {
-            const btn = document.createElement('button');
-            btn.className = 'demo-reset-btn-top link-white';
-            btn.type = 'button';
-            btn.setAttribute('aria-label', 'Demo Reset to repo seed');
-            btn.title = 'Demo Reset to repo seed';
-            btn.textContent = 'Demo Reset';
-            btn.addEventListener('click', (e)=>{
-              e.stopPropagation();
-              // Clear itinerary-level overrides/extras/deleted so global view resets too
-              try {
-                localStorage.removeItem('itineraries.extras');
-                localStorage.removeItem('itineraries.deleted');
-                localStorage.removeItem('itineraries.overrides');
-              } catch(err) { console.warn('[week] demo reset: failed to clear itinerary state', err); }
-
-              if (perTripSeed && perTripSeed.length){
-                try{
-                  saveEventsToStorage(trip.id, perTripSeed);
-                  eventsForThisTrip.length = 0;
-                  eventsForThisTrip.push(...perTripSeed);
-                  // Also reset trip dates to original values
-                  trip.startDate = perTripStartDate || trip.startDate;
-                  trip.endDate = perTripEndDate || trip.endDate;
-                  tripStart = new Date(trip.startDate + 'T00:00:00');
-                  tripEnd = new Date(trip.endDate + 'T00:00:00');
-                  weekStart = new Date(trip.startDate + 'T00:00:00');
-                  console.info('[week] Demo Reset: wrote', perTripSeed.length, 'events to storage and reset dates to', trip.startDate, trip.endDate);
-                  // reload to ensure itinerary list pages also pick up cleared overrides
-                  location.reload();
-                }catch(err){ console.warn('[week] reset failed', err); alert('Reset failed - see console for details.'); }
-              } else {
-                alert('No per-trip seed file available to reset.');
-              }
-            });
-            targetContainer.appendChild(btn);
-            try { console.info('[week] Demo Reset attached to', targetContainer.tagName, targetContainer.id||targetContainer.className); } catch(e){}
-          }
-        } else if ((attempt||0) < 10) {
-          setTimeout(()=> attachDemoResetToHeader((attempt||0)+1), 160);
-        } else {
-          try { console.warn('[week] failed to attach Demo Reset after retries'); } catch(e){}
-        }
-      })();
 
       // Next 7 columns: Monday..Sunday
       for(let i=0;i<7;i++){
