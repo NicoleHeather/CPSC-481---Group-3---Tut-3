@@ -436,21 +436,59 @@
         <div class="evd-header"><h3>Event Details</h3></div>
         <div class="evd-body">
           <div class="evd-image-container"></div>
-          <div class="evd-field"><span class="evd-label">Title:</span> <span class="evd-title"></span></div>
-          <div class="evd-field"><span class="evd-label">Date:</span> <span class="evd-date"></span></div>
-          <div class="evd-field"><span class="evd-label">Time:</span> <span class="evd-time"></span></div>
-          <div class="evd-field evd-location-field"><span class="evd-label">Location:</span> <span class="evd-location"></span></div>
-          <div class="evd-field evd-category-field"><span class="evd-label">Category:</span> <span class="evd-category"></span></div>
-          <div class="evd-field evd-price-field"><span class="evd-label">Price:</span> <span class="evd-price"></span></div>
+          <div class="evd-field">
+            <span class="evd-label">Title:</span>
+            <span class="evd-title evd-view"></span>
+            <input class="evd-input evd-title-input evd-edit-field" type="text" aria-label="Title">
+          </div>
+          <div class="evd-field">
+            <span class="evd-label">Date:</span>
+            <span class="evd-date evd-view"></span>
+            <input class="evd-input evd-date-input evd-edit-field" type="date" aria-label="Date">
+          </div>
+          <div class="evd-field">
+            <span class="evd-label">Time:</span>
+            <span class="evd-time evd-view"></span>
+            <input class="evd-input evd-time-input evd-edit-field" type="time" aria-label="Time">
+          </div>
+          <div class="evd-field evd-duration-row">
+            <span class="evd-label">Duration:</span>
+            <span class="evd-duration evd-view"></span>
+            <div class="evd-input-wrapper evd-duration-wrapper">
+              <input class="evd-input evd-duration-input evd-edit-field" type="number" step="0.25" min="0" aria-label="Duration (hours)" placeholder="1.5">
+              <span class="evd-input-suffix">hrs</span>
+            </div>
+          </div>
+          <div class="evd-field evd-location-field">
+            <span class="evd-label">Location:</span>
+            <span class="evd-location evd-view"></span>
+            <input class="evd-input evd-location-input evd-edit-field" type="text" aria-label="Location">
+          </div>
+          <div class="evd-field evd-category-field">
+            <span class="evd-label">Category:</span>
+            <span class="evd-category evd-view"></span>
+            <input class="evd-input evd-category-input evd-edit-field" type="text" aria-label="Category">
+          </div>
+          <div class="evd-field evd-price-field">
+            <span class="evd-label">Price:</span>
+            <span class="evd-price evd-view"></span>
+            <div class="evd-input-wrapper evd-price-wrapper">
+              <span class="evd-input-prefix">$</span>
+              <input class="evd-input evd-price-input evd-edit-field" type="number" step="1" min="0" aria-label="Price" placeholder="0">
+            </div>
+          </div>
           <div class="evd-description-field">
             <div class="evd-label">Description:</div>
-            <p class="evd-description"></p>
+            <p class="evd-description evd-view"></p>
+            <textarea class="evd-input evd-description-input evd-edit-field" rows="3" aria-label="Description"></textarea>
           </div>
         </div>
         <div class="evd-footer">
-          <button type="button" class="btn evd-close">Close</button>
-          <button type="button" class="btn btn-primary evd-edit">Edit</button>
-          <button type="button" class="btn btn-danger evd-remove">Remove</button>
+          <button type="button" class="btn evd-close evd-view">Close</button>
+          <button type="button" class="btn btn-primary evd-edit evd-view">Edit</button>
+          <button type="button" class="btn btn-danger evd-remove evd-view">Remove</button>
+          <button type="button" class="btn evd-cancel evd-edit-mode">Cancel</button>
+          <button type="button" class="btn btn-primary evd-save evd-edit-mode">Save</button>
         </div>
       `;
       overlay.appendChild(modal);
@@ -459,21 +497,100 @@
       const closeBtn = modal.querySelector('.evd-close');
       const editBtn = modal.querySelector('.evd-edit');
       const removeBtn = modal.querySelector('.evd-remove');
+      const saveBtn = modal.querySelector('.evd-save');
+      const cancelEditBtn = modal.querySelector('.evd-cancel');
 
-      closeBtn.addEventListener('click', ()=>{ overlay.style.display='none'; });
-      overlay.addEventListener('click', (e)=>{ if(e.target === overlay) overlay.style.display='none'; });
+      const titleInput = modal.querySelector('.evd-title-input');
+      const dateInput = modal.querySelector('.evd-date-input');
+      const timeInput = modal.querySelector('.evd-time-input');
+      const durationInput = modal.querySelector('.evd-duration-input');
+      const durationView = modal.querySelector('.evd-duration');
+      const locationInput = modal.querySelector('.evd-location-input');
+      const categoryInput = modal.querySelector('.evd-category-input');
+      const priceInput = modal.querySelector('.evd-price-input');
+      const descriptionInput = modal.querySelector('.evd-description-input');
+
+      function setEventDetailMode(mode, ev){
+        const isEdit = mode === 'edit';
+        modal.classList.toggle('evd-mode-edit', isEdit);
+        overlay.dataset.mode = mode;
+        if(isEdit && ev){
+          // Re-query inputs to ensure they're available
+          const titleInp = modal.querySelector('.evd-title-input');
+          const dateInp = modal.querySelector('.evd-date-input');
+          const timeInp = modal.querySelector('.evd-time-input');
+          const durationInp = modal.querySelector('.evd-duration-input');
+          const locationInp = modal.querySelector('.evd-location-input');
+          const categoryInp = modal.querySelector('.evd-category-input');
+          const priceInp = modal.querySelector('.evd-price-input');
+          const descriptionInp = modal.querySelector('.evd-description-input');
+          
+          if(titleInp) titleInp.value = ev.title || '';
+          if(dateInp) dateInp.value = ev.date || '';
+          if(timeInp) timeInp.value = ev.time || '';
+          if(durationInp) durationInp.value = ev.duration || '';
+          if(locationInp) locationInp.value = ev.location || '';
+          if(categoryInp) categoryInp.value = ev.category || '';
+          if(priceInp) priceInp.value = (ev.price !== undefined && ev.price !== null) ? ev.price : '';
+          if(descriptionInp) descriptionInp.value = ev.description || '';
+        }
+      }
+
+      modal._setMode = setEventDetailMode;
+
+      closeBtn.addEventListener('click', ()=>{ overlay.style.display='none'; setEventDetailMode('view'); });
+      overlay.addEventListener('click', (e)=>{ if(e.target === overlay) { overlay.style.display='none'; setEventDetailMode('view'); } });
 
       editBtn.addEventListener('click', ()=>{
         const eventId = overlay.dataset.eventId;
-        if(!eventId) return;
-        // TODO: Implement edit functionality
-        alert('Edit functionality coming soon!');
+        const ev = eventsForThisTrip.find(e => e.id === eventId);
+        if(!ev) return;
+        setEventDetailMode('edit', ev);
+        titleInput.focus();
+      });
+
+      cancelEditBtn.addEventListener('click', ()=>{
+        const eventId = overlay.dataset.eventId;
+        const ev = eventsForThisTrip.find(e => e.id === eventId);
+        if(ev) { setEventDetailMode('view'); showEventDetailModal(ev); }
+      });
+
+      saveBtn.addEventListener('click', ()=>{
+        const eventId = overlay.dataset.eventId;
+        const idx = eventsForThisTrip.findIndex(e => e.id === eventId);
+        if(idx === -1) return;
+        const ev = eventsForThisTrip[idx];
+        
+        // Re-query inputs
+        const titleInp = modal.querySelector('.evd-title-input');
+        const dateInp = modal.querySelector('.evd-date-input');
+        const timeInp = modal.querySelector('.evd-time-input');
+        const durationInp = modal.querySelector('.evd-duration-input');
+        const locationInp = modal.querySelector('.evd-location-input');
+        const categoryInp = modal.querySelector('.evd-category-input');
+        const priceInp = modal.querySelector('.evd-price-input');
+        const descriptionInp = modal.querySelector('.evd-description-input');
+        
+        ev.title = (titleInp?.value || '').trim() || 'Untitled Event';
+        ev.date = dateInp?.value || ev.date;
+        ev.time = timeInp?.value || ev.time;
+        ev.duration = durationInp?.value || ev.duration;
+        ev.location = (locationInp?.value || '').trim();
+        ev.category = (categoryInp?.value || '').trim();
+        const priceVal = (priceInp?.value || '').trim();
+        ev.price = priceVal === '' ? ev.price : Number(priceVal);
+        ev.description = (descriptionInp?.value || '').trim();
+        saveEventsToStorage(trip.id, eventsForThisTrip);
+        render();
+        setEventDetailMode('view');
+        showEventDetailModal(ev);
       });
 
       removeBtn.addEventListener('click', ()=>{
         const eventId = overlay.dataset.eventId;
         if(!eventId) return;
         overlay.style.display='none';
+        setEventDetailMode('view');
         const event = eventsForThisTrip.find(e => e.id === eventId);
         if(event) showConfirmDeleteModal(event);
       });
@@ -485,10 +602,14 @@
     function showEventDetailModal(event){
       const modal = ensureEventDetailModal();
       modal.dataset.eventId = event.id;
+      modal.classList.remove('evd-mode-edit');
+      modal.dataset.mode = 'view';
+      if(modal._setMode) modal._setMode('view', event);
       
       const titleEl = modal.querySelector('.evd-title');
       const dateEl = modal.querySelector('.evd-date');
       const timeEl = modal.querySelector('.evd-time');
+      const durationEl = modal.querySelector('.evd-duration');
       const locationEl = modal.querySelector('.evd-location');
       const categoryEl = modal.querySelector('.evd-category');
       const priceEl = modal.querySelector('.evd-price');
@@ -519,6 +640,13 @@
         timeEl.textContent = timeDisplay;
       } else {
         timeEl.textContent = 'No time specified';
+      }
+
+      // Duration view
+      if(event.duration){
+        durationEl.textContent = `${event.duration} hrs`;
+      } else {
+        durationEl.textContent = '';
       }
       
       // Location
