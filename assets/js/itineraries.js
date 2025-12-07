@@ -284,10 +284,40 @@ document.addEventListener('DOMContentLoaded', function () {
           const s = fd.get('startDate');
           const en = fd.get('endDate');
           if(!t || !s || !en){ alert('Please fill all fields'); return; }
-          const out = { title: t, startDate: s, endDate: en };
-          if(existing && existing.id) out.id = existing.id;
-          wrapper.remove();
-          onSave(out);
+
+          const proceed = ()=>{
+            const out = { title: t, startDate: s, endDate: en };
+            if(existing && existing.id) out.id = existing.id;
+            wrapper.remove();
+            onSave(out);
+          };
+
+          // If editing and shrinking the date range, warn if stored events would be lost
+          if (existing && existing.id) {
+            const prevStart = parseISO(existing.startDate || s);
+            const prevEnd = parseISO(existing.endDate || en);
+            const newStart = parseISO(s);
+            const newEnd = parseISO(en);
+            if (newStart > prevStart || newEnd < prevEnd) {
+              // load any cached events for this trip (from week/day views)
+              let savedEvents = [];
+              try {
+                const raw = localStorage.getItem(`events-${existing.id}`);
+                if (raw) savedEvents = JSON.parse(raw) || [];
+              } catch(err) { savedEvents = []; }
+              const toLose = savedEvents.filter(ev => {
+                if (!ev || !ev.date) return false;
+                const d = parseISO(ev.date);
+                return d < newStart || d > newEnd;
+              });
+              if (toLose.length > 0) {
+                showItineraryDateChangeModal(toLose.length, proceed);
+                return;
+              }
+            }
+          }
+
+          proceed();
         });
 
         // Close modal on backdrop click or Escape
@@ -295,6 +325,46 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('keydown', function escHandler(ev){ if(ev.key==='Escape'){ wrapper.remove(); document.removeEventListener('keydown', escHandler); } });
 
         return wrapper;
+      }
+
+      // Styled confirmation modal mirroring weekly view
+      let _itModal = null;
+      let _itCallback = null;
+      function ensureItineraryDateChangeModal(){
+        if (_itModal) return _itModal;
+        const overlay = document.createElement('div'); overlay.className = 'cdc-overlay'; overlay.style.display='none';
+        const modal = document.createElement('div'); modal.className = 'cdc-modal';
+        modal.innerHTML = `
+          <div class="cdc-header">
+            <h2>Events Will Be Removed</h2>
+          </div>
+          <div class="cdc-body">
+            <p>Changing the dates will remove <span class="cdc-event-count"></span> event(s) that fall outside the new date range.</p>
+            <p>Continue anyway?</p>
+          </div>
+          <div class="cdc-footer">
+            <button type="button" class="cdc-cancel btn">Cancel</button>
+            <button type="button" class="cdc-confirm btn btn-primary">Remove Events & Update Dates</button>
+          </div>
+        `;
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        const cancelBtn = modal.querySelector('.cdc-cancel');
+        const confirmBtn = modal.querySelector('.cdc-confirm');
+        cancelBtn.addEventListener('click', ()=>{ overlay.style.display='none'; });
+        confirmBtn.addEventListener('click', ()=>{ if(_itCallback) _itCallback(); overlay.style.display='none'; });
+
+        _itModal = overlay;
+        return _itModal;
+      }
+      function showItineraryDateChangeModal(count, onConfirm){
+        const m = ensureItineraryDateChangeModal();
+        _itCallback = onConfirm;
+        m.querySelector('.cdc-event-count').textContent = count;
+        m.style.display = 'flex';
+        const confirmBtn = m.querySelector('.cdc-confirm');
+        if (confirmBtn) confirmBtn.focus();
       }
 
       function showUndoToast(msg, onUndo){
