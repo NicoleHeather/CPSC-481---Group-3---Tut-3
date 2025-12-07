@@ -2,6 +2,9 @@
 const editButton = document.getElementById('event-edit-btn');
 const editPopupForm = document.getElementById('editPopupForm');
 const removeButton = document.getElementById('event-remove-btn');
+const cancelRemoveButton = document.getElementById('cancel-remove');
+const confirmRemoveButton = document.getElementById('yes-remove');
+
 const cancelEditButton = document.getElementById('ev-cancel');
 const removePopupForm = document.getElementById('removePopupForm');
 const background = document.getElementById('whole-page');
@@ -152,8 +155,17 @@ removeButton.addEventListener('click', function () {
     removePopupForm.style.display = 'block';
     modal2.style.display = 'block';
 });
- 
 
+cancelRemoveButton.addEventListener('click', function () {
+    removePopupForm.style.display = "none";
+    modal2.style.display = "none";
+});
+
+confirmRemoveButton.addEventListener('click', function () {
+    removePopupForm.style.display = "none";
+    modal2.style.display = "none";
+});
+ 
 editButton.addEventListener('click', function () {
 
     titleInput.value = currentTitle.textContent;
