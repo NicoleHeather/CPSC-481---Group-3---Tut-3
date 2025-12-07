@@ -14,40 +14,68 @@
     <!-- header partial will be injected here -->
 
     <main class="container">
-        <h1>Event</h1>
         <div class="booking-request_container">
-            <div class="booking-request_header">
-                <button class="back-button" onclick="window.history.back()">
-                    ←
-                </button>
-                <div class="vertical-separator"></div>
-                <p class="booking-request_title">Explore</p>
-            </div>
 
-            <p id="page-title" class="event-header">Guided Hike</p>
+            <div class="event-header">
+                <h2 id="page-title" class="event-title">Guided Hike</h2>
+                <button class="heart-btn" id="save-btn" aria-label="Save to favorites">
+                    <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </button>
+            </div>
 
             <div class="image-container">
                 <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80"
                     alt="Event venue" class="event-image" id="page-image"/>
             </div>
 
-            <div id="page-description" class="description">
-                <p>
-                    Join us for an unforgettable guided hiking experience through the stunning landscapes of Banff
-                    National Park, a UNESCO World Heritage Site.
-                    Our expert local guides will lead you through some of the most scenic trails in the Canadian
-                    Rockies, sharing their knowledge of the area's geology, ecology, and history.
-                </p>
+            <div class="event-details">
+                <div class="event-detail-row">
+                    <svg class="event-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span class="event-detail-value" id="page-date">-</span>
+                </div>
+
+                <div class="event-detail-row">
+                    <svg class="event-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span class="event-detail-value" id="page-time">-</span>
+                </div>
+
+                <div class="event-detail-row">
+                    <svg class="event-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <span class="event-detail-value" id="page-location">-</span>
+                </div>
+
+                <div class="event-detail-row">
+                    <svg class="event-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    <span class="event-detail-value" id="page-price">-</span>
+                </div>
+
+                <div class="event-detail-row full-width">
+                    <svg class="event-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span class="event-detail-value" id="page-description">-</span>
+                </div>
             </div>
 
-            <a id="booking-request-btn" href="../pages/BookingRequest.html" class="btn continue-button"
-                style="text-align:center; font-weight:500">
+            <a id="booking-request-btn" href="../pages/BookingRequest.html" class="btn continue-button">
                 Create Booking Request
             </a>
-            <p></p>
-            <button class="btn continue-button" id="save-btn">
-                Save to History
-            </button>
         </div>
 
     </main>
@@ -56,14 +84,14 @@
             <div id="save-success-container">
                 <img style="width:30%; height:30%;" src="../assets/img/Checkmark.png" alt="Success">
                 <p id="save-success-message">Event saved successfully!</p>
-                <button class="btn btn-secondary" id="save-success-ok">OK</button>
+                <button class="btn" id="save-success-ok">OK</button>
             </div>
         </div>
         <div id="unsave-success-popup">
             <div id="unsave-success-container">
                 <img style="width:30%; height:30%;" src="../assets/img/Checkmark.png" alt="Success">
                 <p id="unsave-success-message">Event removed from saved!</p>
-                <button class="btn btn-secondary" id="unsave-success-ok">OK</button>
+                <button class="btn" id="unsave-success-ok">OK</button>
             </div>
         </div>
     </div>
@@ -75,7 +103,7 @@
     <script>
   
     const urlParams = new URLSearchParams(window.location.search);
-    const eventId = parseInt(urlParams.get('id'));
+    const eventId = urlParams.get('id');
     const source = urlParams.get('source') || 'explore';
 
     const STORAGE_KEY = 'user_saved_events';
@@ -95,7 +123,7 @@
     
     function loadEventDetails() {
         console.log('=== LOADING EVENT DETAILS ===');
-        
+        console.log('Looking for eventId:', eventId);
         
         const savedEvents = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         const eventFromStorage = savedEvents.find(e => e.id === eventId);
@@ -114,18 +142,20 @@
             .then(response => response.json())
             .then(data => {
                 console.log('JSON data loaded');
+                console.log('Explore events:', data.explore.map(e => e.id));
+                console.log('Saved events:', data.saved.map(e => e.id));
                 
                 let event = null;
                 
                 event = data.explore.find(e => e.id === eventId);
                 if (event) {
-                    console.log('✅ Found in explore array:', event.title);
+                    console.log('✅ Found in explore array:', event.title, event);
                 }
                 
                 if (!event) {
                     event = data.saved.find(e => e.id === eventId);
                     if (event) {
-                        console.log('✅ Found in saved array:', event.title);
+                        console.log('✅ Found in saved array:', event.title, event);
                     }
                 }
                 
@@ -146,11 +176,53 @@
                 }
                 
                 window.currentEvent = event;
+                console.log('Set currentEvent:', window.currentEvent);
                 updatePage();
             })
             .catch(err => {
                 console.error('Error loading event:', err);
             });
+    }
+
+    function convertTo12Hour(time) {
+        if (!time) return '';
+        let [hours, mins] = time.split(':');
+        hours = parseInt(hours);
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        return `${hours}:${mins} ${ampm}`;
+    }
+
+    function calculateEndTime(startTime, duration) {
+        if (!startTime || !duration) return '';
+        let [hours, mins] = startTime.split(':');
+        hours = parseInt(hours);
+        mins = parseInt(mins);
+        
+        // Add duration to start time
+        const durationHours = Math.floor(duration);
+        const durationMins = Math.round((duration - durationHours) * 60);
+        
+        hours += durationHours;
+        mins += durationMins;
+        
+        // Handle minute overflow
+        if (mins >= 60) {
+            hours += Math.floor(mins / 60);
+            mins = mins % 60;
+        }
+        
+        // Handle hour overflow (24-hour format)
+        hours = hours % 24;
+        
+        // Convert to 12-hour format
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        
+        const minsStr = mins < 10 ? '0' + mins : mins;
+        return `${hours}:${minsStr} ${ampm}`;
     }
 
     function updatePage() {
@@ -162,14 +234,44 @@
         console.log('Updating page for:', window.currentEvent.title);
         
         document.getElementById('page-title').textContent = window.currentEvent.title;
-        document.getElementById('page-image').src = window.currentEvent.img;
+        if (window.currentEvent.img) {
+            document.getElementById('page-image').src = window.currentEvent.img;
+        }
         document.getElementById('booking-request-btn').href = 
             `../pages/BookingRequest.html?id=${window.currentEvent.id}&title=${encodeURIComponent(window.currentEvent.title)}`;
+        
+        // Update date and time
+        if (window.currentEvent.date) {
+            const dateObj = new Date(window.currentEvent.date);
+            const formattedDate = dateObj.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('page-date').textContent = formattedDate;
+        }
+        
+        if (window.currentEvent.time) {
+            const startTime = convertTo12Hour(window.currentEvent.time);
+            const endTime = calculateEndTime(window.currentEvent.time, window.currentEvent.duration);
+            const durationText = window.currentEvent.duration ? ` (${window.currentEvent.duration}H)` : '';
+            document.getElementById('page-time').textContent = startTime + ' – ' + endTime + durationText;
+        }
+        
+        if (window.currentEvent.location) {
+            document.getElementById('page-location').textContent = window.currentEvent.location;
+        }
+        
+        if (window.currentEvent.price !== undefined) {
+            const priceDisplay = window.currentEvent.price === 0 ? 'Free' : `$${window.currentEvent.price.toFixed(2)}`;
+            document.getElementById('page-price').textContent = priceDisplay;
+        }
         
         // Update description if it exists
         const descriptionEl = document.getElementById('page-description');
         if (descriptionEl && window.currentEvent.description) {
-            descriptionEl.innerHTML = `<p>${window.currentEvent.description}</p>`;
+            descriptionEl.textContent = window.currentEvent.description;
         }
         
         updateSaveButton();
@@ -243,16 +345,17 @@
     // Update save button appearance
     function updateSaveButton() {
         const saveBtn = document.getElementById('save-btn');
-        if (!saveBtn) {
-            console.error('Save button not found');
+        const heartIcon = document.querySelector('.heart-icon');
+        
+        if (!saveBtn || !heartIcon) {
+            console.error('Save button or heart icon not found');
             return;
         }
         
         if (!window.currentEvent) {
             console.error('No current event for updateSaveButton');
-            saveBtn.textContent = 'Save to History';
-            saveBtn.style.backgroundColor = 'var(--color-accent)';
-            saveBtn.style.color = 'white';
+            heartIcon.style.fill = 'none';
+            heartIcon.style.color = '#6b7280';
             return;
         }
         
@@ -262,13 +365,11 @@
         console.log('updateSaveButton - Is saved?', isSaved, 'for event:', window.currentEvent.id);
         
         if (isSaved) {
-            saveBtn.textContent = '✓ Saved to History';
-            saveBtn.style.backgroundColor = 'var(--color-primary)';
-            saveBtn.style.color = 'white';
+            heartIcon.style.fill = 'var(--color-primary)';
+            heartIcon.style.color = 'var(--color-primary)';
         } else {
-            saveBtn.textContent = 'Save to History';
-            saveBtn.style.backgroundColor = 'var(--color-accent)';
-            saveBtn.style.color = 'white';
+            heartIcon.style.fill = 'none';
+            heartIcon.style.color = '#6b7280';
         }
     }
 
