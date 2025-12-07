@@ -676,7 +676,7 @@
       const modal = document.createElement('div'); modal.className = 'ed-modal';
       modal.innerHTML = `
         <div class="ed-header">
-          <h3>Edit Trip Dates</h3>
+          <h2>Edit Trip Dates</h2>
         </div>
         <form class="ed-form">
           <div class="form-group">

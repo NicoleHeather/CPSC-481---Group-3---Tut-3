@@ -201,20 +201,61 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       function confirmDelete(trip){
-        // quick confirm then support Undo via toast
-        const ok = confirm(`Delete itinerary "${trip.title}"? This will hide it locally.`);
-        if(!ok) return;
-        // remove: if extra, remove from extras; otherwise add id to deleted set
-        if(trip.isExtra){
-          const idx = extras.findIndex(x=>x.id===trip.id);
-          if(idx>=0) { const removed = extras.splice(idx,1)[0]; saveJSON(KEY_EXTRAS, extras); showUndoToast('Trip removed', ()=>{ extras.splice(idx,0,removed); saveJSON(KEY_EXTRAS, extras); location.reload(); }); }
-        } else {
-          const arr = loadJSON(KEY_DELETED) || [];
-          arr.push(trip.id);
-          saveJSON(KEY_DELETED, arr);
-          showUndoToast('Trip deleted', ()=>{ const cur = loadJSON(KEY_DELETED)||[]; const i = cur.indexOf(trip.id); if(i>=0) cur.splice(i,1); saveJSON(KEY_DELETED, cur); location.reload(); });
-        }
-        location.reload();
+        const performDelete = ()=>{
+          if(trip.isExtra){
+            const idx = extras.findIndex(x=>x.id===trip.id);
+            if(idx>=0) { const removed = extras.splice(idx,1)[0]; saveJSON(KEY_EXTRAS, extras); showUndoToast('Trip removed', ()=>{ extras.splice(idx,0,removed); saveJSON(KEY_EXTRAS, extras); location.reload(); }); }
+          } else {
+            const arr = loadJSON(KEY_DELETED) || [];
+            arr.push(trip.id);
+            saveJSON(KEY_DELETED, arr);
+            showUndoToast('Trip deleted', ()=>{ const cur = loadJSON(KEY_DELETED)||[]; const i = cur.indexOf(trip.id); if(i>=0) cur.splice(i,1); saveJSON(KEY_DELETED, cur); location.reload(); });
+          }
+          location.reload();
+        };
+        showDeleteItineraryModal(trip.title || 'itinerary', performDelete);
+      }
+
+      // Styled delete confirmation modal for itineraries page
+      let _delModal = null;
+      let _delCallback = null;
+      function ensureDeleteItineraryModal(){
+        if (_delModal) return _delModal;
+        const overlay = document.createElement('div'); overlay.className = 'cd-overlay'; overlay.style.display='none';
+        const modal = document.createElement('div'); modal.className = 'cd-modal';
+        modal.innerHTML = `
+          <div class="cd-header">
+            <h2>Delete Itinerary</h2>
+          </div>
+          <div class="cd-body">
+            <p>This will remove <span class="cd-itinerary-name"></span> from your itineraries on this device.</p>
+            <p>This action cannot be undone.</p>
+          </div>
+          <div class="cd-footer">
+            <button type="button" class="cd-cancel btn">Cancel</button>
+            <button type="button" class="cd-confirm btn btn-danger">Delete</button>
+          </div>
+        `;
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        const cancelBtn = modal.querySelector('.cd-cancel');
+        const confirmBtn = modal.querySelector('.cd-confirm');
+        cancelBtn.addEventListener('click', ()=>{ overlay.style.display='none'; });
+        confirmBtn.addEventListener('click', ()=>{ if(_delCallback) _delCallback(); overlay.style.display='none'; });
+        overlay.addEventListener('click', (e)=>{ if(e.target === overlay){ overlay.style.display='none'; } });
+
+        _delModal = overlay;
+        return _delModal;
+      }
+      function showDeleteItineraryModal(name, onConfirm){
+        const m = ensureDeleteItineraryModal();
+        _delCallback = onConfirm;
+        const nameEl = m.querySelector('.cd-itinerary-name');
+        if (nameEl) nameEl.textContent = `"${name}"`;
+        m.style.display = 'flex';
+        const confirmBtn = m.querySelector('.cd-confirm');
+        if (confirmBtn) confirmBtn.focus();
       }
 
       function createTripForm(existing, onSave){
@@ -356,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
           <div class="cdc-footer">
             <button type="button" class="cdc-cancel btn">Cancel</button>
-            <button type="button" class="cdc-confirm btn btn-primary">Remove Events & Update Dates</button>
+            <button type="button" class="cdc-confirm btn">Remove Events & Update Dates</button>
           </div>
         `;
         overlay.appendChild(modal);

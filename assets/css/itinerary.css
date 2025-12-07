@@ -320,8 +320,6 @@
 .ed-footer .btn { flex: 0 0 auto; }
 .ed-cancel { background: rgba(0,0,0,0.08); color: var(--color-text); }
 .ed-cancel:hover { background: rgba(0,0,0,0.12); }
-.ed-save { background: var(--color-primary); color: white; }
-.ed-save:hover { background: #a00d25; }
 
 /* Confirm date change modal styles */
 .cdc-overlay { position: fixed; inset: 0; background: rgba(2,6,10,0.45); display: none; align-items: center; justify-content: center; z-index: 10000; }
