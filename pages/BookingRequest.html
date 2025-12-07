@@ -6,105 +6,219 @@
 	<title>Booking Request - Prototype</title>
 	<link rel="stylesheet" href="../assets/css/variables.css">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/budget.css">
 	<link rel="stylesheet" href="../assets/css/bookingRequestScreen.css">
 </head>
-<body id="whole-screen">
+<body>
 	<!-- header partial will be injected here -->
 
-	<!-- Add options to override envents and go to conflicting event details. Change popups to be white and round-->
-
 	<main class="container">
-		<div id="background">
-			<div id="booking-event">
-				<h1 style >Booking Request</h1>
-				<div class="user-input">
-					<h2 id="event-name-booking">Guided Hike</h2>
-					<div id="name-input">
-						<label for="name">Name:</label>
-						<div class="required-field-container">
-							<input type="text" id="name" name="name" placeholder="Enter your full name">
-						<div class="asterisk">*</div>
-						</div>
-					</div>
-					<div id="email-input">
-						<label for="email">Email: </label>
-						<div class="required-field-container">
-							<input type="email" id="email" name="email" placeholder="example@gmail.com">
-							<div class="asterisk">*</div>
-						</div>
-					</div>
-					<div id="phone-input">
-						<label for="phone">Phone: </label>
-						<input type="text" id="phone" name="phone" placeholder="XXX-XXX-XXXX">
-					</div>
-					<div id="date-input">
-						<label for="date">Date: </label>
-						<div class="required-field-container">
-							<input type="text" id="date" name="date" disabled>
-						</div>
-					</div>
-					<div id="time-input">
-						<label for="time">Time: </label>
-						<div class="required-field-container">
-							<input type="text" id="time" name="time" disabled>
-						</div>
-					</div>
-					<div id="guest-number-input">
-						<label for="guest-number">Guest Number: </label>
-							<div class="required-field-container">
-								<input type="number" id="guest-number" name="guest-number" placeholder="0-20">
-								<div class="asterisk">*</div>
-							</div>
-						</div>
-					</div>
+		<div class="booking-request__panel">
+			<h1 id="page-title" style="margin-bottom: 1.5rem;">Booking Request</h1>
+			
+			<form id="booking-form" class="modal__form">
+				<div class="field">
+					<label for="event-name-booking">Event</label>
+					<input type="text" id="event-name-booking" name="event-name" disabled>
 				</div>
-					<div class="submit-info" style="text-align:center">
-						<button class="btn" id="submit-info-btn">Send Booking Request</button>
-					</div>
+
+				<div class="field">
+					<label for="name">Name <span style="color: red;">*</span></label>
+					<input type="text" id="name" name="name" placeholder="Enter your full name">
+					<div class="field-error" id="name-error"></div>
 				</div>
-				<div class="modal">
-					<form id="booking-request-popup">
-						<div id="success-container">
-							<img style="width:30%; height:30%;" src="../assets/img/Checkmark.png" alt="Trips R Us logo">
-							<p id="success-message">Booking Request Successfull!</p>
-							<select name="itinerary" id="choose-itinerary">
-								<option value="Itinerary-1">Itinerary-1</option>
-								<option value="Itinerary-2">Itinerary-2</option>
-								<option value="Itinerary-3">Itinerary-3</option>
-								<option value="Itinerary-4">Itinerary-4</option>
-								</select>
-							<input class="btn btn-secondary" id="booking-request-confirm" type="submit" value="Add to Itinerary">
-						</div>
-					</form>
-					<form id="booking-request-conflict">
-						<div id="error-container">
-							<img style="width:60%; height:40%;" src="../assets/img/Error.png" alt="Trips R Us logo">
-							<p id="error-message">Error! This event conflicts with item "Chili's Reservation" at 6PM.</p>
-							<input class="btn btn-secondary" id="booking-request-conflict-ok" type="submit" value="Back to Booking">
-							<input class="btn btn-secondary" id="booking-request-conflict-override" type="submit" value="Override Conflicting Event">
-							<input class="btn btn-secondary" id="booking-request-conflict-view-event" type="submit" value="View Conflicting Event">
-						</div>
-					</form>
-					<div id="booking-request-processing">
-						<img style="width:60%; height:60%;" src="../assets/img/refresh.png" alt="Trips R Us logo">
-						<p style="padding-top:8%; text-align:center">
-							Please wait while we process your request.
-						</p>
-					</div>
-					<form id="missing-required-info">
-						<div id="missing-container">
-							<div style="padding-left:15%">Missing Info Field. Please check the form input.</div>
-							<input class="btn" id="missing-required-info-ok" type="submit" value="Back to Booking">
-						</div>
-					</form>
+
+				<div class="field">
+					<label for="email">Email <span style="color: red;">*</span></label>
+					<input type="email" id="email" name="email" placeholder="example@gmail.com">
+					<div class="field-error" id="email-error"></div>
+				</div>
+
+				<div class="field">
+					<label for="phone">Phone</label>
+					<input type="text" id="phone" name="phone" placeholder="XXX-XXX-XXXX">
+					<div class="field-error" id="phone-error"></div>
+				</div>
+
+				<div class="field">
+					<label for="date">Date</label>
+					<input type="text" id="date" name="date" disabled>
+				</div>
+
+				<div class="field">
+					<label for="time">Time</label>
+					<input type="text" id="time" name="time" disabled>
+				</div>
+
+				<div class="field">
+					<label for="guest-number">Number of Guests <span style="color: red;">*</span></label>
+					<input type="number" id="guest-number" name="guest-number" placeholder="0-20">
+					<div class="field-error" id="guest-number-error"></div>
+				</div>
+
+				<div class="modal__actions">
+					<button type="button" class="btn btn-cancel" id="booking-cancel">Cancel</button>
+					<button type="submit" class="btn" id="submit-info-btn">Send Request</button>
+				</div>
+			</form>
+		</div>
+	</main>
+
+	<div class="modal" id="booking-modal">
+		<div class="modal__panel">
+			<div id="success-container">
+				<img style="width:70px; height:70px; margin-bottom: 1rem;" src="../assets/img/Checkmark.png" alt="Success">
+				<p id="success-message" style="text-align: center; margin-bottom: 1rem;">Booking Request Successful!</p>
+				
+				<div class="field">
+					<label for="choose-itinerary">Add to Itinerary</label>
+					<select name="itinerary" id="choose-itinerary">
+						<option value="">Select an itinerary</option>
+						<option value="Itinerary-1">Itinerary-1</option>
+						<option value="Itinerary-2">Itinerary-2</option>
+						<option value="Itinerary-3">Itinerary-3</option>
+						<option value="Itinerary-4">Itinerary-4</option>
+					</select>
+				</div>
+
+				<div class="modal__actions">
+					<button class="btn btn-cancel" id="booking-request-cancel">Back</button>
+					<button class="btn" id="booking-request-confirm">Add to Itinerary</button>
 				</div>
 			</div>
-	</main>
+		</div>
+
+		<div class="modal__panel" id="error-container" style="display: none;">
+			<img style="width:70px; height:70px; margin-bottom: 1rem;" src="../assets/img/Error.png" alt="Error">
+			<p id="error-message" style="text-align: center; margin-bottom: 1rem;"></p>
+			
+			<div class="modal__actions">
+				<button class="btn btn-cancel" id="booking-request-conflict-ok">Back</button>
+				<button class="btn btn-cancel" id="booking-request-conflict-view-event">View Event</button>
+				<button class="btn" id="booking-request-conflict-override">Override</button>
+			</div>
+		</div>
+
+		<div class="modal__panel" id="missing-container" style="display: none;">
+			<p style="text-align: center; margin-bottom: 1rem;">Missing required information. Please check the form.</p>
+			<div class="modal__actions">
+				<button class="btn" id="missing-required-info-ok">Back to Form</button>
+			</div>
+		</div>
+
+		<div class="modal__panel" id="processing-container" style="display: none; text-align: center;">
+			<img style="width:60px; height:60px; margin-bottom: 1rem;" src="../assets/img/refresh.png" alt="Loading">
+			<p>Processing your request...</p>
+		</div>
+	</div>
 
 	<!-- footer partial will be injected here -->
 
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
-	<script src="../assets/js/popupBookingRequest.js"></script>
+	<script src="../assets/js/popupBooking.js"></script>
+	<script>
+		// Validation helper functions
+		function showFieldError(input, errorEl, message) {
+			if (input && errorEl) {
+				input.classList.add('evd-invalid');
+				errorEl.innerHTML = `<svg viewBox="0 0 16 16" fill="none" style="width:16px;height:16px;vertical-align:middle;"><circle cx="8" cy="8" r="7" fill="#ff7f27"/><path d="M8 4v5M8 11h.01" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>${message}`;
+			}
+		}
+
+		function clearFieldError(input, errorEl) {
+			if (input && errorEl) {
+				input.classList.remove('evd-invalid');
+				errorEl.textContent = '';
+			}
+		}
+
+		// Handle prefilling the booking form
+		window.addEventListener('load', function() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const eventTitle = urlParams.get('title');
+			const eventDate = urlParams.get('date');
+			const eventTime = urlParams.get('time');
+
+			if (eventTitle) {
+				document.getElementById('event-name-booking').value = eventTitle;
+			}
+			if (eventDate) {
+				document.getElementById('date').value = eventDate;
+			}
+			if (eventTime) {
+				document.getElementById('time').value = eventTime;
+			}
+
+			// Get form elements
+			const bookingForm = document.getElementById('booking-form');
+			const nameInput = document.getElementById('name');
+			const emailInput = document.getElementById('email');
+			const phoneInput = document.getElementById('phone');
+			const guestNumberInput = document.getElementById('guest-number');
+			const nameError = document.getElementById('name-error');
+			const emailError = document.getElementById('email-error');
+			const phoneError = document.getElementById('phone-error');
+			const guestNumberError = document.getElementById('guest-number-error');
+
+			// Real-time validation - clear errors on input
+			nameInput.addEventListener('input', () => clearFieldError(nameInput, nameError));
+			emailInput.addEventListener('input', () => clearFieldError(emailInput, emailError));
+			phoneInput.addEventListener('input', () => clearFieldError(phoneInput, phoneError));
+			guestNumberInput.addEventListener('input', () => clearFieldError(guestNumberInput, guestNumberError));
+
+			// Handle cancel button
+			const cancelBtn = document.getElementById('booking-cancel');
+			if (cancelBtn) {
+				cancelBtn.addEventListener('click', function() {
+					window.history.back();
+				});
+			}
+
+			// Handle form submission
+			if (bookingForm) {
+				bookingForm.addEventListener('submit', function(e) {
+					e.preventDefault();
+					let hasErrors = false;
+
+					// Validate name
+					if (!nameInput.value.trim()) {
+						showFieldError(nameInput, nameError, 'Name is required');
+						hasErrors = true;
+					} else {
+						clearFieldError(nameInput, nameError);
+					}
+
+					// Validate email
+					const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+					if (!emailInput.value.trim()) {
+						showFieldError(emailInput, emailError, 'Email is required');
+						hasErrors = true;
+					} else if (!emailRegex.test(emailInput.value)) {
+						showFieldError(emailInput, emailError, 'Please enter a valid email');
+						hasErrors = true;
+					} else {
+						clearFieldError(emailInput, emailError);
+					}
+
+					// Validate guest number
+					if (!guestNumberInput.value) {
+						showFieldError(guestNumberInput, guestNumberError, 'Number of guests is required');
+						hasErrors = true;
+					} else if (guestNumberInput.value < 1 || guestNumberInput.value > 20) {
+						showFieldError(guestNumberInput, guestNumberError, 'Must be between 1 and 20 guests');
+						hasErrors = true;
+					} else {
+						clearFieldError(guestNumberInput, guestNumberError);
+					}
+
+					if (!hasErrors) {
+						console.log('Form is valid, submitting...');
+						// Add form submission logic here
+					}
+				});
+			}
+		});
+	</script>
 </body>
 </html>
