@@ -1,7 +1,7 @@
 /* Booking Request Form Panel */
 .booking-request__panel {
     width: 100%;
-    max-width: 480px;
+    max-width: 380px;
     background: var(--color-surface);
     border-radius: 14px;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
@@ -49,8 +49,17 @@
 }
 
 .field {
-    display: grid;
-    gap: 8px;
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
+	align-items: flex-start;
+}
+
+.field-input-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	flex: 1;
 }
 
 .field > label {
@@ -60,7 +69,13 @@
     text-align: left;
 }
 
-.field input,
+.evd-label {
+	width: 20px;
+	height: 20px;
+	color: #6b7280;
+	flex-shrink: 0;
+	cursor: pointer;
+}.field input,
 .field select {
     padding: 10px 12px;
     border-radius: 10px;
