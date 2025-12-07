@@ -259,6 +259,47 @@
     }
     function showQuickAddModal(date){ const m = ensureQuickAddModal(); m.dataset.date = date; m.querySelector('input[name="time"]').value=''; m.querySelector('input[name="title"]').value=''; m.style.display='flex'; m.querySelector('input[name="title"]').focus(); }
 
+    // Delete confirmation modal: create once and reuse
+    let _confirmDeleteModal = null;
+    function ensureConfirmDeleteModal(){
+      if(_confirmDeleteModal) return _confirmDeleteModal;
+      const overlay = document.createElement('div'); overlay.className = 'cd-overlay'; overlay.style.display='none';
+      const modal = document.createElement('div'); modal.className = 'cd-modal';
+      modal.innerHTML = `
+        <div class="cd-header">
+          <h3>Remove Event?</h3>
+        </div>
+        <div class="cd-body">
+          <p>Are you sure you want to remove "<span class="cd-event-title"></span>"?</p>
+        </div>
+        <div class="cd-footer">
+          <button type="button" class="cd-cancel btn">Cancel</button>
+          <button type="button" class="cd-confirm btn btn-danger">Remove</button>
+        </div>
+      `;
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      const cancelBtn = modal.querySelector('.cd-cancel');
+      const confirmBtn = modal.querySelector('.cd-confirm');
+
+      cancelBtn.addEventListener('click', ()=>{ overlay.style.display='none'; });
+      confirmBtn.addEventListener('click', ()=>{
+        const eventId = overlay.dataset.eventId;
+        const idx = eventsForThisTrip.findIndex(e => e.id === eventId);
+        if(idx >= 0){
+          eventsForThisTrip.splice(idx, 1);
+          saveEventsToStorage(trip.id, eventsForThisTrip);
+          render();
+        }
+        overlay.style.display='none';
+      });
+
+      _confirmDeleteModal = overlay;
+      return _confirmDeleteModal;
+    }
+    function showConfirmDeleteModal(eventId, eventTitle){ const m = ensureConfirmDeleteModal(); m.dataset.eventId = eventId; m.querySelector('.cd-event-title').textContent = eventTitle; m.style.display='flex'; m.querySelector('.cd-confirm').focus(); }
+
     // Compute the week that contains the trip.startDate. Week starts Monday.
     function startOfWeekMonday(d){
       const date = new Date(d);
@@ -417,8 +458,19 @@
         if(todays.length){
           todays.slice(0, SHOW).forEach(ev =>{
             const card = document.createElement('div'); card.className='event-item';
-            card.innerHTML = `<div class="event-time">${ev.time || ''}</div><div class="event-title">${ev.title}</div>`;
+            card.innerHTML = `<div class="event-time">${ev.time || ''}</div><div class="event-title">${ev.title}</div><button class="btn event-remove" data-event-id="${ev.id}" aria-label="Remove event" title="Remove event">×</button>`;
             inner.appendChild(card);
+            
+            // Attach remove handler
+            const removeBtn = card.querySelector('.event-remove');
+            if(removeBtn){
+              removeBtn.addEventListener('click', (e)=>{
+                e.stopPropagation();
+                const eventId = removeBtn.dataset.eventId;
+                const eventTitle = ev.title;
+                showConfirmDeleteModal(eventId, eventTitle);
+              });
+            }
           });
           const hidden = todays.length - SHOW;
           if(hidden > 0){
