@@ -44,6 +44,9 @@
     return `${hours12}:${minutes.toString().padStart(2,'0')} ${period}`;
   }
 
+  // Expose to12Hour to window so modals can use it
+  window.to12Hour = to12Hour;
+
   const params = new URLSearchParams(location.search);
   const tripId = params.get("trip");
   const dateISO = params.get("date");
@@ -61,6 +64,7 @@
   let currentTrip = null;
   let currentEvents = [];
   let addEventModal = null;
+  let eventDetailsModal = null;
 
   (async () => {
     const trips = await loadTrips();
@@ -232,13 +236,17 @@
       `;
 
       card.addEventListener('click', () => {
-        location.href = `./EventInfo.html?id=${encodeURIComponent(ev.id)}&trip=${encodeURIComponent(tripId)}`;
+        if (eventDetailsModal) {
+          eventDetailsModal.show(ev);
+        }
       });
 
       card.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          location.href = `./EventInfo.html?id=${encodeURIComponent(ev.id)}&trip=${encodeURIComponent(tripId)}`;
+          if (eventDetailsModal) {
+            eventDetailsModal.show(ev);
+          }
         }
       });
 
@@ -303,6 +311,55 @@
     onCancel: () => {
       // modal hides automatically
     }
+  });
+
+  // Initialize event details modal
+  function calculateEndTimeFromDuration(startTime, duration) {
+    const [h, m] = startTime.split(':').map(Number);
+    const durationHours = parseFloat(duration) || 0;
+    const durationMins = Math.round((durationHours % 1) * 60);
+    const totalMins = h * 60 + m + (Math.floor(durationHours) * 60) + durationMins;
+    const endH = Math.floor(totalMins / 60) % 24;
+    const endM = totalMins % 60;
+    return `${String(endH).padStart(2, '0')}:${String(endM).padStart(2, '0')}`;
+  }
+
+  eventDetailsModal = window.createEventDetailsModal({
+    calculateEndTime: calculateEndTimeFromDuration,
+    onEdit: (event) => {
+      // Edit mode is handled by the modal's internal logic
+    },
+    onRemove: async (event) => {
+      const confirmed = await window.showConfirmDialog(
+        'Remove Event?',
+        `Are you sure you want to remove "${event.title}"?`,
+        'Remove',
+        'Cancel'
+      );
+      if (confirmed) {
+        currentEvents = currentEvents.filter(e => e.id !== event.id);
+        saveEventsToStorage(currentTrip.id, currentEvents);
+        eventDetailsModal.hide();
+        renderDayEvents();
+      }
+    },
+    onSave: async (updatedEvent) => {
+      const index = currentEvents.findIndex(e => e.id === updatedEvent.id);
+      if (index !== -1) {
+        // Calculate duration from time difference
+        if (updatedEvent.time && updatedEvent.endTime) {
+          const [startH, startM] = updatedEvent.time.split(':').map(Number);
+          const [endH, endM] = updatedEvent.endTime ? updatedEvent.endTime.split(':').map(Number) : [0, 0];
+          const startTotalMins = startH * 60 + startM;
+          const endTotalMins = endH * 60 + endM;
+          const durationMins = endTotalMins - startTotalMins;
+          updatedEvent.duration = String((durationMins / 60).toFixed(1));
+        }
+        currentEvents[index] = updatedEvent;
+        saveEventsToStorage(currentTrip.id, currentEvents);
+      }
+    },
+    showConfirmDialog: window.showConfirmDialog
   });
 
 })();
