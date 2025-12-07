@@ -458,7 +458,7 @@
   only for layout and positioning so the appearance matches SamplePage's
   "Regular" button. The `.btn` class provides the background/hover.
 */
-.header-control { text-decoration: none; font-weight:700; padding:6px 12px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; /* make controls equal width */ flex: 0 0 96px; width: 96px; }
+.header-control { text-decoration: none; font-weight:400; padding:10px 14px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; /* make controls equal width */ flex: 0 0 96px; width: 96px; }
 .header-control.left { position: absolute; left: 8px; }
 .header-control.right { position: absolute; right: 8px; }
 .header-control:focus { outline: 3px solid rgba(255,127,39,0.14); outline-offset: 3px; }

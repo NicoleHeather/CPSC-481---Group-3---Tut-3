@@ -352,7 +352,7 @@ main.container { padding-bottom: 92px; }
   padding: 10px 16px;
   background: linear-gradient(90deg, rgba(255,127,39,0.98), rgba(200,16,46,0.98));
   color: white;
-  font-weight: 700;
+  font-weight: 400;
   /* top corners must be square so the tab sits flush against the card */
   border-top-left-radius: 0;
   border-top-right-radius: 0;
