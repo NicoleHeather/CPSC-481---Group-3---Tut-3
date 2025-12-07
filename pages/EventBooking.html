@@ -82,14 +82,14 @@
     <div class="modal" id="save-modal">
         <div id="save-success-popup">
             <div id="save-success-container">
-                <img style="width:30%; height:30%;" src="../assets/img/Checkmark.png" alt="Success">
+                <img style="width:70px; height:70px;" src="../assets/img/Checkmark.png" alt="Success">
                 <p id="save-success-message">Event saved successfully!</p>
                 <button class="btn" id="save-success-ok">OK</button>
             </div>
         </div>
         <div id="unsave-success-popup">
             <div id="unsave-success-container">
-                <img style="width:30%; height:30%;" src="../assets/img/Checkmark.png" alt="Success">
+                <img style="width:70px; height:70px;" src="../assets/img/Checkmark.png" alt="Success">
                 <p id="unsave-success-message">Event removed from saved!</p>
                 <button class="btn" id="unsave-success-ok">OK</button>
             </div>
@@ -442,12 +442,12 @@
         savePopup.style.display = 'block';
         unsavePopup.style.display = 'none';
         
-        // Auto-close after 3 seconds
+        // Auto-close after 5 seconds
         setTimeout(() => {
             if (modal.style.display === 'flex') {
                 closeSavePopup();
             }
-        }, 3000);
+        }, 5000);
     }
 
     function showUnsavePopup(eventTitle = '') {
@@ -473,7 +473,7 @@
         savePopup.style.display = 'none';
         unsavePopup.style.display = 'block';
         
-        // Auto-close after 3 seconds
+        // Auto-close after 5 seconds
         setTimeout(() => {
             if (modal.style.display === 'flex') {
                 closeSavePopup();
@@ -484,7 +484,7 @@
                     }, 300);
                 }
             }
-        }, 3000);
+        }, 5000);
     }
 
     function closeSavePopup() {
