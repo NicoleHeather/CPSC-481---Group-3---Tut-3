@@ -770,7 +770,39 @@ select:-moz-autofill {
 .modal .btn-cancel { background: transparent; border: 2px solid rgba(0,0,0,0.06); }
 .modal .btn-large { min-width: 160px; }
 
+ /* Footer Navbar Highlighting*/
+.bottom-nav .nav-item.active {
+  color: orange !important;
+  background-color: rgba(255, 165, 0, 0.1);
+}
 
+.bottom-nav .nav-item.active .icon {
+  color: orange !important;
+}
+
+.bottom-nav .nav-item.active .icon svg {
+  fill: orange !important;
+  color: orange !important;
+  stroke: orange !important;
+}
+
+.bottom-nav .nav-item.active svg path {
+  fill: orange !important;
+  stroke: orange !important;
+}
+
+.bottom-nav .nav-item.active .label {
+  color: orange !important;
+  font-weight: 700 !important;
+}
+
+.bottom-nav .nav-item {
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.bottom-nav .nav-item .icon svg {
+  transition: fill 0.2s ease, color 0.2s ease, stroke 0.2s ease;
+}
 
 
 

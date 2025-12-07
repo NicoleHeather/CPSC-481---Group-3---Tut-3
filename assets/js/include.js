@@ -21,6 +21,43 @@
     }
   }
 
+  // Function to highlight active footer item
+  function highlightActiveFooterItem() {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    console.log('Highlighting footer for page:', currentPage);
+    
+    // Find all nav items and highlight the one matching current page
+    document.querySelectorAll('.nav-item').forEach(item => {
+      const href = item.getAttribute('href');
+      if (href) {
+        const itemPage = href.split('/').pop().toLowerCase().replace('.html', '');
+        const cleanCurrentPage = currentPage.replace('.html', '');
+        
+        // Simple matching logic
+        if (itemPage === cleanCurrentPage) {
+          item.classList.add('active');
+          console.log('✓ Added active class to nav item for:', cleanCurrentPage);
+        }
+        // Additional specific matches
+        else if (cleanCurrentPage === 'home' && itemPage === 'home') {
+          item.classList.add('active');
+        }
+        else if (cleanCurrentPage === 'itineraries' && itemPage === 'itineraries') {
+          item.classList.add('active');
+        }
+        else if (cleanCurrentPage === 'search' && itemPage === 'search') {
+          item.classList.add('active');
+        }
+        else if (cleanCurrentPage === 'explore' && itemPage === 'search') {
+          item.classList.add('active');
+        }
+        else if (cleanCurrentPage === 'accountsettings' && itemPage === 'accountsettings') {
+          item.classList.add('active');
+        }
+      }
+    });
+  }
+
   // compute base path: if current URL path contains '/pages/', go up one level
   const path = window.location.pathname;
   const base = path.includes('/pages/') ? '..' : '.';
@@ -117,8 +154,14 @@
       if (device) {
         const temp = document.createElement('div'); temp.innerHTML = html;
         while (temp.firstChild) device.appendChild(temp.firstChild);
+        
+        // Highlight active footer item after insertion
+        setTimeout(highlightActiveFooterItem, 50);
       } else {
         insertFooterToBody(html);
+        
+        // Highlight active footer item after insertion
+        setTimeout(highlightActiveFooterItem, 50);
       }
     }
     // If running from file:// and footer partial couldn't be loaded, insert a minimal fallback footer
