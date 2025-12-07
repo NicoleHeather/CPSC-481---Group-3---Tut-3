@@ -294,6 +294,71 @@
       try { saveEventsToStorage(trip.id, eventsForThisTrip); console.info('[week] initialized storage with', eventsForThisTrip.length, 'seeded events'); } catch(e){ /* ignore */ }
     }
 
+    // Check for new event data from BookingRequest
+    const newEventDataStr = sessionStorage.getItem('newEventData');
+    const newEventTrip = sessionStorage.getItem('newEventTrip');
+    let highlightEventId = null;
+    
+    if (newEventDataStr && newEventTrip === trip.id) {
+      try {
+        const newEventData = JSON.parse(newEventDataStr);
+        
+        // Extract start time - handle both 12-hour format with " - " separator
+        let startTime = '14:00'; // default time
+        const timeStr = newEventData.time || '';
+        
+        if (timeStr.includes(' - ')) {
+          // Format: "2:00 PM - 4:00 PM"
+          const startPart = timeStr.split(' - ')[0].trim();
+          // Convert 12-hour to 24-hour if needed
+          const match = startPart.match(/^(\d+):(\d+)\s?(AM|PM)?$/i);
+          if (match) {
+            let hours = parseInt(match[1]);
+            const minutes = match[2];
+            const period = match[3]?.toUpperCase();
+            
+            if (period) {
+              if (period === 'PM' && hours !== 12) hours += 12;
+              if (period === 'AM' && hours === 12) hours = 0;
+            }
+            startTime = `${String(hours).padStart(2, '0')}:${minutes}`;
+          }
+        } else if (timeStr.match(/^\d+:\d+$/)) {
+          // Already in 24-hour format
+          startTime = timeStr;
+        }
+        
+        // Create a new event object with the booking request data
+        const newEvent = {
+          id: `booking-request-${Date.now()}`,
+          title: newEventData.title,
+          date: newEventData.date,
+          time: startTime,
+          location: trip.title,
+          description: `Booking Request from ${newEventData.name}\nEmail: ${newEventData.email}\nPhone: ${newEventData.phone}\nGuests: ${newEventData.guests}`,
+          duration: 2,
+          isNew: true
+        };
+        
+        // Add the new event to the events list
+        eventsForThisTrip.push(newEvent);
+        highlightEventId = newEvent.id;
+        
+        // Save the updated events to localStorage
+        saveEventsToStorage(trip.id, eventsForThisTrip);
+        
+        // Clear sessionStorage
+        sessionStorage.removeItem('newEventData');
+        sessionStorage.removeItem('newEventTrip');
+        
+        console.info('[week] added new booking request event:', newEvent);
+      } catch (e) {
+        console.warn('[week] failed to add new event from booking request:', e);
+        sessionStorage.removeItem('newEventData');
+        sessionStorage.removeItem('newEventTrip');
+      }
+    }
+
     // Helper functions for time calculations (used by both Add Event and Event Detail modals)
     function calculateDuration(startTime, endTime) {
       if(!startTime || !endTime) return 1;
@@ -1526,6 +1591,10 @@
         if(todays.length){
           todays.slice(0, SHOW).forEach(ev =>{
             const card = document.createElement('div'); card.className='event-item';
+            // Highlight the newly added event
+            if (ev.id === highlightEventId) {
+              card.classList.add('event-item--new');
+            }
             // Display time in 12-hour format
             const timeDisplay = to12Hour(ev.time);
             card.innerHTML = `<div class="event-time">${timeDisplay}</div><div class="event-title">${ev.title}</div>`;

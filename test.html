@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Loading Test</title>
+    <script>
+        async function testDataLoading() {
+            console.log('Testing data loading...');
+            
+            try {
+                // Test events.json
+                const eventsResponse = await fetch('assets/data/events.json');
+                if (!eventsResponse.ok) {
+                    console.error('Failed to load events.json:', eventsResponse.status);
+                    return;
+                }
+                const events = await eventsResponse.json();
+                console.log('✓ events.json loaded successfully:', events.explore.length, 'explore events,', events.saved.length, 'saved events');
+                
+                // Test trips.json
+                const tripsResponse = await fetch('assets/data/trips.json');
+                if (!tripsResponse.ok) {
+                    console.error('Failed to load trips.json:', tripsResponse.status);
+                    return;
+                }
+                const trips = await tripsResponse.json();
+                console.log('✓ trips.json loaded successfully:', trips.length, 'trips');
+                
+                // Test index.html can load
+                console.log('✓ All data files loaded successfully');
+                console.log('Ready to test ItineraryWeek.html and other pages');
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+        
+        // Run test when page loads
+        window.addEventListener('DOMContentLoaded', testDataLoading);
+    </script>
+</head>
+<body>
+    <h1>Data Loading Test</h1>
+    <p>Check the browser console for test results.</p>
+</body>
+</html>

@@ -79,32 +79,30 @@
 	</main>
 
 	<div class="modal" id="booking-modal">
-		<div class="modal__panel">
-			<div id="success-container">
-				<img style="width:70px; height:70px; margin-bottom: 1rem;" src="../assets/img/Checkmark.png" alt="Success">
-				<p id="success-message" style="text-align: center; margin-bottom: 1rem;">Booking Request Successful!</p>
-				
-				<div class="field">
-					<label for="choose-itinerary">Add to Itinerary</label>
-					<select name="itinerary" id="choose-itinerary">
-						<option value="">Select an itinerary</option>
-						<option value="Itinerary-1">Itinerary-1</option>
-						<option value="Itinerary-2">Itinerary-2</option>
-						<option value="Itinerary-3">Itinerary-3</option>
-						<option value="Itinerary-4">Itinerary-4</option>
-					</select>
-				</div>
+		<div class="modal__panel" id="success-container" style="display: none; flex-direction: column; gap: 16px;">
+			<div style="text-align: center;">
+				<img style="width: 70px; height: 70px; margin-bottom: 1rem;" src="../assets/img/Checkmark.png" alt="Success">
+				<p style="margin: 0; font-size: 1.125rem; font-weight: 500; color: var(--color-text);">Booking Request Sent!</p>
+			</div>
+			
+			<div class="field" style="gap: 8px; margin-bottom: 0;">
+				<label for="choose-itinerary" style="font-size: 0.9rem; font-weight: 500; color: var(--color-text);">Add to Itinerary (Optional)</label>
+				<select name="itinerary" id="choose-itinerary" style="padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.12); font-inherit; background: #fff; font-size: 1rem;">
+					<option value="">Select an itinerary</option>
+				</select>
+			</div>
 
-				<div class="modal__actions">
-					<button class="btn btn-cancel" id="booking-request-cancel">Back</button>
-					<button class="btn" id="booking-request-confirm">Add to Itinerary</button>
-				</div>
+			<div class="modal__actions">
+				<button class="btn btn-cancel" id="booking-request-cancel">Back</button>
+				<button class="btn" id="booking-request-confirm">Add to Itinerary</button>
 			</div>
 		</div>
 
-		<div class="modal__panel" id="error-container" style="display: none;">
-			<img style="width:70px; height:70px; margin-bottom: 1rem;" src="../assets/img/Error.png" alt="Error">
-			<p id="error-message" style="text-align: center; margin-bottom: 1rem;"></p>
+		<div class="modal__panel" id="error-container" style="display: none; flex-direction: column; gap: 16px;">
+			<div style="text-align: center;">
+				<img style="width: 70px; height: 70px; margin-bottom: 1rem;" src="../assets/img/Error.png" alt="Error">
+				<p id="error-message" style="margin: 0; font-size: 1.125rem; font-weight: 500; color: var(--color-text);"></p>
+			</div>
 			
 			<div class="modal__actions">
 				<button class="btn btn-cancel" id="booking-request-conflict-ok">Back</button>
@@ -113,16 +111,17 @@
 			</div>
 		</div>
 
-		<div class="modal__panel" id="missing-container" style="display: none;">
-			<p style="text-align: center; margin-bottom: 1rem;">Missing required information. Please check the form.</p>
+		<div class="modal__panel" id="missing-container" style="display: none; flex-direction: column; gap: 16px; text-align: center;">
+			<p style="margin: 0; font-size: 1.125rem; font-weight: 500; color: var(--color-text);">Missing Information</p>
+			<p style="margin: 0; color: var(--color-muted); font-size: 0.95rem;">Please check the form and try again.</p>
 			<div class="modal__actions">
 				<button class="btn" id="missing-required-info-ok">Back to Form</button>
 			</div>
 		</div>
 
-		<div class="modal__panel" id="processing-container" style="display: none; text-align: center;">
-			<img style="width:60px; height:60px; margin-bottom: 1rem;" src="../assets/img/refresh.png" alt="Loading">
-			<p>Processing your request...</p>
+		<div class="modal__panel" id="processing-container" style="display: none; flex-direction: column; gap: 16px; text-align: center; align-items: center;">
+			<img style="width: 60px; height: 60px;" src="../assets/img/refresh.png" alt="Loading">
+			<p style="margin: 0; font-size: 1.125rem; font-weight: 500; color: var(--color-text);">Processing your request...</p>
 		</div>
 	</div>
 
@@ -212,6 +211,58 @@
 				});
 			}
 
+			// Handle modal close buttons
+			const bookingModal = document.getElementById('booking-modal');
+			const backButtons = [
+				document.getElementById('booking-request-cancel'),
+				document.getElementById('booking-request-conflict-ok'),
+				document.getElementById('missing-required-info-ok')
+			];
+
+			backButtons.forEach(btn => {
+				if (btn) {
+					btn.addEventListener('click', function() {
+						if (bookingModal) {
+							bookingModal.classList.remove('open');
+						}
+					});
+				}
+			});
+
+			// Handle Add to Itinerary button
+			const addToItineraryBtn = document.getElementById('booking-request-confirm');
+			if (addToItineraryBtn) {
+				addToItineraryBtn.addEventListener('click', function() {
+					const selectElement = document.getElementById('choose-itinerary');
+					const selectedItinerary = selectElement.value;
+					
+					if (selectedItinerary) {
+						// Store the new event details
+						const eventData = {
+							title: document.getElementById('event-name-booking').value,
+							date: document.getElementById('date').value,
+							time: document.getElementById('time').value,
+							name: document.getElementById('name').value,
+							email: document.getElementById('email').value,
+							phone: document.getElementById('phone').value,
+							guests: document.getElementById('guest-number').value
+						};
+						
+						// Store in sessionStorage
+						sessionStorage.setItem('newEventData', JSON.stringify(eventData));
+						sessionStorage.setItem('newEventTrip', selectedItinerary);
+						
+						// Navigate to the weekly itinerary view
+						window.location.href = `../pages/ItineraryWeek.html?trip=${encodeURIComponent(selectedItinerary)}`;
+					} else {
+						// If no itinerary selected, just close the modal
+						if (bookingModal) {
+							bookingModal.classList.remove('open');
+						}
+					}
+				});
+			}
+
 			// Handle form submission
 			if (bookingForm) {
 				bookingForm.addEventListener('submit', function(e) {
@@ -251,7 +302,43 @@
 
 					if (!hasErrors) {
 						console.log('Form is valid, submitting...');
-						// Add form submission logic here
+						// Show success modal
+						const successContainer = document.getElementById('success-container');
+						const errorContainer = document.getElementById('error-container');
+						const missingContainer = document.getElementById('missing-container');
+						const processingContainer = document.getElementById('processing-container');
+						
+						// Hide all containers first
+						if (successContainer) successContainer.style.display = 'none';
+						if (errorContainer) errorContainer.style.display = 'none';
+						if (missingContainer) missingContainer.style.display = 'none';
+						if (processingContainer) processingContainer.style.display = 'none';
+						
+						// Load itineraries
+						fetch('../assets/data/trips.json')
+							.then(response => response.json())
+							.then(data => {
+								const selectElement = document.getElementById('choose-itinerary');
+								const trips = data.trips || [];
+								
+								// Clear existing options except the first one
+								while (selectElement.options.length > 1) {
+									selectElement.remove(1);
+								}
+								
+								// Add trip options
+								trips.forEach(trip => {
+									const option = document.createElement('option');
+									option.value = trip.id;
+									option.textContent = trip.title;
+									selectElement.appendChild(option);
+								});
+							})
+							.catch(error => console.error('Error loading itineraries:', error));
+						
+						// Show success container
+						if (successContainer) successContainer.style.display = 'flex';
+						if (bookingModal) bookingModal.classList.add('open');
 					}
 				});
 			}

@@ -183,6 +183,21 @@
   padding-left: 6px;
 }
 
+.event-item--new {
+  background-color: rgba(255, 127, 39, 0.08);
+  border-left: 4px solid var(--color-accent);
+  padding-left: 6px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  margin: 2px 0;
+  animation: highlightPulse 2s ease-in-out;
+}
+
+@keyframes highlightPulse {
+  0% { background-color: rgba(255, 127, 39, 0.16); }
+  100% { background-color: rgba(255, 127, 39, 0.08); }
+}
+
 .event-time { font-weight: 600; color: var(--color-primary); width:60px; flex:0 0 60px; white-space: nowrap; }
 .event-title { font-weight: 600; color: var(--color-text); flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: 8px; }
 
