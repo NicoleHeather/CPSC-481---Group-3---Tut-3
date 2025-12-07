@@ -440,16 +440,19 @@
             <span class="evd-label">Title:</span>
             <span class="evd-title evd-view"></span>
             <input class="evd-input evd-title-input evd-edit-field" type="text" aria-label="Title">
+            <span class="evd-error evd-title-error"></span>
           </div>
           <div class="evd-field">
             <span class="evd-label">Date:</span>
             <span class="evd-date evd-view"></span>
             <input class="evd-input evd-date-input evd-edit-field" type="date" aria-label="Date">
+            <span class="evd-error evd-date-error"></span>
           </div>
           <div class="evd-field">
             <span class="evd-label">Time:</span>
             <span class="evd-time evd-view"></span>
             <input class="evd-input evd-time-input evd-edit-field" type="time" aria-label="Time">
+            <span class="evd-error evd-time-error"></span>
           </div>
           <div class="evd-field evd-duration-row">
             <span class="evd-label">Duration:</span>
@@ -458,6 +461,7 @@
               <input class="evd-input evd-duration-input evd-edit-field" type="number" step="0.25" min="0" aria-label="Duration (hours)" placeholder="1.5">
               <span class="evd-input-suffix">hrs</span>
             </div>
+            <span class="evd-error evd-duration-error"></span>
           </div>
           <div class="evd-field evd-location-field">
             <span class="evd-label">Location:</span>
@@ -476,6 +480,7 @@
               <span class="evd-input-prefix">$</span>
               <input class="evd-input evd-price-input evd-edit-field" type="number" step="1" min="0" aria-label="Price" placeholder="0">
             </div>
+            <span class="evd-error evd-price-error"></span>
           </div>
           <div class="evd-description-field">
             <div class="evd-label">Description:</div>
@@ -510,29 +515,138 @@
       const priceInput = modal.querySelector('.evd-price-input');
       const descriptionInput = modal.querySelector('.evd-description-input');
 
+      // Validation helper functions
+      function validateTitle(value) {
+        const trimmed = (value || '').trim();
+        return trimmed.length > 0;
+      }
+
+      function validateDate(value) {
+        return value && value.length > 0;
+      }
+
+      function validateTime(value) {
+        return value && value.length > 0;
+      }
+
+      function validateDuration(value) {
+        if(!value) return true; // Optional field
+        const num = parseFloat(value);
+        return !isNaN(num) && num > 0;
+      }
+
+      function validatePrice(value) {
+        if(!value) return true; // Optional field
+        const num = parseFloat(value);
+        return !isNaN(num) && num >= 0;
+      }
+
+      function showFieldError(input, errorEl, message) {
+        if(input && errorEl) {
+          input.classList.add('evd-invalid');
+          input.classList.remove('evd-valid');
+          errorEl.textContent = message;
+        }
+      }
+
+      function clearFieldError(input, errorEl) {
+        if(input && errorEl) {
+          input.classList.remove('evd-invalid');
+          input.classList.add('evd-valid');
+          errorEl.textContent = '';
+        }
+      }
+
+      // Add real-time validation listeners
+      if(titleInput) {
+        titleInput.addEventListener('input', () => {
+          const titleError = modal.querySelector('.evd-title-error');
+          if(validateTitle(titleInput.value)) {
+            clearFieldError(titleInput, titleError);
+          } else {
+            showFieldError(titleInput, titleError, 'Title cannot be empty');
+          }
+        });
+      }
+
+      if(dateInput) {
+        dateInput.addEventListener('change', () => {
+          const dateError = modal.querySelector('.evd-date-error');
+          if(validateDate(dateInput.value)) {
+            clearFieldError(dateInput, dateError);
+          } else {
+            showFieldError(dateInput, dateError, 'Date is required');
+          }
+        });
+      }
+
+      if(timeInput) {
+        timeInput.addEventListener('change', () => {
+          const timeError = modal.querySelector('.evd-time-error');
+          if(validateTime(timeInput.value)) {
+            clearFieldError(timeInput, timeError);
+          } else {
+            showFieldError(timeInput, timeError, 'Time is required');
+          }
+        });
+      }
+
+      if(durationInput) {
+        durationInput.addEventListener('input', () => {
+          const durationError = modal.querySelector('.evd-duration-error');
+          if(validateDuration(durationInput.value)) {
+            clearFieldError(durationInput, durationError);
+          } else {
+            showFieldError(durationInput, durationError, 'Must be a positive number');
+          }
+        });
+      }
+
+      if(priceInput) {
+        priceInput.addEventListener('input', () => {
+          const priceError = modal.querySelector('.evd-price-error');
+          if(validatePrice(priceInput.value)) {
+            clearFieldError(priceInput, priceError);
+          } else {
+            showFieldError(priceInput, priceError, 'Must be a valid positive number');
+          }
+        });
+      }
+
       function setEventDetailMode(mode, ev){
-        const isEdit = mode === 'edit';
-        modal.classList.toggle('evd-mode-edit', isEdit);
-        overlay.dataset.mode = mode;
-        if(isEdit && ev){
-          // Re-query inputs to ensure they're available
-          const titleInp = modal.querySelector('.evd-title-input');
-          const dateInp = modal.querySelector('.evd-date-input');
-          const timeInp = modal.querySelector('.evd-time-input');
-          const durationInp = modal.querySelector('.evd-duration-input');
-          const locationInp = modal.querySelector('.evd-location-input');
-          const categoryInp = modal.querySelector('.evd-category-input');
-          const priceInp = modal.querySelector('.evd-price-input');
-          const descriptionInp = modal.querySelector('.evd-description-input');
+        try {
+          if(!mode) {
+            console.warn('setEventDetailMode: mode is required');
+            return;
+          }
           
-          if(titleInp) titleInp.value = ev.title || '';
-          if(dateInp) dateInp.value = ev.date || '';
-          if(timeInp) timeInp.value = ev.time || '';
-          if(durationInp) durationInp.value = ev.duration || '';
-          if(locationInp) locationInp.value = ev.location || '';
-          if(categoryInp) categoryInp.value = ev.category || '';
-          if(priceInp) priceInp.value = (ev.price !== undefined && ev.price !== null) ? ev.price : '';
-          if(descriptionInp) descriptionInp.value = ev.description || '';
+          const isEdit = mode === 'edit';
+          modal.classList.toggle('evd-mode-edit', isEdit);
+          overlay.dataset.mode = mode;
+          
+          if(isEdit && ev){
+            // Re-query inputs to ensure they're available
+            const titleInp = modal.querySelector('.evd-title-input');
+            const dateInp = modal.querySelector('.evd-date-input');
+            const timeInp = modal.querySelector('.evd-time-input');
+            const durationInp = modal.querySelector('.evd-duration-input');
+            const locationInp = modal.querySelector('.evd-location-input');
+            const categoryInp = modal.querySelector('.evd-category-input');
+            const priceInp = modal.querySelector('.evd-price-input');
+            const descriptionInp = modal.querySelector('.evd-description-input');
+            
+            // Validate and safely populate inputs
+            if(titleInp) titleInp.value = String(ev.title || '');
+            if(dateInp) dateInp.value = String(ev.date || '');
+            if(timeInp) timeInp.value = String(ev.time || '');
+            if(durationInp) durationInp.value = String(ev.duration || '');
+            if(locationInp) locationInp.value = String(ev.location || '');
+            if(categoryInp) categoryInp.value = String(ev.category || '');
+            if(priceInp) priceInp.value = (ev.price !== undefined && ev.price !== null) ? String(ev.price) : '';
+            if(descriptionInp) descriptionInp.value = String(ev.description || '');
+          }
+        } catch(err) {
+          console.error('Error in setEventDetailMode:', err);
         }
       }
 
@@ -542,57 +656,160 @@
       overlay.addEventListener('click', (e)=>{ if(e.target === overlay) { overlay.style.display='none'; setEventDetailMode('view'); } });
 
       editBtn.addEventListener('click', ()=>{
-        const eventId = overlay.dataset.eventId;
-        const ev = eventsForThisTrip.find(e => e.id === eventId);
-        if(!ev) return;
-        setEventDetailMode('edit', ev);
-        titleInput.focus();
+        try {
+          const eventId = overlay.dataset.eventId;
+          if(!eventId) {
+            console.warn('Edit clicked but no eventId found');
+            return;
+          }
+          const ev = eventsForThisTrip.find(e => e.id === eventId);
+          if(!ev) {
+            console.warn('Event not found with id:', eventId);
+            return;
+          }
+          setEventDetailMode('edit', ev);
+          if(titleInput) titleInput.focus();
+        } catch(err) {
+          console.error('Error in edit button handler:', err);
+        }
       });
 
       cancelEditBtn.addEventListener('click', ()=>{
-        const eventId = overlay.dataset.eventId;
-        const ev = eventsForThisTrip.find(e => e.id === eventId);
-        if(ev) { setEventDetailMode('view'); showEventDetailModal(ev); }
+        try {
+          const eventId = overlay.dataset.eventId;
+          if(!eventId) return;
+          const ev = eventsForThisTrip.find(e => e.id === eventId);
+          if(ev) { setEventDetailMode('view'); showEventDetailModal(ev); }
+        } catch(err) {
+          console.error('Error in cancel button handler:', err);
+          setEventDetailMode('view');
+        }
       });
 
       saveBtn.addEventListener('click', ()=>{
-        const eventId = overlay.dataset.eventId;
-        const idx = eventsForThisTrip.findIndex(e => e.id === eventId);
-        if(idx === -1) return;
-        const ev = eventsForThisTrip[idx];
-        
-        // Re-query inputs
-        const titleInp = modal.querySelector('.evd-title-input');
-        const dateInp = modal.querySelector('.evd-date-input');
-        const timeInp = modal.querySelector('.evd-time-input');
-        const durationInp = modal.querySelector('.evd-duration-input');
-        const locationInp = modal.querySelector('.evd-location-input');
-        const categoryInp = modal.querySelector('.evd-category-input');
-        const priceInp = modal.querySelector('.evd-price-input');
-        const descriptionInp = modal.querySelector('.evd-description-input');
-        
-        ev.title = (titleInp?.value || '').trim() || 'Untitled Event';
-        ev.date = dateInp?.value || ev.date;
-        ev.time = timeInp?.value || ev.time;
-        ev.duration = durationInp?.value || ev.duration;
-        ev.location = (locationInp?.value || '').trim();
-        ev.category = (categoryInp?.value || '').trim();
-        const priceVal = (priceInp?.value || '').trim();
-        ev.price = priceVal === '' ? ev.price : Number(priceVal);
-        ev.description = (descriptionInp?.value || '').trim();
-        saveEventsToStorage(trip.id, eventsForThisTrip);
-        render();
-        setEventDetailMode('view');
-        showEventDetailModal(ev);
+        try {
+          const eventId = overlay.dataset.eventId;
+          if(!eventId) {
+            console.warn('Save clicked but no eventId found');
+            return;
+          }
+          
+          const idx = eventsForThisTrip.findIndex(e => e.id === eventId);
+          if(idx === -1) {
+            console.warn('Event not found with id:', eventId);
+            return;
+          }
+          
+          const ev = eventsForThisTrip[idx];
+          if(!ev) return;
+          
+          // Re-query inputs
+          const titleInp = modal.querySelector('.evd-title-input');
+          const dateInp = modal.querySelector('.evd-date-input');
+          const timeInp = modal.querySelector('.evd-time-input');
+          const durationInp = modal.querySelector('.evd-duration-input');
+          const locationInp = modal.querySelector('.evd-location-input');
+          const categoryInp = modal.querySelector('.evd-category-input');
+          const priceInp = modal.querySelector('.evd-price-input');
+          const descriptionInp = modal.querySelector('.evd-description-input');
+          
+          // Validate all required fields before saving
+          let hasErrors = false;
+          
+          // Validate title
+          if(!validateTitle(titleInp?.value)) {
+            showFieldError(titleInp, modal.querySelector('.evd-title-error'), 'Title cannot be empty');
+            hasErrors = true;
+          } else {
+            clearFieldError(titleInp, modal.querySelector('.evd-title-error'));
+          }
+          
+          // Validate date
+          if(!validateDate(dateInp?.value)) {
+            showFieldError(dateInp, modal.querySelector('.evd-date-error'), 'Date is required');
+            hasErrors = true;
+          } else {
+            clearFieldError(dateInp, modal.querySelector('.evd-date-error'));
+          }
+          
+          // Validate time
+          if(!validateTime(timeInp?.value)) {
+            showFieldError(timeInp, modal.querySelector('.evd-time-error'), 'Time is required');
+            hasErrors = true;
+          } else {
+            clearFieldError(timeInp, modal.querySelector('.evd-time-error'));
+          }
+          
+          // Validate duration if provided
+          if(durationInp?.value && !validateDuration(durationInp.value)) {
+            showFieldError(durationInp, modal.querySelector('.evd-duration-error'), 'Must be a positive number');
+            hasErrors = true;
+          } else {
+            clearFieldError(durationInp, modal.querySelector('.evd-duration-error'));
+          }
+          
+          // Validate price if provided
+          if(priceInp?.value && !validatePrice(priceInp.value)) {
+            showFieldError(priceInp, modal.querySelector('.evd-price-error'), 'Must be a valid positive number');
+            hasErrors = true;
+          } else {
+            clearFieldError(priceInp, modal.querySelector('.evd-price-error'));
+          }
+          
+          // If there are validation errors, don't save
+          if(hasErrors) {
+            console.warn('Validation failed - cannot save event');
+            return;
+          }
+          
+          // Validate and sanitize inputs
+          const newTitle = (titleInp?.value || '').trim() || 'Untitled Event';
+          const newDate = dateInp?.value || ev.date;
+          const newTime = timeInp?.value || ev.time;
+          const newDuration = durationInp?.value || ev.duration;
+          const newLocation = (locationInp?.value || '').trim();
+          const newCategory = (categoryInp?.value || '').trim();
+          const newPrice = parseFloat((priceInp?.value || '').trim());
+          const newDescription = (descriptionInp?.value || '').trim();
+          
+          // Update event with validation
+          ev.title = newTitle;
+          ev.date = newDate || ev.date; // Keep original if empty
+          ev.time = newTime || ev.time; // Keep original if empty
+          ev.duration = newDuration !== '' ? newDuration : ev.duration;
+          ev.location = newLocation;
+          ev.category = newCategory;
+          ev.price = !isNaN(newPrice) ? newPrice : ev.price; // Keep original price if invalid number
+          ev.description = newDescription;
+          
+          saveEventsToStorage(trip.id, eventsForThisTrip);
+          render();
+          setEventDetailMode('view');
+          showEventDetailModal(ev);
+        } catch(err) {
+          console.error('Error in save button handler:', err);
+          alert('Failed to save event. Please try again.');
+        }
       });
 
       removeBtn.addEventListener('click', ()=>{
-        const eventId = overlay.dataset.eventId;
-        if(!eventId) return;
-        overlay.style.display='none';
-        setEventDetailMode('view');
-        const event = eventsForThisTrip.find(e => e.id === eventId);
-        if(event) showConfirmDeleteModal(event);
+        try {
+          const eventId = overlay.dataset.eventId;
+          if(!eventId) {
+            console.warn('Remove clicked but no eventId found');
+            return;
+          }
+          const event = eventsForThisTrip.find(e => e.id === eventId);
+          if(!event) {
+            console.warn('Event not found with id:', eventId);
+            return;
+          }
+          overlay.style.display='none';
+          setEventDetailMode('view');
+          showConfirmDeleteModal(event);
+        } catch(err) {
+          console.error('Error in remove button handler:', err);
+        }
       });
 
       _eventDetailModal = overlay;
@@ -600,97 +817,136 @@
     }
 
     function showEventDetailModal(event){
-      const modal = ensureEventDetailModal();
-      modal.dataset.eventId = event.id;
-      modal.classList.remove('evd-mode-edit');
-      modal.dataset.mode = 'view';
-      if(modal._setMode) modal._setMode('view', event);
-      
-      const titleEl = modal.querySelector('.evd-title');
-      const dateEl = modal.querySelector('.evd-date');
-      const timeEl = modal.querySelector('.evd-time');
-      const durationEl = modal.querySelector('.evd-duration');
-      const locationEl = modal.querySelector('.evd-location');
-      const categoryEl = modal.querySelector('.evd-category');
-      const priceEl = modal.querySelector('.evd-price');
-      const descriptionEl = modal.querySelector('.evd-description');
-      const imageContainer = modal.querySelector('.evd-image-container');
-      const locationField = modal.querySelector('.evd-location-field');
-      const categoryField = modal.querySelector('.evd-category-field');
-      const priceField = modal.querySelector('.evd-price-field');
-      const descriptionField = modal.querySelector('.evd-description-field');
-
-      titleEl.textContent = event.title || 'Untitled Event';
-      
-      // Format date
-      if(event.date){
-        const dateObj = parseISO(event.date);
-        dateEl.textContent = dateObj.toLocaleDateString(undefined, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
-      } else {
-        dateEl.textContent = 'No date';
-      }
-      
-      // Format time with end time if duration exists
-      if(event.time){
-        let timeDisplay = to12Hour(event.time);
-        if(event.duration){
-          const endTime24 = calculateEndTime(event.time, event.duration);
-          timeDisplay += ` - ${to12Hour(endTime24)}`;
+      try {
+        if(!event || !event.id) {
+          console.error('showEventDetailModal: invalid event object');
+          return;
         }
-        timeEl.textContent = timeDisplay;
-      } else {
-        timeEl.textContent = 'No time specified';
-      }
+        
+        const modal = ensureEventDetailModal();
+        if(!modal) {
+          console.error('Failed to create event detail modal');
+          return;
+        }
+        
+        modal.dataset.eventId = event.id;
+        modal.classList.remove('evd-mode-edit');
+        modal.dataset.mode = 'view';
+        if(modal._setMode) modal._setMode('view', event);
+        
+        const titleEl = modal.querySelector('.evd-title');
+        const dateEl = modal.querySelector('.evd-date');
+        const timeEl = modal.querySelector('.evd-time');
+        const durationEl = modal.querySelector('.evd-duration');
+        const locationEl = modal.querySelector('.evd-location');
+        const categoryEl = modal.querySelector('.evd-category');
+        const priceEl = modal.querySelector('.evd-price');
+        const descriptionEl = modal.querySelector('.evd-description');
+        const imageContainer = modal.querySelector('.evd-image-container');
+        const locationField = modal.querySelector('.evd-location-field');
+        const categoryField = modal.querySelector('.evd-category-field');
+        const priceField = modal.querySelector('.evd-price-field');
+        const descriptionField = modal.querySelector('.evd-description-field');
 
-      // Duration view
-      if(event.duration){
-        durationEl.textContent = `${event.duration} hrs`;
-      } else {
-        durationEl.textContent = '';
+        // Safely set title
+        if(titleEl) titleEl.textContent = event.title || 'Untitled Event';
+        
+        // Format date with error handling
+        if(dateEl) {
+          if(event.date){
+            try {
+              const dateObj = parseISO(event.date);
+              dateEl.textContent = dateObj.toLocaleDateString(undefined, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+            } catch(dateErr) {
+              console.warn('Failed to parse date:', event.date, dateErr);
+              dateEl.textContent = 'Invalid date';
+            }
+          } else {
+            dateEl.textContent = 'No date';
+          }
+        }
+        
+        // Format time with end time if duration exists
+        if(timeEl) {
+          if(event.time){
+            try {
+              let timeDisplay = to12Hour(event.time);
+              if(event.duration){
+                const endTime24 = calculateEndTime(event.time, event.duration);
+                timeDisplay += ` - ${to12Hour(endTime24)}`;
+              }
+              timeEl.textContent = timeDisplay;
+            } catch(timeErr) {
+              console.warn('Failed to format time:', event.time, timeErr);
+              timeEl.textContent = 'Invalid time';
+            }
+          } else {
+            timeEl.textContent = 'No time specified';
+          }
+        }
+
+        // Duration view
+        if(durationEl) {
+          if(event.duration){
+            durationEl.textContent = `${event.duration} hrs`;
+          } else {
+            durationEl.textContent = '';
+          }
+        }
+        
+        // Location
+        if(event.location){
+          if(locationEl) locationEl.textContent = event.location;
+          if(locationField) locationField.style.display = 'block';
+        } else {
+          if(locationField) locationField.style.display = 'none';
+        }
+        
+        // Category
+        if(event.category){
+          if(categoryEl) categoryEl.textContent = event.category;
+          if(categoryField) categoryField.style.display = 'block';
+        } else {
+          if(categoryField) categoryField.style.display = 'none';
+        }
+        
+        // Price
+        if(event.price !== undefined && event.price !== null){
+          if(priceEl) priceEl.textContent = event.price === 0 ? 'Free' : `$${event.price}`;
+          if(priceField) priceField.style.display = 'block';
+        } else {
+          if(priceField) priceField.style.display = 'none';
+        }
+        
+        // Description
+        if(event.description){
+          if(descriptionEl) descriptionEl.textContent = event.description;
+          if(descriptionField) descriptionField.style.display = 'block';
+        } else {
+          if(descriptionField) descriptionField.style.display = 'none';
+        }
+        
+        // Image
+        if(imageContainer) {
+          if(event.img){
+            try {
+              imageContainer.innerHTML = `<img src="${event.img}" alt="${event.title || 'Event'}" class="evd-image">`;
+              imageContainer.style.display = 'block';
+            } catch(imgErr) {
+              console.warn('Failed to load image:', event.img, imgErr);
+              imageContainer.innerHTML = '';
+              imageContainer.style.display = 'none';
+            }
+          } else {
+            imageContainer.innerHTML = '';
+            imageContainer.style.display = 'none';
+          }
+        }
+        
+        if(modal) modal.style.display = 'flex';
+      } catch(err) {
+        console.error('Error in showEventDetailModal:', err);
       }
-      
-      // Location
-      if(event.location){
-        locationEl.textContent = event.location;
-        locationField.style.display = 'block';
-      } else {
-        locationField.style.display = 'none';
-      }
-      
-      // Category
-      if(event.category){
-        categoryEl.textContent = event.category;
-        categoryField.style.display = 'block';
-      } else {
-        categoryField.style.display = 'none';
-      }
-      
-      // Price
-      if(event.price !== undefined && event.price !== null){
-        priceEl.textContent = event.price === 0 ? 'Free' : `$${event.price}`;
-        priceField.style.display = 'block';
-      } else {
-        priceField.style.display = 'none';
-      }
-      
-      // Description
-      if(event.description){
-        descriptionEl.textContent = event.description;
-        descriptionField.style.display = 'block';
-      } else {
-        descriptionField.style.display = 'none';
-      }
-      
-      // Image
-      if(event.img){
-        imageContainer.innerHTML = `<img src="${event.img}" alt="${event.title}" class="evd-image">`;
-        imageContainer.style.display = 'block';
-      } else {
-        imageContainer.innerHTML = '';
-        imageContainer.style.display = 'none';
-      }
-      
-      modal.style.display = 'flex';
     }
 
     // Compute the week that contains the trip.startDate. Week starts Monday.

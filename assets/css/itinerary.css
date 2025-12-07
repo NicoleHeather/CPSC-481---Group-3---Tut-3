@@ -360,6 +360,10 @@
 .evd-duration-row .evd-view { margin-left: 4px; }
 .evd-cancel { background: rgba(0,0,0,0.08); color: var(--color-text); }
 .evd-cancel:hover { background: rgba(0,0,0,0.12); }
+.evd-error { display: none; color: #c1121f; font-size: 0.8rem; margin-top: 3px; font-weight: 500; }
+.evd-mode-edit .evd-error { display: block; }
+.evd-input.evd-invalid { border-color: #c1121f; background-color: rgba(193, 18, 31, 0.03); }
+.evd-input.evd-valid { border-color: #4caf50; }
 
 /* Edit Dates button keeps only positioning/spacing specifics; visuals come from .btn-accent-outline */
 .day-add {
