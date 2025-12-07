@@ -858,6 +858,7 @@
         <div class="evd-footer">
           <button type="button" class="btn evd-cancel evd-edit-mode">Cancel</button>
           <button type="button" class="btn evd-save evd-edit-mode">Save</button>
+          <button type="button" class="btn evd-close">Close</button>
         </div>
       `;
       overlay.appendChild(modal);
@@ -869,6 +870,7 @@
       const menuDropdown = modal.querySelector('.evd-menu-dropdown');
       const saveBtn = modal.querySelector('.evd-save');
       const cancelEditBtn = modal.querySelector('.evd-cancel');
+      const closeBtn = modal.querySelector('.evd-close');
 
       const titleInput = modal.querySelector('.evd-title-input');
       const dateInput = modal.querySelector('.evd-date-input');
@@ -1091,6 +1093,10 @@
           console.error('Error in cancel button handler:', err);
           setEventDetailMode('view');
         }
+      });
+
+      closeBtn.addEventListener('click', ()=>{
+        overlay.style.display = 'none';
       });
 
       saveBtn.addEventListener('click', async ()=>{
