@@ -1627,8 +1627,10 @@
         try {
           const lastWindowStart = getLastWindowStart();
           const msPerDay = 24 * 60 * 60 * 1000;
-          const totalWindows = Math.floor(((lastWindowStart - tripStart) / (7 * msPerDay))) + 1;
-          const currentWindowIndex = Math.floor(((weekStart - tripStart) / (7 * msPerDay))) + 1;
+          // Compute sliding windows by day so an 8-day trip yields 2 possible
+          // 7-day viewing windows (start on tripStart, tripStart+1, ... lastWindowStart)
+          const totalWindows = Math.floor(((lastWindowStart - tripStart) / msPerDay)) + 1;
+          const currentWindowIndex = Math.floor(((weekStart - tripStart) / msPerDay)) + 1;
           // single-line: "Start — End · Viewing window X of Y"
           weekRangeEl.innerText = `${startStr} — ${endStr} · Viewing window ${currentWindowIndex} of ${totalWindows}`;
         } catch(e) {
