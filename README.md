@@ -63,19 +63,21 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
 
 ### Not Implemented:
 - Quick actions
+- Account Creation
 
 ### Suggested Steps:
 1. Swipe the images on the upper middle part of the screen to switch between stored itineraries
 2. Select the **“Itinerary”** option on the toolbar
 
 ---
+** Click Demo Reset in the top right corner at any time to reseed the default itineraries and events**
 
 ## Itinerary Screen
 
 ### Functionalities Implemented:
-- Budget tracking
-- Adding expenses
-- Adding itineraries
+- Link to Budget tracking
+  - Adding expenses
+- Adding new itineraries
 - Removing itineraries
 - Sharing itineraries
 
@@ -103,6 +105,7 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
 - Week view (next and previous week)
 - Editing trip start date
 - Adding custom events
+- Clicking on an event opens event details with Edit and Delete buttons
 
 ### Not Implemented:
 - N/A
@@ -114,6 +117,7 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
 4. Select the **“+”** button on any day
 5. Enter a title, date, start and end times, event (optional) location, (optional) category, (optional) cost, and (optional) description and select **“Add Event”**
 6. Select the new event that was just added, observe the new info
+7. Delete Event
 
 ---
 
