@@ -1,0 +1,20 @@
+<!-- Custom Booking Request Popup Modal -->
+<div class="modal" id="custom-booking-modal" style="display:none; position:fixed; inset:0; z-index:1000;">
+  <div style="display:flex; align-items:center; justify-content:center; min-height:100vh; padding:1.5rem;">
+    <div class="modal__panel" style="background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.12); padding: 2rem; max-width: 400px; width:100%;">
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <img src="../assets/img/Checkmark.png" alt="Success" style="width:60px; height:60px; margin-bottom:1rem;">
+        <h3 style="color:var(--color-primary); font-size:1.125rem; font-weight:700; margin:0;">Booking Request Sent!</h3>
+      </div>
+    <div class="field" style="margin-bottom:1.2rem; display:flex; flex-direction:column; align-items:stretch;">
+      <label for="custom-itinerary-select" style="margin-bottom:0.5rem; font-size:1rem; font-weight:500; color:var(--color-text);">Add to Itinerary (Optional)</label>
+      <select id="custom-itinerary-select" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid #ddd; font-size:1rem;">
+        <option value="">Select an itinerary</option>
+      </select>
+    </div>
+    <div style="display:flex; gap:12px; justify-content:center;">
+      <button class="btn btn-cancel" id="custom-booking-back" style="flex:1;">Back</button>
+      <button class="btn" id="custom-booking-add" style="flex:1; background: linear-gradient(90deg, #ff7f27 0%, #ff3c6e 100%); color:#fff;">Add to Itinerary</button>
+    </div>
+  </div>
+</div>

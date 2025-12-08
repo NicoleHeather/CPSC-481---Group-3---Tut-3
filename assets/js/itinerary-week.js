@@ -110,6 +110,7 @@
           <span class="day-time">${act.time}</span>
           <span class="day-title">${title}</span>
         `;
+        if (ev && (ev.id || ev.eventId)) li.dataset.eventId = ev.id || ev.eventId || ev._id || title;
         list.appendChild(li);
       });
       if(day.activities.length===0){ const li=document.createElement('li'); li.className='day-more'; li.textContent='No items'; list.appendChild(li); }
@@ -1584,6 +1585,8 @@
         if(todays.length){
           todays.slice(0, SHOW).forEach(ev =>{
             const card = document.createElement('div'); card.className='event-item';
+              // make it findable for external highlight requests
+              if (ev && (ev.id || ev.eventId)) card.dataset.eventId = ev.id || ev.eventId || ev._id || ev.title;
             // Highlight the newly added event
             if (ev.id === highlightEventId) {
               card.classList.add('event-item--new');
@@ -1627,7 +1630,10 @@
         try {
           const lastWindowStart = getLastWindowStart();
           const msPerDay = 24 * 60 * 60 * 1000;
-          const totalWindows = Math.floor(((lastWindowStart - tripStart) / (7 * msPerDay))) + 1;
+          // Compute number of 7-day pages needed to cover the trip
+          // (e.g., 8 days -> 2 pages, 14 days -> 2 pages, 15 days -> 3 pages)
+          const tripDays = Math.floor((tripEnd - tripStart) / msPerDay) + 1;
+          const totalWindows = Math.ceil(tripDays / 7);
           const currentWindowIndex = Math.floor(((weekStart - tripStart) / (7 * msPerDay))) + 1;
           // single-line: "Start — End · Viewing window X of Y"
           weekRangeEl.innerText = `${startStr} — ${endStr} · Viewing window ${currentWindowIndex} of ${totalWindows}`;
@@ -1636,6 +1642,67 @@
           weekRangeEl.innerText = `${startStr} — ${endStr}`;
         }
       }
+
+      // If a bookingHighlight payload is present (from Booking Request), locate
+      // the referenced event element, scroll it into view and apply a temporary
+      // highlight so users can inspect the conflicting event.
+      try {
+        const raw = sessionStorage.getItem('bookingHighlight');
+        if (raw) {
+          const payload = JSON.parse(raw);
+          if (payload && payload.tripId && String(payload.tripId) === String(trip.id) && payload.eventId) {
+            // attempt to locate the element by data-event-id
+            const idSelector = String(payload.eventId).replace(/"/g, '\\"');
+            const selector = `.event-item[data-event-id="${idSelector}"]`;
+            const target = listEl.querySelector(selector);
+          if (target) {
+            // prefer the stylesheet class for visual highlight
+            target.classList.add('event-item--highlight');
+            // Only scroll if the target is not fully visible to avoid pushing
+            // the page up unnecessarily. Use bounding rect check.
+            try {
+              const rect = target.getBoundingClientRect();
+              const viewH = window.innerHeight || document.documentElement.clientHeight;
+              const fullyVisible = (rect.top >= 0 && rect.bottom <= viewH);
+              if (!fullyVisible) {
+                try { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(_){}
+              }
+            } catch(_) {}
+            // toast to explain why we navigated here
+            const toast = document.createElement('div');
+            toast.className = 'booking-highlight-toast';
+            // Build message content: show attempted event (if any) and the conflict message
+            const attemptedLine = document.createElement('div');
+            attemptedLine.className = 'booking-highlight-attempt';
+            if (payload.attemptedTitle) {
+              attemptedLine.textContent = `Attempting to add: ${payload.attemptedTitle}`;
+            }
+            const msgLine = document.createElement('div');
+            msgLine.className = 'booking-highlight-msg';
+            msgLine.textContent = payload.msg || 'Conflicting event highlighted.';
+            // non-bold text
+            attemptedLine.style.fontWeight = '400';
+            msgLine.style.fontWeight = '400';
+            toast.appendChild(attemptedLine);
+            toast.appendChild(msgLine);
+            const close = document.createElement('button');
+            // use btn-cancel for consistent cancel styling; avoid the general .btn gradient
+            close.className = 'btn-cancel booking-highlight-dismiss';
+            close.textContent = 'Dismiss';
+            close.addEventListener('click', ()=>{ try{ toast.remove(); }catch(_){} });
+            // center the dismiss button
+            close.style.alignSelf = 'center';
+            toast.appendChild(close);
+            document.body.appendChild(toast);
+            // remove highlight after a delay so it doesn't persist forever
+            setTimeout(()=>{ try{ target.classList.remove('event-item--highlight'); }catch(_){} }, 7000);
+            // also remove toast after a while
+            setTimeout(()=>{ try{ toast.remove(); }catch(_){} }, 9000);
+          }
+          }
+          sessionStorage.removeItem('bookingHighlight');
+        }
+      } catch(e) { /* ignore */ }
 
       // disable prev/next when at trip bounds so navigation steps by 7 days
       // only when there are more trip days to show.

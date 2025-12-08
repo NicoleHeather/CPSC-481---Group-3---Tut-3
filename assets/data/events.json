@@ -80,9 +80,9 @@
     },
     {
       "id": "events-test",
-      "title": "Test Event Today",
+      "title": "Music Concert",
       "location": "Calgary",
-      "category": "Testing",
+      "category": "Music",
       "date": "2026-05-06",
       "time": "14:00",
       "duration" : "1",
