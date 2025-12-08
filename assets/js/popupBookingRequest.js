@@ -102,6 +102,8 @@ window.onload = function () {
         overlay.style.alignItems = 'center';
         overlay.style.justifyContent = 'center';
         overlay.style.zIndex = '1100';
+        // mark overlay so we can remove it programmatically when closing modals
+        overlay.setAttribute('data-validation-popup', '1');
 
         const panel = document.createElement('div');
         panel.style.background = '#fff';
@@ -115,7 +117,7 @@ window.onload = function () {
         panel.style.gap = '0.75rem';
 
         const heading = document.createElement('div');
-        heading.textContent = 'Cannot be added to this itinerary.';
+        heading.textContent = 'Cannot send booking request.';
         heading.style.fontWeight = '700';
         heading.style.color = 'var(--color-primary, #d43b4a)';
         heading.style.fontSize = '1rem';
@@ -225,8 +227,22 @@ window.onload = function () {
     if (sendRequestBtn && modal && itinerarySelect) {
         sendRequestBtn.addEventListener('click', function (e) {
             e.preventDefault();
+            // Basic form validation before opening the modal: ensure required fields exist
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const guestNumberInput = document.getElementById('guest-number');
+            const missing = [];
+            if (!nameInput || !nameInput.value.trim()) missing.push('Name');
+            if (!emailInput || !emailInput.value.trim()) missing.push('Email');
+            const guestsVal = guestNumberInput ? Number(guestNumberInput.value) : 0;
+            if (!guestNumberInput || isNaN(guestsVal) || guestsVal < 1 || guestsVal > 20) missing.push('Guests');
+            if (missing.length) {
+                // show a lightweight validation popup and do not open the modal
+                showValidationPopup('Please complete required fields: ' + missing.join(', '));
+                return;
+            }
+            // Passed basic validation, open modal and load itineraries (repo + user)
             modal.style.display = 'block';
-            // Load itineraries (repo + user)
             let merged = [];
             fetch('../assets/data/trips.json')
                 .then(response => response.json())
@@ -254,9 +270,24 @@ window.onload = function () {
         });
     }
     // Back button closes modal
-    if (backBtn && modal) {
+    function closeBookingModal() {
+        try {
+            if (modal) {
+                modal.style.display = 'none';
+                if (modal.classList && modal.classList.contains('open')) modal.classList.remove('open');
+            }
+        } catch (err) { /* ignore */ }
+        // remove any leftover validation overlays
+        try {
+            const overlays = document.querySelectorAll('[data-validation-popup]');
+            overlays.forEach(o => { if (o && o.parentNode) o.parentNode.removeChild(o); });
+        } catch (err) { /* ignore */ }
+        console.debug('[popupBookingRequest] closeBookingModal called');
+    }
+
+    if (backBtn) {
         backBtn.addEventListener('click', function () {
-            modal.style.display = 'none';
+            closeBookingModal();
         });
     }
     // Add to Itinerary button (optional logic)

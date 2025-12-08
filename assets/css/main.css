@@ -196,6 +196,17 @@ main.container { padding-bottom: 92px; }
   color: inherit;
 }
 
+/* Disabled button state to match theme */
+.btn[disabled], .btn.disabled {
+  background: var(--color-gray);
+  color: var(--color-text);
+  opacity: 0.95;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+  transform: none;
+}
+
 /* Demo Reset top-header button: appear as a white link with right padding */
 .demo-reset-btn-top {
   position: absolute;
