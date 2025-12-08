@@ -14,7 +14,7 @@ const pageLocation = document.getElementById("page-location");
 const pageCost = document.getElementById("page-cost")
 const pageDuration = document.getElementById("page-duration");
 
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', function () {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     console.log(urlParams);
@@ -62,7 +62,19 @@ window.onload = function () {
             if (pageDescription && currentEvent && currentEvent.description) pageDescription.innerText = currentEvent.description;
             if (pageImage && currentEvent && currentEvent.img) pageImage.src = currentEvent.img;
             if (pageDate && currentEvent && currentEvent.date) pageDate.innerText = currentEvent.date;
-            if (pageTime && currentEvent && currentEvent.time) pageTime.innerText = currentEvent.time;
+            // Only populate page time if the element exists and is still empty/default to avoid
+            // clobbering formatting applied by other page scripts that may run earlier/later.
+            if (pageTime && currentEvent && currentEvent.time && (pageTime.textContent === '-' || pageTime.textContent.trim() === '')) {
+                    // normalize and display as 12-hour with AM/PM
+                    const t = String(currentEvent.time || '').trim();
+                    function normalize24(tstr){ if (!tstr && tstr !== '') return ''; let s = String(tstr).trim(); if(!s) return ''; const mDigits = s.match(/^(\d{1,4})$/); if (mDigits){ const p = mDigits[1].padStart(4,'0'); let hh = parseInt(p.slice(0,2),10); const mm = p.slice(2); if(hh===24) hh=0; return `${String(hh).padStart(2,'0')}:${mm}`; } const m24 = s.match(/^(\d{1,2}):(\d{2})$/); if(m24){ let hh = parseInt(m24[1],10); const mm = m24[2]; if(hh===24) hh=0; return `${String(hh).padStart(2,'0')}:${mm}`; } const m12 = s.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)$/i); if(m12){ let hh = parseInt(m12[1],10); const mm = m12[2]||'00'; const period = m12[3].toUpperCase(); if(period==='PM' && hh!==12) hh+=12; if(period==='AM' && hh===12) hh=0; return `${String(hh).padStart(2,'0')}:${mm}`; } return s; }
+                    function to12Hour(t24){ if(!t24) return ''; const [hh,mm] = String(t24).split(':'); const h = Number(hh); const m = (mm||'00').padStart(2,'0'); const period = h>=12 ? 'PM':'AM'; const h12 = h%12||12; return `${h12}:${m} ${period}`; }
+                    const start24 = normalize24(currentEvent.time);
+                    // best-effort endTime from duration
+                    function calculateEndTime24(startTime, duration){ if(!startTime || !duration) return ''; const [sh, sm] = startTime.split(':').map(Number); const total = sh*60 + sm + Math.round(parseFloat(duration)*60); const endH = Math.floor(total/60)%24; const endM = Math.floor(total%60); return `${String(endH).padStart(2,'0')}:${String(endM).padStart(2,'0')}`; }
+                    const end24 = calculateEndTime24(start24, currentEvent.duration);
+                        pageTime.innerText = end24 ? `${to12Hour(start24)} – ${to12Hour(end24)}` : to12Hour(start24);
+            }
             if (pageLocation && currentEvent && currentEvent.location) pageLocation.innerText = currentEvent.location;
 
             if (pageCost) {
@@ -86,6 +98,8 @@ if (bookingRequestButton) {
         if (!currentEvent) return;
         console.log("Send data");
         console.log(currentEvent.id);
-        bookingRequestButton.href = `BookingRequest.html?date=${currentEvent.date}&time=${currentEvent.time}&title=${currentEvent.title}&id=${currentEvent.id}`;
+        // pass normalized 24-hour time in the query string
+        function _normalize24(q){ if(!q && q!=='') return ''; let s=String(q).trim(); const mDigits=s.match(/^(\d{1,4})$/); if(mDigits){ const p=mDigits[1].padStart(4,'0'); let hh=parseInt(p.slice(0,2),10); const mm=p.slice(2); if(hh===24) hh=0; return `${String(hh).padStart(2,'0')}:${mm}`;} const m24=s.match(/^(\d{1,2}):(\d{2})$/); if(m24){ let hh=parseInt(m24[1],10); const mm=m24[2]; if(hh===24) hh=0; return `${String(hh).padStart(2,'0')}:${mm}`;} const m12=s.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)$/i); if(m12){ let hh=parseInt(m12[1],10); const mm=m12[2]||'00'; const period=m12[3].toUpperCase(); if(period==='PM' && hh!==12) hh+=12; if(period==='AM' && hh===12) hh=0; return `${String(hh).padStart(2,'0')}:${mm}`;} return s; }
+        bookingRequestButton.href = `BookingRequest.html?date=${currentEvent.date}&time=${encodeURIComponent(_normalize24(currentEvent.time))}&title=${encodeURIComponent(currentEvent.title)}&id=${currentEvent.id}`;
     });
 }

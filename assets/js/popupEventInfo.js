@@ -39,6 +39,16 @@ const descriptionInput = document.getElementById('ev-notes');
 let currentDuration;
 let customEvent = true;
 //let tmpEventId = 1;
+            // normalize displayed start time (handle inputs like '2400' or '24:00')
+            function normalize24(t) {
+                if (!t && t !== '') return '';
+                let s = String(t).trim(); if(!s) return '';
+                const mDigits = s.match(/^(\d{1,4})$/); if(mDigits){ const p = mDigits[1].padStart(4,'0'); let hh = parseInt(p.slice(0,2),10); const mm = p.slice(2); if(hh===24) hh=0; return `${String(hh).padStart(2,'0')}:${mm}`; }
+                const m24 = s.match(/^(\d{1,2}):(\d{2})$/); if(m24){ let hh = parseInt(m24[1],10); const mm = m24[2]; if(hh===24) hh = 0; return `${String(hh).padStart(2,'0')}:${mm}`; }
+                const m12 = s.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)$/i); if(m12){ let hh = parseInt(m12[1],10); const mm = m12[2]||'00'; const period = m12[3].toUpperCase(); if(period==='PM' && hh!==12) hh+=12; if(period==='AM' && hh===12) hh=0; return `${String(hh).padStart(2,'0')}:${mm}`; }
+                return s;
+            }
+            function normalizeShort(t){ const n = normalize24(t); if(!n) return ''; const [hh,mm] = n.split(':'); return `${String(Number(hh))}:${mm}`; }
 let currentEvent;
 let intineraryInfo = [];
 let arrTimeOptions = ["0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", 
@@ -85,7 +95,7 @@ window.onload = function () {
 
             currentTitle.innerHTML = currentEvent.title;
             currentDate.innerHTML = currentEvent.date;
-            currentStart.innerHTML = currentEvent.time;
+            currentStart.innerHTML = normalizeShort(currentEvent.time);
 
             currentDuration = currentEvent.duration;
 
