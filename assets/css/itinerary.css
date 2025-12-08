@@ -240,6 +240,60 @@
 }
 .day-empty { color: var(--color-muted); font-style: italic; }
 
+/* Strong highlight style for booking conflicts */
+.event-item--highlight {
+  background: linear-gradient(90deg, rgba(212,59,74,0.10), rgba(212,59,74,0.04));
+  border-left: 6px solid #d43b4a;
+  padding-left: 8px;
+  margin: 2px 0; /* keep consistent with other events to avoid extra cell spacing */
+  box-shadow: 0 10px 30px rgba(212,59,74,0.12);
+  transform: translateY(-3px);
+  transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease;
+  z-index: 2;
+}
+
+@keyframes bookingPulse {
+  0% { box-shadow: 0 0 0 0 rgba(212,59,74,0.18); }
+  70% { box-shadow: 0 18px 40px -10px rgba(212,59,74,0.08); }
+  100% { box-shadow: 0 8px 28px rgba(212,59,74,0.12); }
+}
+.event-item--highlight { animation: bookingPulse 1.2s ease both; }
+
+/* Toast shown when navigating to a booking highlight */
+.booking-highlight-toast {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  color: var(--color-text);
+  padding: 10px 12px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  z-index: 1150;
+  display: flex;
+  flex-direction: column; /* stack message and dismiss button */
+  align-items: center; /* center contents */
+  gap: 8px;
+  font-weight: 400; /* non-bold text */
+  max-width: calc(100% - 32px);
+}
+.booking-highlight-dismiss { background: transparent; border: none; color: #666; cursor: pointer; font-size: 0.95rem; align-self: center; padding: 6px 10px; border-radius:6px; }
+.booking-highlight-dismiss:hover { background: rgba(0,0,0,0.04); }
+.booking-highlight-attempt, .booking-highlight-msg { text-align: center; }
+
+/* Ensure the toast's cancel button appears as a gray outlined button (matches Edit Dates style) */
+.booking-highlight-toast .btn-cancel {
+  background: rgba(0,0,0,0.06) !important;
+  border: 1px solid rgba(0,0,0,0.10) !important;
+  color: var(--color-text) !important;
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
+  min-width: 100px;
+  box-shadow: none !important;
+}
+.booking-highlight-toast .btn-cancel:hover { background: rgba(0,0,0,0.08) !important; }
+
 /* +N more link shown when a day has more events than the preview */
 .day-more-btn {
   display:inline-block;
