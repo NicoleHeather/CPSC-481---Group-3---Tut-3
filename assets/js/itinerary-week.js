@@ -106,8 +106,14 @@
         const ev = EVENTS.find(e=>e.id===act.id);
         const title = ev ? ev.title : '(Event)';
         const li=document.createElement('li');
+        // format time: prefer ev.start/end if available, otherwise use act.time
+        let timeText = act.time || '';
+        if (ev) {
+          if (ev.endTime) timeText = `${to12Hour(ev.time)} - ${to12Hour(ev.endTime)}`;
+          else timeText = to12Hour(ev.time || act.time || '');
+        }
         li.innerHTML = `
-          <span class="day-time">${act.time}</span>
+          <span class="day-time">${timeText}</span>
           <span class="day-title">${title}</span>
         `;
         if (ev && (ev.id || ev.eventId)) li.dataset.eventId = ev.id || ev.eventId || ev._id || title;
@@ -297,40 +303,58 @@
       try {
         const newEventData = JSON.parse(newEventDataStr);
         
-        // Extract start time - handle both 12-hour format with " - " separator
-        let startTime = '14:00'; // default time
-        const timeStr = newEventData.time || '';
-        
-        if (timeStr.includes(' - ')) {
-          // Format: "2:00 PM - 4:00 PM"
-          const startPart = timeStr.split(' - ')[0].trim();
-          // Convert 12-hour to 24-hour if needed
-          const match = startPart.match(/^(\d+):(\d+)\s?(AM|PM)?$/i);
-          if (match) {
-            let hours = parseInt(match[1]);
-            const minutes = match[2];
-            const period = match[3]?.toUpperCase();
-            
-            if (period) {
-              if (period === 'PM' && hours !== 12) hours += 12;
-              if (period === 'AM' && hours === 12) hours = 0;
-            }
-            startTime = `${String(hours).padStart(2, '0')}:${minutes}`;
+        // Extract start/end time - handle both 12-hour formats and ranges like "2:00 PM - 4:30 PM"
+        const timeStr = (newEventData.time || '').trim();
+        function to24(part) {
+          if (!part) return null;
+          const p = part.trim();
+          // 24-hour hh:mm
+          const m24 = p.match(/^(\d{1,2}):(\d{2})$/);
+          if (m24) return `${String(m24[1]).padStart(2,'0')}:${m24[2]}`;
+          // 12-hour with optional AM/PM
+          const m12 = p.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+          if (m12) {
+            let hh = parseInt(m12[1],10);
+            const mm = m12[2];
+            const period = m12[3].toUpperCase();
+            if (period === 'PM' && hh !== 12) hh += 12;
+            if (period === 'AM' && hh === 12) hh = 0;
+            return `${String(hh).padStart(2,'0')}:${mm}`;
           }
-        } else if (timeStr.match(/^\d+:\d+$/)) {
-          // Already in 24-hour format
-          startTime = timeStr;
+          // fallback: try to parse loose (e.g., "2 PM")
+          const mLoose = p.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?$/i);
+          if (mLoose) {
+            let hh = parseInt(mLoose[1],10);
+            const mm = mLoose[2] || '00';
+            const period = (mLoose[3] || '').toUpperCase();
+            if (period === 'PM' && hh !== 12) hh += 12;
+            if (period === 'AM' && hh === 12) hh = 0;
+            return `${String(hh).padStart(2,'0')}:${mm}`;
+          }
+          return null;
         }
-        
+
+        let start24 = null, end24 = null;
+        if (timeStr.includes('-') || timeStr.includes('–')) {
+          const parts = timeStr.split(/\s*[\-–]\s*/);
+          start24 = to24(parts[0]);
+          end24 = to24(parts[1]);
+        } else {
+          start24 = to24(timeStr) || null;
+        }
+        // default start if parsing failed
+        if (!start24) start24 = '14:00';
+
         // Create a new event object with the booking request data
         const newEvent = {
           id: `booking-request-${Date.now()}`,
           title: newEventData.title,
           date: newEventData.date,
-          time: startTime,
+          time: start24,
+          endTime: end24 || null,
           location: trip.title,
           description: `Booking Request from ${newEventData.name}\nEmail: ${newEventData.email}\nPhone: ${newEventData.phone}\nGuests: ${newEventData.guests}`,
-          duration: 2,
+          duration: end24 ? calculateDuration(start24, end24) : 2,
           isNew: true
         };
         
@@ -1591,8 +1615,8 @@
             if (ev.id === highlightEventId) {
               card.classList.add('event-item--new');
             }
-            // Display time in 12-hour format
-            const timeDisplay = to12Hour(ev.time);
+            // Display time in 12-hour format; include end time if present
+            const timeDisplay = (ev.endTime) ? `${to12Hour(ev.time)} - ${to12Hour(ev.endTime)}` : to12Hour(ev.time || '');
             card.innerHTML = `<div class="event-time">${timeDisplay}</div><div class="event-title">${ev.title}</div>`;
             card.style.cursor = 'pointer';
             card.addEventListener('click', ()=> showEventDetailModal(ev));

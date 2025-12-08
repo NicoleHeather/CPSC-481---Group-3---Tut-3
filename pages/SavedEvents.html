@@ -372,6 +372,49 @@
 			return `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
 		}
 
+		// Normalize various time inputs to HH:MM (24-hour). Converts '2400' or '24:00' to '00:00'.
+		function normalize24(timeStr) {
+			if (!timeStr && timeStr !== '') return '';
+			let t = String(timeStr).trim();
+			if (!t) return '';
+			const mDigits = t.match(/^(\d{1,4})$/);
+			if (mDigits) {
+				const s = mDigits[1].padStart(4,'0');
+				let hh = parseInt(s.slice(0,2),10);
+				const mm = s.slice(2);
+				if (hh === 24) hh = 0;
+				return `${String(hh).padStart(2,'0')}:${mm}`;
+			}
+			const m24 = t.match(/^(\d{1,2}):(\d{2})$/);
+			if (m24) {
+				let hh = parseInt(m24[1],10);
+				const mm = m24[2];
+				if (hh === 24) hh = 0;
+				return `${String(hh).padStart(2,'0')}:${mm}`;
+			}
+			const m12 = t.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)$/i);
+			if (m12) {
+				let hh = parseInt(m12[1],10);
+				const mm = m12[2] || '00';
+				const period = m12[3].toUpperCase();
+				if (period === 'PM' && hh !== 12) hh += 12;
+				if (period === 'AM' && hh === 12) hh = 0;
+				return `${String(hh).padStart(2,'0')}:${mm}`;
+			}
+			return t;
+		}
+
+		// Convert 24-hour HH:MM to 12-hour with AM/PM
+		function to12Hour(time24) {
+			if (!time24) return '';
+			const parts = String(time24).split(':');
+			const h = parseInt(parts[0], 10);
+			const m = parts[1] ? parts[1].padStart(2,'0') : '00';
+			const period = h >= 12 ? 'PM' : 'AM';
+			const hh = h % 12 || 12;
+			return `${hh}:${m} ${period}`;
+		}
+
 
 		// 1. Initialize Data (LocalStorage or Fetch)
 		function initSavedEvents() {
@@ -427,8 +470,9 @@
 				const dateDisplay = formatDate(event.date);
 				
 				// FIX: Removed the temporary '|| 2' default value. The logic now correctly relies on event.duration being present in the data.
-				const endTime = calculateEndTime(event.time, event.duration);
-				const timeRange = endTime ? `${event.time} - ${endTime}` : event.time;
+				const start24 = normalize24(event.time);
+				const end24 = start24 ? calculateEndTime(start24, event.duration) : '';
+				const timeRange = end24 ? `${to12Hour(start24)} - ${to12Hour(end24)}` : to12Hour(start24);
 
 
 				card.innerHTML = `
