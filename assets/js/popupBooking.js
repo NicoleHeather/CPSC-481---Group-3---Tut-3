@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 pageDuration.innerText = currentEvent.duration + " HR";
             }
         })
-};
+});
 
 
 if (bookingRequestButton) {
