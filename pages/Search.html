@@ -581,7 +581,7 @@
 		});
 
 		function populateTimeDropdown(selectId) {
-			const select = document.getElementById(selectId);
+			const searchSelect = document.getElementById(selectId);
 			for (let hour = 0; hour < 24; hour++) {
 				for (let min = 0; min < 60; min += 30) {
 					const hh = hour.toString().padStart(2, "0");

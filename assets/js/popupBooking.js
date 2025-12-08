@@ -34,12 +34,10 @@ window.onload = function () {
             console.log(savedInfo);
             console.log(savedInfo[0])
 
-            for (let i = 0; i <= exploreInfo.length; i ++)
-            {
+            for (let i = 0; i < exploreInfo.length; i++) {
                 let tmp = exploreInfo[i];
-
+                if (!tmp) continue;
                 console.log(tmp.id);
-
                 if (tmp.id == eventId){
                     currentEvent = tmp;
                     break;
@@ -47,13 +45,11 @@ window.onload = function () {
             }
 
             for (let j = 0; j < savedInfo.length; j ++){
-
-                if (currentEvent != undefined || currentEvent != null){
+                if (currentEvent != undefined && currentEvent != null){
                     break;
                 }
-                        
-                tmp2 = savedInfo[j];
-
+                let tmp2 = savedInfo[j];
+                if (!tmp2) continue;
                 if (tmp2.id == eventId){
                     currentEvent = tmp2;
                     break;
@@ -61,29 +57,35 @@ window.onload = function () {
             }
 
             console.log(currentEvent);
-            
-            pageTitle.innerText = currentEvent.title;
-            pageDescription.innerText = currentEvent.description;
-            pageImage.src = currentEvent.img;
-            pageDate.innerText = currentEvent.date;
-            pageTime.innerText = currentEvent.time;
-            pageLocation.innerText = currentEvent.location;
 
-            if (currentEvent.price == undefined){
-                pageCost.innerText = "Free";
-            }
-            else {
-                pageCost.innerText = currentEvent.price;
+            if (pageTitle && currentEvent && currentEvent.title) pageTitle.innerText = currentEvent.title;
+            if (pageDescription && currentEvent && currentEvent.description) pageDescription.innerText = currentEvent.description;
+            if (pageImage && currentEvent && currentEvent.img) pageImage.src = currentEvent.img;
+            if (pageDate && currentEvent && currentEvent.date) pageDate.innerText = currentEvent.date;
+            if (pageTime && currentEvent && currentEvent.time) pageTime.innerText = currentEvent.time;
+            if (pageLocation && currentEvent && currentEvent.location) pageLocation.innerText = currentEvent.location;
+
+            if (pageCost) {
+                if (currentEvent && currentEvent.price == undefined){
+                    pageCost.innerText = "Free";
+                }
+                else if (currentEvent && currentEvent.price !== undefined) {
+                    pageCost.innerText = currentEvent.price;
+                }
             }
 
-            pageDuration.innerText = currentEvent.duration + " HR";
+            if (pageDuration && currentEvent && currentEvent.duration !== undefined) {
+                pageDuration.innerText = currentEvent.duration + " HR";
+            }
         })
 };
 
 
-bookingRequestButton.addEventListener('click', function () {
-    console.log("Send data");
-    console.log(currentEvent.id);
-    bookingRequestButton.href = `BookingRequest.html?date=${currentEvent.date}&time=${currentEvent.time}&title=${currentEvent.title}&id=${currentEvent.id}`;
-
-});
+if (bookingRequestButton) {
+    bookingRequestButton.addEventListener('click', function () {
+        if (!currentEvent) return;
+        console.log("Send data");
+        console.log(currentEvent.id);
+        bookingRequestButton.href = `BookingRequest.html?date=${currentEvent.date}&time=${currentEvent.time}&title=${currentEvent.title}&id=${currentEvent.id}`;
+    });
+}

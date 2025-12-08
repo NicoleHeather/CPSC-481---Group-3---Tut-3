@@ -30,6 +30,9 @@ document.addEventListener('DOMContentLoaded', function () {
       merged = merged.filter(t => !deleted.has(t.id));
       merged = merged.map(t => overrides[t.id] ? Object.assign({}, t, overrides[t.id]) : t);
 
+      // Expose merged itineraries globally for other scripts
+      window.mergedItineraries = merged;
+
       if (!merged.length) {
         container.innerHTML = '<p>No itineraries found.</p>';
         return;

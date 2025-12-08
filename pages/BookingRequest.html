@@ -71,54 +71,37 @@
 				</div>
 
 				<div class="modal__actions">
-					<button type="button" class="btn btn-cancel" id="booking-cancel">Cancel</button>
-					<button type="submit" class="btn" id="submit-info-btn">Send Request</button>
+						<button type="button" class="btn btn-cancel" id="booking-cancel">Cancel</button>
+						<button type="submit" class="btn" id="submit-info-btn">Send Request</button>
+				</div>
+
+				<!-- Booking Request Popup Modal -->
+				<div class="modal" id="booking-request-modal" style="display:none; position:fixed; inset:0; z-index:1000;">
+					<div style="display:flex; align-items:center; justify-content:center; min-height:100vh; padding:1.5rem;">
+						<div class="modal__panel" style="background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.12); padding: 2rem; max-width: 400px; width:100%;">
+							<div style="text-align:center; margin-bottom:1.5rem;">
+								<img src="../assets/img/Checkmark.png" alt="Success" style="width:60px; height:60px; margin-bottom:1rem;">
+								<h3 style="color:var(--color-primary); font-size:1.125rem; font-weight:700; margin:0;">Booking Request Sent!</h3>
+							</div>
+							<div class="field" style="margin-bottom:1.2rem;">
+								<label for="modal-itinerary-select" style="font-size:1rem; font-weight:500; color:var(--color-text);">Add to Itinerary (Optional)</label>
+								<select id="modal-itinerary-select" style="width:100%; padding:10px 12px; border-radius:10px; border:1px solid #ddd; font-size:1rem;">
+									<option value="">Select an itinerary</option>
+								</select>
+							</div>
+							<div style="display:flex; gap:12px; justify-content:center;">
+								<button class="btn btn-cancel" id="modal-booking-back" style="flex:1;">Back</button>
+								<button class="btn" id="modal-booking-add" style="flex:1; background: linear-gradient(90deg, #ff7f27 0%, #ff3c6e 100%); color:#fff;">Add to Itinerary</button>
+							</div>
+						</div>
+					</div>
 				</div>
 			</form>
 		</div>
 	</main>
 
-	<div class="modal" id="booking-modal">
-		<div class="modal__panel" id="success-container" style="display: none; flex-direction: column; gap: 16px;">
-			<div style="text-align: center;">
-				<img style="width: 70px; height: 70px; margin-bottom: 1rem;" src="../assets/img/Checkmark.png" alt="Success">
-				<p style="margin: 0; font-size: 1.125rem; font-weight: 500; color: var(--color-text);">Booking Request Sent!</p>
-			</div>
-			
-			<div class="field" style="gap: 8px; margin-bottom: 0;">
-				<label for="choose-itinerary" style="font-size: 0.9rem; font-weight: 500; color: var(--color-text);">Add to Itinerary (Optional)</label>
-				<select name="itinerary" id="choose-itinerary" style="padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.12); font-inherit; background: #fff; font-size: 1rem;">
-					<option value="">Select an itinerary</option>
-				</select>
-			</div>
-
-			<div class="modal__actions">
-				<button class="btn btn-cancel" id="booking-request-cancel">Back</button>
-				<button class="btn" id="booking-request-confirm">Add to Itinerary</button>
-			</div>
-		</div>
-
-		<div class="modal__panel" id="error-container" style="display: none; flex-direction: column; gap: 16px;">
-			<div style="text-align: center;">
-				<img style="width: 70px; height: 70px; margin-bottom: 1rem;" src="../assets/img/Error.png" alt="Error">
-				<p id="error-message" style="margin: 0; font-size: 1.125rem; font-weight: 500; color: var(--color-text);"></p>
-			</div>
-			
-			<div class="modal__actions">
-				<button class="btn btn-cancel" id="booking-request-conflict-ok">Back</button>
-				<button class="btn btn-cancel" id="booking-request-conflict-view-event">View Event</button>
-				<button class="btn" id="booking-request-conflict-override">Override</button>
-			</div>
-		</div>
-
-		<div class="modal__panel" id="missing-container" style="display: none; flex-direction: column; gap: 16px; text-align: center;">
-			<p style="margin: 0; font-size: 1.125rem; font-weight: 500; color: var(--color-text);">Missing Information</p>
-			<p style="margin: 0; color: var(--color-muted); font-size: 0.95rem;">Please check the form and try again.</p>
-			<div class="modal__actions">
-				<button class="btn" id="missing-required-info-ok">Back to Form</button>
-			</div>
-		</div>
-
+	<!-- Custom Booking Request Popup Modal -->
+	<!--#include file="../partials/custom-booking-modal.html" -->
 		<div class="modal__panel" id="processing-container" style="display: none; flex-direction: column; gap: 16px; text-align: center; align-items: center;">
 			<img style="width: 60px; height: 60px;" src="../assets/img/refresh.png" alt="Loading">
 			<p style="margin: 0; font-size: 1.125rem; font-weight: 500; color: var(--color-text);">Processing your request...</p>
@@ -130,6 +113,7 @@
 	<script src="../assets/js/include.js"></script>
 	<script src="../assets/js/main.js"></script>
 	<script src="../assets/js/popupBooking.js"></script>
+	<script src="../assets/js/popupBookingRequest.js"></script>
 	<script>
 		// Time formatting functions
 		function convertTo12Hour(time) {
@@ -233,8 +217,8 @@
 			const addToItineraryBtn = document.getElementById('booking-request-confirm');
 			if (addToItineraryBtn) {
 				addToItineraryBtn.addEventListener('click', function() {
-					const selectElement = document.getElementById('choose-itinerary');
-					const selectedItinerary = selectElement.value;
+					const itinerarySelect = document.getElementById('choose-itinerary');
+					const selectedItinerary = itinerarySelect.value;
 					
 					if (selectedItinerary) {
 						// Store the new event details
@@ -318,12 +302,13 @@
 						fetch('../assets/data/trips.json')
 							.then(response => response.json())
 							.then(data => {
+								const itinerarySelect = document.getElementById('choose-itinerary');
 								const selectElement = document.getElementById('choose-itinerary');
 								const trips = data.trips || [];
 								
 								// Clear existing options except the first one
-								while (selectElement.options.length > 1) {
-									selectElement.remove(1);
+								while (itinerarySelect.options.length > 1) {
+									itinerarySelect.remove(1);
 								}
 								
 								// Add trip options
@@ -331,7 +316,7 @@
 									const option = document.createElement('option');
 									option.value = trip.id;
 									option.textContent = trip.title;
-									selectElement.appendChild(option);
+									itinerarySelect.appendChild(option);
 								});
 							})
 							.catch(error => console.error('Error loading itineraries:', error));

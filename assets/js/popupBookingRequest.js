@@ -1,95 +1,59 @@
-// script.js
-const bookingConfirmtButton = document.getElementById('submit-info-btn');
-const bookingConfirmForm = document.getElementById('booking-request-popup');
-const bookingConflictForm = document.getElementById('booking-request-conflict');
-const background = document.getElementById('whole-screen');
-const cardBackground = document.getElementById('booking-event')
-const modal = document.querySelector('.modal');
-const missingInfoForm = document.getElementById('missing-required-info');
-const processingDisplay = document.getElementById('booking-request-processing');
-const addEventButton = document.getElementById('booking-request-confirm');
-
-const missingInfoOkayButton = document.getElementById('missing-required-info-ok');
-const bookingRequestView = document.getElementById('booking-request-conflict-view-event');
-const backToBookingButton = document.getElementById('booking-request-conflict-ok');
-
-//Track Input
-const time = document.querySelector('#time');
-const date = document.querySelector('#date');
-const guestNumber = document.querySelector('#guest-number');
-const email = document.querySelector('#email');
-const nameInput = document.querySelector('#name');
-
-const evTitle = document.getElementById('event-name-booking')
-
-//Timeout
-const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
-
-let eventId;
-
+// popupBookingRequest.js - Minimal Fresh Version
 window.onload = function () {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    console.log(urlParams);
-    const paramTime = urlParams.get('time');
-    const paramDate = urlParams.get('date')
-    const paramTitle = urlParams.get('title')
-    eventId = urlParams.get('id');
-    console.log(eventId)
-    console.log('D:', paramDate);
-    console.log('T:', paramTime);
+    console.log('[popupBookingRequest] loaded');
+    const sendRequestBtn = document.getElementById('submit-info-btn');
+    const modal = document.getElementById('booking-request-modal');
+    const backBtn = document.getElementById('modal-booking-back');
+    const addBtn = document.getElementById('modal-booking-add');
+    const itinerarySelect = document.getElementById('modal-itinerary-select');
 
-    time.value = paramTime;
-    date.value = paramDate;
-    evTitle.innerText = paramTitle;
+    // Show modal and populate dropdown
+    if (sendRequestBtn && modal && itinerarySelect) {
+        sendRequestBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            modal.style.display = 'block';
+            // Load itineraries (repo + user)
+            let merged = [];
+            fetch('../assets/data/trips.json')
+                .then(response => response.json())
+                .then(data => {
+                    const trips = data.trips || [];
+                    const extrasRaw = localStorage.getItem('itineraries.extras');
+                    const extras = extrasRaw ? JSON.parse(extrasRaw) : [];
+                    const deletedRaw = localStorage.getItem('itineraries.deleted');
+                    const deleted = deletedRaw ? new Set(JSON.parse(deletedRaw)) : new Set();
+                    merged = trips.concat(extras.map(t => Object.assign({isExtra: true}, t)));
+                    merged = merged.filter(t => t.id && !deleted.has(t.id));
+                    console.log('[popupBookingRequest] merged itineraries:', merged);
+                    // Clear existing options except the first one
+                    while (itinerarySelect.options.length > 1) {
+                        itinerarySelect.remove(1);
+                    }
+                    // Add trip options
+                    merged.forEach(trip => {
+                        const option = document.createElement('option');
+                        option.value = trip.id;
+                        option.textContent = trip.title;
+                        itinerarySelect.appendChild(option);
+                    });
+                });
+        });
+    }
+    // Back button closes modal
+    if (backBtn && modal) {
+        backBtn.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+    }
+    // Add to Itinerary button (optional logic)
+    if (addBtn && itinerarySelect) {
+        addBtn.addEventListener('click', function () {
+            if (!itinerarySelect.value) {
+                alert('Please select a valid itinerary.');
+                return;
+            }
+            // Add your logic here for adding to itinerary
+            modal.style.display = 'none';
+        });
+    }
 }
-
-bookingConfirmtButton.addEventListener('click', async function () {
-    
-    submittedTime = time.value;
-    submittedDate = date.value;
-
-    //Users have to refill input on refresh - fix this
-    if (time.value == "" || date.value == "" || 
-        guestNumber.value == "" || email.value == "" || nameInput.value == "") 
-    {
-        missingInfoForm.style.display = 'flex';
-        modal.style.display = "block";
-
-        return;
-    }
-
-    //If the time input is the same as the conflicting event time, show conflict popup.
-    if (submittedTime == "6:00 PM" || submittedTime == "6 PM" || submittedTime == "11:00") {
-        bookingConflictForm.style.display = 'flex';
-        modal.style.display = "block";
-        return;
-    }
-    else {
-        modal.style.display = "block";
-        processingDisplay.style.display = "flex";
-        await sleep(5000); //Delay to simulate "processing of booking"
-        processingDisplay.style.display = "none";
-        bookingConfirmForm.style.display = 'flex';
-        return;
-    }
-});
-
-addEventButton.addEventListener ('click', function () {
-    addEventButton.href = 'ItineraryWeek.html'
-});
-
-missingInfoOkayButton.addEventListener ('click', function () {
-    missingInfoForm.style.display = 'none';
-    modal.style.display = "none";
-});
-
-bookingRequestView.addEventListener ('click', function () {
-
-    bookingRequestView.href = `EventInfo.html?id=${eventId}&source=booking`;
-});
-
-backToBookingButton.addEventListener ('click', function () {
-    bookingConflictForm.style.display = 'none';
-    modal.style.display = "none";  
-})
