@@ -102,6 +102,8 @@ window.onload = function () {
         overlay.style.alignItems = 'center';
         overlay.style.justifyContent = 'center';
         overlay.style.zIndex = '1100';
+        // mark overlay so we can remove it programmatically when closing modals
+        overlay.setAttribute('data-validation-popup', '1');
 
         const panel = document.createElement('div');
         panel.style.background = '#fff';
@@ -268,9 +270,24 @@ window.onload = function () {
         });
     }
     // Back button closes modal
-    if (backBtn && modal) {
+    function closeBookingModal() {
+        try {
+            if (modal) {
+                modal.style.display = 'none';
+                if (modal.classList && modal.classList.contains('open')) modal.classList.remove('open');
+            }
+        } catch (err) { /* ignore */ }
+        // remove any leftover validation overlays
+        try {
+            const overlays = document.querySelectorAll('[data-validation-popup]');
+            overlays.forEach(o => { if (o && o.parentNode) o.parentNode.removeChild(o); });
+        } catch (err) { /* ignore */ }
+        console.debug('[popupBookingRequest] closeBookingModal called');
+    }
+
+    if (backBtn) {
         backBtn.addEventListener('click', function () {
-            modal.style.display = 'none';
+            closeBookingModal();
         });
     }
     // Add to Itinerary button (optional logic)
