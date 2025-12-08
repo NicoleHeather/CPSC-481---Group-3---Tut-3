@@ -12,6 +12,7 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
 ## Setup
 - View the deployed app from the link:  
   https://nicoleheather.github.io/CPSC-481---Group-3---Tut-3/
+- Use Chrome Browser to view
 - Open DevTools (Ctrl + Shift + I or F12)
 - Toggle the Device Toolbar (Ctrl + Shift + M) to enable responsive/mobile preview.
 - In the device toolbar's device dropdown, choose "Edit" → "Add custom device" (or choose "Responsive").  
@@ -23,6 +24,8 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
   - User agent string: leave default or choose an iPhone-like UA
 - Select your new "iPhone 16" device from the list. DevTools will resize the viewport to 393×852.
 - Hard-reload the page (Right-click refresh → "Empty Cache and Hard Reload") so CSS and JS load correctly in the emulated device mode.
+
+* Please note that due to limitations of the Chrome simulator, hover feedback is not functional. However, this interaction would not apply to the mobile app experience regardless, since hover states are not supported on mobile devices.
 
 ---
 
