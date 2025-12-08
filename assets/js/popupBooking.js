@@ -1,5 +1,6 @@
 // script.js
 const bookingRequestButton = document.getElementById('booking-request-btn');
+console.debug('[popupBooking] bookingRequestButton element:', bookingRequestButton);
 const saveButton = document.getElementById('save-btn');
 let exploreInfo = [];
 let currentEvent;
@@ -57,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             console.log(currentEvent);
+            console.debug('[popupBooking] resolved currentEvent:', currentEvent);
 
             if (pageTitle && currentEvent && currentEvent.title) pageTitle.innerText = currentEvent.title;
             if (pageDescription && currentEvent && currentEvent.description) pageDescription.innerText = currentEvent.description;
@@ -100,6 +102,25 @@ if (bookingRequestButton) {
         console.log(currentEvent.id);
         // pass normalized 24-hour time in the query string
         function _normalize24(q){ if(!q && q!=='') return ''; let s=String(q).trim(); const mDigits=s.match(/^(\d{1,4})$/); if(mDigits){ const p=mDigits[1].padStart(4,'0'); let hh=parseInt(p.slice(0,2),10); const mm=p.slice(2); if(hh===24) hh=0; return `${String(hh).padStart(2,'0')}:${mm}`;} const m24=s.match(/^(\d{1,2}):(\d{2})$/); if(m24){ let hh=parseInt(m24[1],10); const mm=m24[2]; if(hh===24) hh=0; return `${String(hh).padStart(2,'0')}:${mm}`;} const m12=s.match(/^(\d{1,2})(?::(\d{2}))?\s*(AM|PM)$/i); if(m12){ let hh=parseInt(m12[1],10); const mm=m12[2]||'00'; const period=m12[3].toUpperCase(); if(period==='PM' && hh!==12) hh+=12; if(period==='AM' && hh===12) hh=0; return `${String(hh).padStart(2,'0')}:${mm}`;} return s; }
-        bookingRequestButton.href = `BookingRequest.html?date=${currentEvent.date}&time=${encodeURIComponent(_normalize24(currentEvent.time))}&title=${encodeURIComponent(currentEvent.title)}&id=${currentEvent.id}`;
+        // Save event payload to sessionStorage as a fallback for BookingRequest page
+        try {
+            const payload = {
+                title: currentEvent.title,
+                date: currentEvent.date,
+                time: _normalize24(currentEvent.time),
+                duration: currentEvent.duration,
+                id: currentEvent.id
+            };
+            console.debug('[popupBooking] booking payload to save:', payload);
+            sessionStorage.setItem('newEventData', JSON.stringify(payload));
+            console.debug('[popupBooking] sessionStorage.newEventData saved');
+        } catch (err) {
+            console.warn('Unable to write newEventData to sessionStorage', err);
+        }
+
+        // Use explicit pages path to avoid relative-resolution issues
+        const computedHref = `../pages/BookingRequest.html?date=${currentEvent.date}&time=${encodeURIComponent(_normalize24(currentEvent.time))}&title=${encodeURIComponent(currentEvent.title)}&id=${currentEvent.id}`;
+        console.debug('[popupBooking] setting bookingRequestButton.href ->', computedHref);
+        bookingRequestButton.href = computedHref;
     });
 }

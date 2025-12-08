@@ -153,22 +153,53 @@
 
 		// Handle prefilling the booking form
 		window.addEventListener('load', function() {
+			console.debug('[BookingRequest] location.href =', window.location.href);
+			console.debug('[BookingRequest] location.search =', window.location.search);
+			console.debug('[BookingRequest] sessionStorage.newEventData =', sessionStorage.getItem('newEventData'));
 			const urlParams = new URLSearchParams(window.location.search);
 			const eventTitle = urlParams.get('title');
 			const eventDate = urlParams.get('date');
 			const eventTime = urlParams.get('time');
+			console.debug('[BookingRequest] url params title,date,time =', eventTitle, eventDate, eventTime);
 
 			if (eventTitle) {
 				document.getElementById('event-name-booking').value = eventTitle;
+				console.debug('[BookingRequest] prefill from URL title ->', eventTitle);
 			}
 			if (eventDate) {
 				document.getElementById('date').value = eventDate;
+				console.debug('[BookingRequest] prefill from URL date ->', eventDate);
 			}
 			if (eventTime) {
 				const startTime = convertTo12Hour(eventTime);
 				const endTime = calculateEndTime(eventTime);
 				document.getElementById('time').value = `${startTime} - ${endTime}`;
+				console.debug('[BookingRequest] prefill from URL time ->', `${startTime} - ${endTime}`);
 			}
+
+			// Fallback: if URL params are missing, attempt to use sessionStorage.newEventData
+			try {
+				if ((!eventTitle || !eventDate || !eventTime) && sessionStorage.getItem('newEventData')) {
+					const fallback = JSON.parse(sessionStorage.getItem('newEventData')) || {};
+					console.debug('[BookingRequest] using sessionStorage fallback ->', fallback);
+					if (!eventTitle && fallback.title) {
+						document.getElementById('event-name-booking').value = fallback.title;
+						console.debug('[BookingRequest] prefill from session title ->', fallback.title);
+					}
+					if (!eventDate && fallback.date) {
+						document.getElementById('date').value = fallback.date;
+						console.debug('[BookingRequest] prefill from session date ->', fallback.date);
+					}
+					if (!eventTime && fallback.time) {
+						const t = String(fallback.time||'');
+						const start = t.split('-')[0].trim();
+						const start12 = convertTo12Hour(start);
+						const end12 = (fallback.duration) ? calculateEndTime(start) : '';
+						document.getElementById('time').value = end12 ? `${start12} - ${end12}` : start12;
+						console.debug('[BookingRequest] prefill from session time ->', document.getElementById('time').value);
+					}
+				}
+			} catch (e) { console.warn('Failed to parse session fallback for booking request', e); }
 
 			// Get form elements
 			const bookingForm = document.getElementById('booking-form');
