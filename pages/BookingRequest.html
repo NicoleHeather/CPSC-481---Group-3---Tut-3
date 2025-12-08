@@ -95,6 +95,19 @@
 							</div>
 						</div>
 					</div>
+
+						<!-- Missing required fields modal -->
+						<div class="modal" id="missing-container" style="display:none; position:fixed; inset:0; z-index:1100;">
+							<div style="display:flex; align-items:center; justify-content:center; min-height:100vh; padding:1.5rem;">
+								<div class="modal__panel" style="background: #fff; border-radius: 12px; box-shadow: 0 6px 30px rgba(0,0,0,0.12); padding: 1.5rem; max-width: 420px; width:100%; text-align:center;">
+									<h3 style="margin-top:0; margin-bottom:0.5rem; color:var(--color-primary); font-size:1.125rem;">Missing required fields</h3>
+									<p style="margin:0 0 1rem 0; color:var(--color-text);">Please complete the highlighted fields before sending your request.</p>
+									<div style="display:flex; gap:12px; justify-content:center; margin-top:12px;">
+										<button id="missing-required-info-ok" class="btn">OK</button>
+									</div>
+								</div>
+							</div>
+						</div>
 				</div>
 			</form>
 		</div>
@@ -181,11 +194,15 @@
 			const phoneError = document.getElementById('phone-error');
 			const guestNumberError = document.getElementById('guest-number-error');
 
-			// Real-time validation - clear errors on input
-			nameInput.addEventListener('input', () => clearFieldError(nameInput, nameError));
-			emailInput.addEventListener('input', () => clearFieldError(emailInput, emailError));
-			phoneInput.addEventListener('input', () => clearFieldError(phoneInput, phoneError));
-			guestNumberInput.addEventListener('input', () => clearFieldError(guestNumberInput, guestNumberError));
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+			// Real-time validation - clear errors on input and update submit state
+			// Do not show validation feedback until the user clicks Send Request.
+			// No real-time clearing of errors here; validation runs on submit.
+			nameInput.addEventListener('input', function(){});
+			emailInput.addEventListener('input', function(){});
+			phoneInput.addEventListener('input', function(){});
+			guestNumberInput.addEventListener('input', function(){});
 
 			// Handle cancel button
 			const cancelBtn = document.getElementById('booking-cancel');
@@ -212,6 +229,15 @@
 					});
 				}
 			});
+
+			// Missing required fields modal OK handler (hide modal)
+			const missingOkBtn = document.getElementById('missing-required-info-ok');
+			if (missingOkBtn) {
+				missingOkBtn.addEventListener('click', function(){
+					const missingContainer = document.getElementById('missing-container');
+					if (missingContainer) missingContainer.style.display = 'none';
+				});
+			}
 
 			// Handle Add to Itinerary button
 			const addToItineraryBtn = document.getElementById('booking-request-confirm');
@@ -262,7 +288,6 @@
 					}
 
 					// Validate email
-					const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 					if (!emailInput.value.trim()) {
 						showFieldError(emailInput, emailError, 'Email is required');
 						hasErrors = true;
@@ -286,44 +311,38 @@
 
 					if (!hasErrors) {
 						console.log('Form is valid, submitting...');
-						// Show success modal
-						const successContainer = document.getElementById('success-container');
-						const errorContainer = document.getElementById('error-container');
+						// Hide missing container if present
 						const missingContainer = document.getElementById('missing-container');
-						const processingContainer = document.getElementById('processing-container');
-						
-						// Hide all containers first
-						if (successContainer) successContainer.style.display = 'none';
-						if (errorContainer) errorContainer.style.display = 'none';
 						if (missingContainer) missingContainer.style.display = 'none';
-						if (processingContainer) processingContainer.style.display = 'none';
-						
-						// Load itineraries
+						// Load itineraries into the booking-request modal select
 						fetch('../assets/data/trips.json')
 							.then(response => response.json())
 							.then(data => {
-								const itinerarySelect = document.getElementById('choose-itinerary');
-								const selectElement = document.getElementById('choose-itinerary');
-								const trips = data.trips || [];
-								
+								const itinerarySelect = document.getElementById('modal-itinerary-select');
+								const trips = (data && data.trips) || [];
 								// Clear existing options except the first one
-								while (itinerarySelect.options.length > 1) {
-									itinerarySelect.remove(1);
+								if (itinerarySelect) {
+									while (itinerarySelect.options.length > 1) itinerarySelect.remove(1);
+									trips.forEach(trip => {
+										const option = document.createElement('option');
+										option.value = trip.id;
+										option.textContent = trip.title;
+										itinerarySelect.appendChild(option);
+									});
 								}
-								
-								// Add trip options
-								trips.forEach(trip => {
-									const option = document.createElement('option');
-									option.value = trip.id;
-									option.textContent = trip.title;
-									itinerarySelect.appendChild(option);
-								});
 							})
-							.catch(error => console.error('Error loading itineraries:', error));
-						
-						// Show success container
-						if (successContainer) successContainer.style.display = 'flex';
-						if (bookingModal) bookingModal.classList.add('open');
+							.catch(error => console.error('Error loading itineraries:', error))
+							.finally(() => {
+								// Show the booking-request modal (success) after itineraries loaded
+								const bookingReq = document.getElementById('booking-request-modal');
+								if (bookingReq) bookingReq.style.display = 'flex';
+							});
+					} else {
+						// Validation failed: ensure booking-request modal is hidden and show missing modal
+						const bookingReq = document.getElementById('booking-request-modal');
+						if (bookingReq) bookingReq.style.display = 'none';
+						const missingContainer = document.getElementById('missing-container');
+						if (missingContainer) missingContainer.style.display = 'flex';
 					}
 				});
 			}
