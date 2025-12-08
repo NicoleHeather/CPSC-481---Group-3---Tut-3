@@ -52,7 +52,6 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
 
 ### Functionalities Implemented:
 - Upcoming itineraries
-- Quick actions
 - Navigation bar:
   - Home: The current screen
   - Itinerary: Where the itineraries are stored
@@ -60,12 +59,11 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
   - Account: Personal info and account management, i.e settings
 
 ### Not Implemented:
-- NA
+- Quick actions
 
 ### Suggested Steps:
 1. Swipe the images on the upper middle part of the screen to switch between stored itineraries
-2. (Optional) Slelect any of the four buttons underneath "Quick actions"
-3. Select the **“Itinerary”** option on the toolbar
+2. Select the **“Itinerary”** option on the toolbar
 
 ---
 
@@ -85,11 +83,14 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
 1. Select the **“Manage Budget”** button
 2. Select **“+ Add Expense”**
 3. Enter any name, type and a cost < $500
-4. Redo steps 2–3 with a different name, type and cost still < $500
-5. Dismiss the budget pop-up
-6. Select **“+ Add Itinerary”**, enter any name, start and end dates and select **“save”**
-7. Select the **“...”** button on the newly added itinerary, and delete it
-8. Select the **“Calgary”** itinerary
+4. Redo steps 2–3 with a different category, type and cost still < $500
+5. (Optional) Continue to add expenses with different categoreis to observe the change in the display.
+6. Select the "<- Trips" button
+7. Select **“+ Add Itinerary”**, enter any name, start and end dates and select **“Save”**
+8. Select the **“...”** button on the newly added itinerary, and delete it
+9. Go the "..." button on the "Calgary" itinerary, select "Share"
+10. On the share screen, add an email in the input and select "Share Event". Dismiss the pop-up when ready
+12. Select the **“Calgary”** itinerary
 
 ---
 
@@ -108,36 +109,32 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
 2. Attempt to enter the start date again, but ensure it’s previous to the original start date
 3. Select the **“Next”** button
 4. Select the **“+”** button on any day
-5. Enter a time and title and select **“add”**
+5. Enter a title, date, start and end times, event (optional) location, (optional) category, (optional) cost, and (optional) description and select **“Add Event”**
+6. Select the new event that was just added, observe the new info
 
 ---
 
-## Itinerary Day / Event Info / Share Screen
+## Itinerary Day / Event Info
 
 ### Functionalities Implemented:
 - Day itinerary view
 - Back to week view
-- (TBD) Add event
-- (TBD) Remove event
-- Share events through email
+- Add event
+- Remove event
 
 ### Not Implemented:
 - N/A
 
 ### Suggested Steps:
-1. Select **“Monday, May 4”** and scroll down to the event **“Farewell Dinner”**
-2. While in the event info screen, select **“Edit”**
-3. Modify, enter or remove any information as desired, and select **“Save”**  
-   (This is known as a “custom” event)
-4. Select **“Remove”** and confirm deletion when the pop-up appears
-5. Back on the Itinerary Day view, select any other available day
-6. While in the event info screen, select **“Edit”**.  
-   Observe that some fields are not editable (non-custom event)
-7. Select **“Share”**, and on the share event screen add any email address and select **“Share Event”**
-8. Dismiss the pop-up when ready
-9. Return to the event info screen using the **“<”** button on the header
-10. Select **“Remove”** and confirm deletion with the **“Delete”** button
-11. Using the navigation bar at the bottom of the screen, select the **“Explore”** option
+1. Select the title of any day (i.e Friday, May 1)
+2. (Optional) Select edit dates and attempt to change the start date of the itinerary
+3. Select any event object, then select **“Remove Event”** and confirm deletion with the **"Remove"** button when the pop-up appears.
+4. Back on the Itinerary Day view, select any other available day
+5. Select an event and While in the event info screen, select the pencil icon.
+6. Change any of the input fields and select "Save" to confirm the changes.
+7. Using the navigation bar at the bottom of the screen, select the **“Explore”** option
+8. Return to the Itinerary screen view using the "<" button twice.
+9. Using the navigation bar on the bottom, select the **"Explore"** option
 
 ---
 
@@ -150,7 +147,7 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
 - Search events
 - Saving to history/removing from history
 - Sending booking requests
-- (TBA) Adding booked event to different itineraries
+- Adding booked event to different itineraries
 - Event conflict resolution options
 
 ### Not Implemented:
@@ -159,24 +156,19 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
 ### Suggested Steps:
 1. Using the **“Search…”** bar at the top of the screen, enter any combination of words or letters
 2. Select the **“Filter”** option and select any dates, starts, ends, categories or locations → **Apply Filters**
-3. Clear the filtering and search input, scroll to find the event **“Lakeside Brunch”** and select it
-4. While on the event booking screen, select **“Create Booking Request”**
-5. On the booking request screen, enter all required info (red asterisks)
-6. Select **“Send Booking Request”**
-7. When the conflict pop-up appears, select **“View Conflicting Event”**
-8. Observe the event, then use the **“<”** button
-9. On the pop-up again, select **“Back to Booking”** and return to Explore
-10. Use the **“Saved”** button to go to the saved events screen
-11. Observe that there are no saved events at the moment
-12. Select a search result
-13. On its event booking screen, select **“Save to History”** and dismiss the pop-up
-14. Return to the saved events screen — you should now see an event in history
-15. Repeat with another search result
-16. Still on the saved events page, select an event
-17. Select **“Create a Booking Request”**, fill it out, then **“Send Booking Request”**
-18. Once processed, choose an itinerary via dropdown → **Add to Itinerary**  
-   (This should take you to the Itinerary screen)
-19. Using the navigation bar, select **“Account”**
+3. In the input bar between the **"Filter** and **"Saved"** select the option **Dates:Calgary Trip"**.
+4. Select the **"Rock Concert"** result.
+5. Select the heart icon and dismiss the pop-up, then use the header back button to return to the search page.
+6. Select the **"Saved"** button and go back to the **"Rock Concert"** result.
+7. Select the **"Create Booking Request"** button.
+8. (Optional) Try to submit the request without filling in any information.
+9. Fill in all the required info and select the **"Send Request"** button.
+10. Using the itinerary dropdown, select the Calgary itinerary, then select the **"Add to Itinerary"** option
+11. On the event conflict pop-up, press the **"View conflicting event"** text. Go to the conflciting event on the itinerary week view and remove it.
+12. Using the back button on the header, return to the booking request page and try to book the request again.
+13. Return to the **"Saved"** events screen using the back button
+14. Choose any saved search result and use the heart icon to un-save it.
+15. Using the navigation bar, select **“Account”**
 
 ---
 
@@ -186,27 +178,27 @@ Keenan Hanearin-Balczer, 30171362, keenan.hanearinbalcz@ucalgary.ca
 - Changing and saving personal info
 - Logging out
 - Saving and editing emergency contact info
-- Searching for medical centers
+- Searching for medical centers/hospitals
 
 ### Not Implemented:
 - Canceling personal info changes
 - Password resetting
 - Language preferences
-- Saving Preferences
 - Deleting account
 
 ### Suggested Steps:
 1. In **Personal Information**, change any field and select **“Save Changes”**
 2. Verify pop-up indicating info is saved
 3. (Optional) Interact with non-implemented sections
-4. Scroll to the red-background section and select **“Emergency Information”**
+4. Scroll to the bottom of the screen and select **“Emergency Information”**
 5. Enter a name and phone number → **Save Info**
-6. (Optional) Use **Edit Contact**, **Save**, or **Call**
-7. (Optional) Select **Search**, dismiss missing info pop-up
+6. (Optional) Use **Edit Contact**, or **Call**
+7. (Optional) Empty city and province searhc input and select **Search**, dismiss missing info pop-up
 8. Enter **Calgary** and **Alberta** → **Search**
 9. Select any search result using the **“>”** icon
-10. Return using the **“<”**
-11. Select **“Sign Out”**
+10. Return using the **"<-"** button the webpage
+11. Go back to the account screen using the header back button
+12. Select **“Sign Out”**
 
 ---
 
