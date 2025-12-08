@@ -147,8 +147,12 @@ window.onload = function () {
             inlineLink.addEventListener('click', function (e) {
                 e.preventDefault();
                 try {
-                    sessionStorage.setItem('bookingHighlight', JSON.stringify(navigatePayload));
-                } catch (err) {}
+                    if (window.bookingHighlight && typeof window.bookingHighlight.set === 'function') {
+                        window.bookingHighlight.set(navigatePayload, { basePath: BASE_PATH });
+                        return;
+                    }
+                } catch (err) { /* swallow */ }
+                try { sessionStorage.setItem('bookingHighlight', JSON.stringify(navigatePayload)); } catch(e){}
                 window.location.href = `${BASE_PATH}/pages/ItineraryWeek.html?trip=${encodeURIComponent(navigatePayload.tripId)}`;
             });
         }

@@ -1647,60 +1647,21 @@
       // the referenced event element, scroll it into view and apply a temporary
       // highlight so users can inspect the conflicting event.
       try {
-        const raw = sessionStorage.getItem('bookingHighlight');
-        if (raw) {
-          const payload = JSON.parse(raw);
-          if (payload && payload.tripId && String(payload.tripId) === String(trip.id) && payload.eventId) {
-            // attempt to locate the element by data-event-id
-            const idSelector = String(payload.eventId).replace(/"/g, '\\"');
-            const selector = `.event-item[data-event-id="${idSelector}"]`;
-            const target = listEl.querySelector(selector);
-          if (target) {
-            // prefer the stylesheet class for visual highlight
-            target.classList.add('event-item--highlight');
-            // Only scroll if the target is not fully visible to avoid pushing
-            // the page up unnecessarily. Use bounding rect check.
-            try {
-              const rect = target.getBoundingClientRect();
-              const viewH = window.innerHeight || document.documentElement.clientHeight;
-              const fullyVisible = (rect.top >= 0 && rect.bottom <= viewH);
-              if (!fullyVisible) {
-                try { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(_){}
-              }
-            } catch(_) {}
-            // toast to explain why we navigated here
-            const toast = document.createElement('div');
-            toast.className = 'booking-highlight-toast';
-            // Build message content: show attempted event (if any) and the conflict message
-            const attemptedLine = document.createElement('div');
-            attemptedLine.className = 'booking-highlight-attempt';
-            if (payload.attemptedTitle) {
-              attemptedLine.textContent = `Attempting to add: ${payload.attemptedTitle}`;
+        if (window.bookingHighlight && typeof window.bookingHighlight.consume === 'function') {
+          try { window.bookingHighlight.consume(listEl, trip.id); } catch(_){}
+        } else {
+          // fallback to inline consumption if helper is unavailable
+          const raw = sessionStorage.getItem('bookingHighlight');
+          if (raw) {
+            const payload = JSON.parse(raw);
+            if (payload && payload.tripId && String(payload.tripId) === String(trip.id) && payload.eventId) {
+              const idSelector = String(payload.eventId).replace(/"/g, '\\"');
+              const selector = `.event-item[data-event-id="${idSelector}"]`;
+              const target = listEl.querySelector(selector);
+              if (target) target.classList.add('event-item--highlight');
             }
-            const msgLine = document.createElement('div');
-            msgLine.className = 'booking-highlight-msg';
-            msgLine.textContent = payload.msg || 'Conflicting event highlighted.';
-            // non-bold text
-            attemptedLine.style.fontWeight = '400';
-            msgLine.style.fontWeight = '400';
-            toast.appendChild(attemptedLine);
-            toast.appendChild(msgLine);
-            const close = document.createElement('button');
-            // use btn-cancel for consistent cancel styling; avoid the general .btn gradient
-            close.className = 'btn-cancel booking-highlight-dismiss';
-            close.textContent = 'Dismiss';
-            close.addEventListener('click', ()=>{ try{ toast.remove(); }catch(_){} });
-            // center the dismiss button
-            close.style.alignSelf = 'center';
-            toast.appendChild(close);
-            document.body.appendChild(toast);
-            // remove highlight after a delay so it doesn't persist forever
-            setTimeout(()=>{ try{ target.classList.remove('event-item--highlight'); }catch(_){} }, 7000);
-            // also remove toast after a while
-            setTimeout(()=>{ try{ toast.remove(); }catch(_){} }, 9000);
+            sessionStorage.removeItem('bookingHighlight');
           }
-          }
-          sessionStorage.removeItem('bookingHighlight');
         }
       } catch(e) { /* ignore */ }
 
