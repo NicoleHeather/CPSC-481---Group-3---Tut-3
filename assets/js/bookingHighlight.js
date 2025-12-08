@@ -29,8 +29,17 @@
       if(!listEl) { sessionStorage.removeItem('bookingHighlight'); return false; }
 
       const idSelector = String(payload.eventId || payload.eventId || '').replace(/"/g,'\\"');
-      const selector = `.event-item[data-event-id="${idSelector}"]`;
-      const target = listEl.querySelector(selector);
+      // Try several selectors to accommodate different renderers (week list uses li[data-event-id], other views use .event-item)
+      const candidates = [
+        `.event-item[data-event-id="${idSelector}"]`,
+        `[data-event-id="${idSelector}"]`,
+        `.day-list li[data-event-id="${idSelector}"]`
+      ];
+      let target = null;
+      for (let s of candidates) {
+        try { target = listEl.querySelector(s); } catch(_) { target = null; }
+        if (target) break;
+      }
       if(target){
         target.classList.add('event-item--highlight');
         try {
@@ -45,11 +54,35 @@
         const attemptedLine = document.createElement('div');
         attemptedLine.className = 'booking-highlight-attempt';
         if(payload.attemptedTitle){ attemptedLine.textContent = `Attempting to add: ${payload.attemptedTitle}`; }
-        const msgLine = document.createElement('div');
-        msgLine.className = 'booking-highlight-msg';
-        msgLine.textContent = payload.msg || 'Conflicting event highlighted.';
-        attemptedLine.style.fontWeight = '400'; msgLine.style.fontWeight = '400';
-        toast.appendChild(attemptedLine); toast.appendChild(msgLine);
+
+        // Determine conflicting event title/time from payload or DOM
+        let conflictTitle = payload.conflictTitle || '';
+        if(!conflictTitle && target){
+          try {
+            const titleCandidates = ['.event-title', '.day-title', '.title', '.item-title'];
+            for (const sel of titleCandidates) {
+              const t = target.querySelector(sel);
+              if (t && t.textContent && t.textContent.trim()) { conflictTitle = t.textContent.trim(); break; }
+            }
+            if(!conflictTitle) {
+              // fallback: use trimmed textContent of the target (may include time)
+              const txt = (target.textContent || '').trim();
+              if (txt) conflictTitle = txt.split('\n').map(s=>s.trim()).filter(Boolean).join(' — ');
+            }
+          } catch(_){}
+        }
+        const conflictTimeRange = payload.conflictTimeRange || payload.conflictTime || '';
+
+        const conflictLine = document.createElement('div');
+        conflictLine.className = 'booking-highlight-conflict';
+        if(conflictTitle){
+          conflictLine.textContent = `Conflicts with: ${conflictTitle}${conflictTimeRange ? ' — ' + conflictTimeRange : ''}`;
+        } else {
+          conflictLine.textContent = payload.msg || 'Conflicting event highlighted.';
+        }
+
+        attemptedLine.style.fontWeight = '400'; conflictLine.style.fontWeight = '400';
+        toast.appendChild(attemptedLine); toast.appendChild(conflictLine);
         const close = document.createElement('button'); close.className='btn-cancel booking-highlight-dismiss'; close.textContent='Dismiss';
         close.addEventListener('click', ()=>{ try{ toast.remove(); }catch(_){} }); close.style.alignSelf='center'; toast.appendChild(close);
         document.body.appendChild(toast);

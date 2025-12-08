@@ -385,7 +385,10 @@ window.onload = function () {
                     function fmtMin(m) { const hh = Math.floor(m/60)%24; const mm = String(m%60).padStart(2,'0'); const ampm = hh>=12?'PM':'AM'; const ph = hh%12||12; return `${ph}:${mm} ${ampm}`; }
                     const conflictText = `Time conflicts with "${overlap.title}" on ${dateVal} at ${fmtMin(evStart)} - ${fmtMin(evEnd)}.`;
                     const copyText = `Conflict: ${overlap.title} on ${dateVal} ${fmtMin(evStart)}-${fmtMin(evEnd)}`;
-                    const payload = buildAttemptPayload({ tripId: selectedId, eventId: (overlap.id || overlap.eventId || overlap._id || overlap.title), msg: conflictText });
+                    const conflictId = (overlap.id || overlap.eventId || overlap._id || overlap.title);
+                    const conflictTitle = overlap.title || overlap.name || '';
+                    const conflictTimeRange = `${fmtMin(evStart)} - ${fmtMin(evEnd)}`;
+                    const payload = buildAttemptPayload({ tripId: selectedId, eventId: conflictId, msg: conflictText, conflictTitle, conflictTimeRange });
                     showValidationPopup(conflictText, copyText, payload);
                     return;
                 }

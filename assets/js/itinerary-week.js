@@ -1,4 +1,6 @@
-(function(){
+document.addEventListener('DOMContentLoaded', function(){
+
+  console.debug('[itinerary-week] DOMContentLoaded - initializing');
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
@@ -52,73 +54,14 @@
   // Convert 24-hour time (HH:MM) to 12-hour format with AM/PM
   function to12Hour(time24){
     if(!time24) return '';
-    const [hours, minutes] = time24.split(':').map(Number);
+    const parts = String(time24).split(':');
+    const hours = Number(parts[0] || 0);
+    const minutes = Number(parts[1] || 0);
     const period = hours >= 12 ? 'PM' : 'AM';
-    const hours12 = hours % 12 || 12;
-    return `${hours12}:${minutes.toString().padStart(2,'0')} ${period}`;
+    const h12 = hours % 12 || 12;
+    return `${h12}:${String(minutes).padStart(2,'0')} ${period}`;
   }
-
-  // Calculate end time given start time and duration in hours
-  function calculateEndTime(startTime, durationHours){
-    if(!startTime || !durationHours) return '';
-    const [hours, minutes] = startTime.split(':').map(Number);
-    const totalMinutes = hours * 60 + minutes + (parseFloat(durationHours) * 60);
-    const endHours = Math.floor(totalMinutes / 60) % 24;
-    const endMinutes = Math.floor(totalMinutes % 60);
-    return `${endHours.toString().padStart(2,'0')}:${endMinutes.toString().padStart(2,'0')}`;
-  }
-
-  function mapEventsSequentially(trip, events){
-    const days = eachDate(trip.startDate, trip.endDate).map(date=>({date, city: trip.title, activities: []}));
-    let index=0, PER_DAY=2;
-    for(let i=0;i<days.length;i++){
-      for(let j=0;j<PER_DAY;j++){
-        if(index>=events.length) break;
-        const ev=events[index++]; days[i].activities.push({id: ev.id, time: ev.time});
-      }
-    }
-    return days;
-  }
-
-  function getQueryParam(name){ const url=new URL(location.href); return url.searchParams.get(name); }
-
-  function renderWeekRowForDates(trip, days, EVENTS, weekStartIndex){
-    // weekStartIndex indicates the index in days array to start the 7-day window
-    const wrap=document.createElement('div'); wrap.className='week-row';
-    const slice = days.slice(weekStartIndex, weekStartIndex+7);
-    slice.forEach(day=>{
-      const cell=document.createElement('div'); cell.className='day-cell';
-      cell.setAttribute('role','link'); cell.setAttribute('tabindex','0');
-      const href = `${basePath()}/pages/ItineraryDay.html?trip=${encodeURIComponent(trip.id)}&date=${encodeURIComponent(day.date)}`;
-      cell.dataset.href = href;
-      cell.addEventListener('click', ()=>{ if(cell.dataset.href) location.href = cell.dataset.href; });
-      cell.addEventListener('keydown',(e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); if(cell.dataset.href) location.href = cell.dataset.href; } });
-
-      cell.innerHTML = `
-        <span class="day-name">${toDay(day.date)}</span>
-        <span class="day-date">${toShort(day.date)}</span>
-        <div class="day-meta"><div>${trip.title}</div></div>
-        <span class="chev" aria-hidden="true">›</span>
-      `;
-
-      const list=document.createElement('ul'); list.className='day-list';
-      day.activities.slice(0,3).forEach(act=>{
-        const ev = EVENTS.find(e=>e.id===act.id);
-        const title = ev ? ev.title : '(Event)';
-        const li=document.createElement('li');
-        li.innerHTML = `
-          <span class="day-time">${act.time}</span>
-          <span class="day-title">${title}</span>
-        `;
-        if (ev && (ev.id || ev.eventId)) li.dataset.eventId = ev.id || ev.eventId || ev._id || title;
-        list.appendChild(li);
-      });
-      if(day.activities.length===0){ const li=document.createElement('li'); li.className='day-more'; li.textContent='No items'; list.appendChild(li); }
-      cell.appendChild(list);
-      wrap.appendChild(cell);
-    });
-    return wrap;
-  }
+  
 
   function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
@@ -1702,5 +1645,4 @@
     });
 
     render();
-  })();
-})();
+  });
